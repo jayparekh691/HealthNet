@@ -1,8 +1,6 @@
 package com.example.project3.controller;
 
-
-import com.example.project3.payloads.EmployeeDto;
-import com.example.project3.payloads.HospitalDto;
+import com.example.project3.entities.Employee;
 import com.example.project3.services.EmployeeServices;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,14 @@ public class EmployeeController {
     private EmployeeServices employeeServices;
 
     @PostMapping("/{id}")
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto, @PathVariable("id") Integer h_id){
-            EmployeeDto employeeDto1 = this.employeeServices.createEmployee(employeeDto,h_id);
-            return new ResponseEntity<>(employeeDto1, HttpStatus.CREATED);
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee, @PathVariable("id") Integer h_id){
+            Employee employee1 = this.employeeServices.createEmployee(employee,h_id);
+            return new ResponseEntity<>(employee1, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login/{email}/{password}")
+    public ResponseEntity<Employee> login(@PathVariable("email") String email, @PathVariable("password") String password){
+        Employee employee = this.employeeServices.login(email,password);
+        return new ResponseEntity<Employee>(employee,HttpStatus.ACCEPTED);
     }
 }
