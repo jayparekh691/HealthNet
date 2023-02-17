@@ -1,6 +1,5 @@
 package com.example.project3.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,22 +12,22 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Hospital {
+public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int h_id;
+    private int p_id;
 
-    private String h_name;
-    private String h_address;
-    private String admin_name;
-    private String admin_address;
-    private String email;
-    private String password;
+    private String name;
+    private int age;
     private String mobile_number;
+    private char gender;
+    private String address;
+    private String town;
+    private String city;
+    private String state;
+    private int pincode;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Employee> employeeList;
-
-
+    List<Appointment> appointments;
 }
