@@ -7,8 +7,8 @@ import java.util.List;
 public interface EmployeeServices {
 
 
-    Employee login(String email,String password);
-    Employee createEmployee(Employee employeeDto, Integer h_id);
+    Employee login(String email,String password, String role);
+    Employee createEmployee(Employee employeeDto);
     Employee updateEmployee(Employee employeeDto, Integer id);
     Employee getEmployeeById(Integer id);
     List<Employee> getAllEmployees();

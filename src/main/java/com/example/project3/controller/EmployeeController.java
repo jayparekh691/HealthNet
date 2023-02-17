@@ -16,15 +16,15 @@ public class EmployeeController {
     @Autowired
     private EmployeeServices employeeServices;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee, @PathVariable("id") Integer h_id){
-            Employee employee1 = this.employeeServices.createEmployee(employee,h_id);
+    @PostMapping("/create-employee/")
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee){
+            Employee employee1 = this.employeeServices.createEmployee(employee);
             return new ResponseEntity<>(employee1, HttpStatus.CREATED);
     }
 
-    @PostMapping("/login/{email}/{password}")
-    public ResponseEntity<Employee> login(@PathVariable("email") String email, @PathVariable("password") String password){
-        Employee employee = this.employeeServices.login(email,password);
+    @PostMapping("/login/{email}/{password}/{role}")
+    public ResponseEntity<Employee> login(@PathVariable("email") String email, @PathVariable("password") String password,@PathVariable("role") String role){
+        Employee employee = this.employeeServices.login(email,password,role);
         return new ResponseEntity<Employee>(employee,HttpStatus.ACCEPTED);
     }
 }
