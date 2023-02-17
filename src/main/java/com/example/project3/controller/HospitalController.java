@@ -1,8 +1,6 @@
 package com.example.project3.controller;
 
 import com.example.project3.payloads.HospitalDto;
-import com.example.project3.services.HospitalServices;
-import com.example.project3.services.impl.HospitalServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

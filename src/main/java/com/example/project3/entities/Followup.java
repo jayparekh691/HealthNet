@@ -1,6 +1,5 @@
 package com.example.project3.entities;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SuperAdmin {
+public class Followup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int s_id;
-
-    private String email;
-
-    private String password;
+    private int f_id;
+    private String instructions;
+    private int numberOfFollowup;
+    private int secheduleCount;
+    private String scheduleType;
 
 }

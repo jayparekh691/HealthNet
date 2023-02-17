@@ -21,30 +21,23 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int e_id;
-    String name;
-    Date DOB;
-    String email;
-    String password;
-    String mobile_number;
-    char gender;
-    String address;
-    String qualification;
-    String emp_type;
-    String photo;
-    String license_number;
-    String specialization;
+    private String name;
+    private Date DOB;
+    private String email;
+    private String password;
+    private String mobile_number;
+    private char gender;
+    private String address;
+    private String qualification;
+    private String emp_type;
+    private String photo;
+    private String license_number;
+    private String specialization;
 
     @ManyToOne
     @JoinColumn(name = "hid", nullable = false)
     @JsonIgnore
     private Hospital hospital;
     // F.K Hospital id
-
-    public int getHospital_id(){
-        return this.hospital.getH_id();
-    }
-    public void setHospital_id(int id){
-        this.hospital.setH_id(id);
-    }
 
 }
