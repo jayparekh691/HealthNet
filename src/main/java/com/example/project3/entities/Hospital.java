@@ -26,9 +26,4 @@ public class Hospital {
     private String password;
     private String mobile_number;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Employee> employeeList;
-
-
 }

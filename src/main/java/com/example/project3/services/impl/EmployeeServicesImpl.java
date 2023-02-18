@@ -1,6 +1,8 @@
 package com.example.project3.services.impl;
 
+import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Employee;
+import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.repo.EmployeeRepo;
 import com.example.project3.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Override
     public Employee login(String email, String password, String role) {
-        Employee employee = this.employeeRepo.findEmployeeByEmailAndPasswordOrRole(email,password,role);
-//        System.out.println(employee.getEmail());
+        Employee employee = this.employeeRepo.findEmployeeByEmailAndPasswordAndRole(email,password,role);
         return employee;
     }
 

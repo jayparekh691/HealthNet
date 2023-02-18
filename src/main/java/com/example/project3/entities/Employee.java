@@ -34,10 +34,5 @@ public class Employee {
     private String license_number;
     private String specialization;
 
-    @ManyToOne
-    @JoinColumn(name = "hid", nullable = true)
-    @JsonIgnore
-    private Hospital hospital;
-    // F.K Hospital id
 
 }

@@ -1,22 +1,28 @@
 package com.example.project3.services.impl;
 
+import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Patient;
+import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.repo.PatientRepo;
 import com.example.project3.services.PatientServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientServicesImpl implements PatientServices {
 
     @Autowired
     private PatientRepo patientRepo;
+    @Autowired
+    private AppointmentRepo appointmentRepo;
+
     @Override
     public Patient createPatient(Patient patient) {
         this.patientRepo.save(patient);
-        return null;
+        return patient;
     }
 
     @Override
