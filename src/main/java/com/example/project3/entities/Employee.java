@@ -34,5 +34,4 @@ public class Employee {
     private String license_number;
     private String specialization;
 
-
 }

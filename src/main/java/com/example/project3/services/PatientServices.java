@@ -8,8 +8,8 @@ import java.util.List;
 public interface PatientServices {
 
 
-    Patient createPatient(Patient patientDto);
-    Patient updatePatient(Patient patientDto, Integer id);
+    Patient createPatient(Patient patient);
+    Patient updatePatient(Patient patient, Integer id);
     Patient getPatientById(Integer id);
     List<Patient> getAllPatient();
 }
