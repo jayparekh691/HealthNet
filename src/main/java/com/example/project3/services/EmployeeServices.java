@@ -1,15 +1,17 @@
 package com.example.project3.services;
 
-import com.example.project3.payloads.EmployeeDto;
+import com.example.project3.entities.Employee;
 
 import java.util.List;
 
 public interface EmployeeServices {
 
-    EmployeeDto createEmployee(EmployeeDto employeeDto,Integer h_id);
-    EmployeeDto updateEmployee(EmployeeDto employeeDto, Integer id);
-    EmployeeDto getEmployeeById(Integer id);
-    List<EmployeeDto> getAllEmployees();
+
+    Employee login(String email,String password, String role);
+    Employee createEmployee(Employee employeeDto);
+    Employee updateEmployee(Employee employeeDto, Integer id);
+    Employee getEmployeeById(Integer id);
+    List<Employee> getAllEmployees();
     void deleteEmployee();
 
 }

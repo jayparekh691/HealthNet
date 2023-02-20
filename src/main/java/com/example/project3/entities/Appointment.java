@@ -23,7 +23,7 @@ public class Appointment {
     @OneToOne
     private Patient patient;
     @OneToOne
-    private Doctor doctor;
+    private Employee doctor;
     @OneToOne
     private Diagnostics diagnostics;
     @OneToMany(fetch = FetchType.EAGER)

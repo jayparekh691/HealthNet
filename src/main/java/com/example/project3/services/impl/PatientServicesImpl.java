@@ -1,44 +1,53 @@
 package com.example.project3.services.impl;
 
+import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Patient;
-import com.example.project3.payloads.PatientDto;
+import com.example.project3.repo.AppointmentRepo;
+import com.example.project3.repo.PatientRepo;
 import com.example.project3.services.PatientServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class PatientServicesImpl implements PatientServices {
 
+    @Autowired
+    private PatientRepo patientRepo;
+    @Autowired
+    private AppointmentRepo appointmentRepo;
+
     @Override
-    public PatientDto createPatient(PatientDto patientDto) {
-        return null;
+    public Patient createPatient(Patient patient) {
+        this.patientRepo.save(patient);
+        return patient;
     }
 
     @Override
-    public PatientDto updatePatient(PatientDto patientDto, Integer id) {
-        return null;
+    public Patient updatePatient(Patient patient, Integer id) {
+        Patient patient1 = this.patientRepo.findById(id).orElseThrow();
+        patient1.setAddress(patient.getAddress());
+        patient1.setGender(patient.getGender());
+        patient1.setCity(patient.getCity());
+        patient1.setName(patient.getName());
+        patient1.setAge(patient.getAge());
+        patient1.setMobile_number(patient.getMobile_number());
+        patient1.setPincode(patient.getPincode());
+        this.patientRepo.save(patient1);
+        return patient1;
     }
 
     @Override
-    public PatientDto getPatientById(Integer id) {
-        return null;
+    public Patient getPatientById(Integer id) {
+        Patient patient = this.patientRepo.findById(id).orElseThrow();
+        return patient;
     }
 
     @Override
-    public List<PatientDto> getAllPatient() {
-        return null;
-    }
-
-    private PatientDto patientToDto(Patient patient){
-        PatientDto patientDto = new PatientDto();
-        patientDto.setCity(patient.getCity());
-        patientDto.setAge(patient.getAge());
-        patientDto.setGender(patient.getGender());
-        patientDto.setName(patient.getName());
-        patientDto.setAddress(patient.getAddress());
-        patientDto.setMobile_number(patient.getMobile_number());
-        patientDto.setTown(patient.getTown());
-        patientDto.setPincode(patient.getPincode());
-        patientDto.setState(patient.getState());
-        patientDto.setAppointmentsdto(patient.getAppointments());
+    public List<Patient> getAllPatient() {
+        List<Patient> patients = this.patientRepo.findAll();
+        return patients;
     }
 }

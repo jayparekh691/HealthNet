@@ -29,15 +29,9 @@ public class Employee {
     private char gender;
     private String address;
     private String qualification;
-    private String emp_type;
+    private String role;
     private String photo;
     private String license_number;
     private String specialization;
-
-    @ManyToOne
-    @JoinColumn(name = "hid", nullable = false)
-    @JsonIgnore
-    private Hospital hospital;
-    // F.K Hospital id
 
 }
