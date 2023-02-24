@@ -13,5 +13,5 @@ public interface EmployeeServices {
     Employee getEmployeeById(Integer id);
     List<Employee> getAllEmployees();
     void deactivateEmployee(Integer id);
-
+    List<Employee> getAllDoctors();
 }
