@@ -12,5 +12,5 @@ public interface AppointmentServices {
     Appointment getAppointmentById(Integer id);
     List<Appointment> getAllAppointments();
     void deleteAppointment(Integer id);
-
+    List<Appointment> getAppointmentByDoctorId(Integer id);
 }

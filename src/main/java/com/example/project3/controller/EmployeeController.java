@@ -22,9 +22,9 @@ public class EmployeeController {
             return new ResponseEntity<>(employee1, HttpStatus.CREATED);
     }
 
-    @PostMapping("/login/{email}/{password}/{role}")
-    public ResponseEntity<Employee> login(@PathVariable("email") String email, @PathVariable("password") String password,@PathVariable("role") String role){
-        Employee employee = this.employeeServices.login(email,password,role);
-        return new ResponseEntity<Employee>(employee,HttpStatus.ACCEPTED);
+    @PostMapping("/login")
+    public ResponseEntity<Employee> login(@RequestBody Employee employee){
+        Employee employee1 = this.employeeServices.login(employee);
+        return new ResponseEntity<Employee>(employee1,HttpStatus.ACCEPTED);
     }
 }

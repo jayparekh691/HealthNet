@@ -49,6 +49,13 @@ public class AppointmentServicesImpl implements AppointmentServices {
     }
 
     @Override
+    public List<Appointment> getAppointmentByDoctorId(Integer id) {
+        Employee employee = this.employeeRepo.findById(id).orElseThrow();
+        List<Appointment> appointments = this.appointmentRepo.findByDoctor(employee);
+        return appointments;
+    }
+
+    @Override
     public List<Appointment> getAllAppointments() {
         List<Appointment> appointments = this.appointmentRepo.findAll();
         return appointments;
