@@ -61,6 +61,13 @@ public class EmployeeServicesImpl implements EmployeeServices {
     }
 
     @Override
+    public  List<Employee> getAllDoctors(){
+        String role="doctor";
+        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        return employees;
+    }
+
+    @Override
     public void deactivateEmployee(Integer id) {
 
     }
