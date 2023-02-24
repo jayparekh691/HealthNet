@@ -48,4 +48,10 @@ public class AppointmentController {
         this.appointmentServices.deleteAppointment(a_id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/get-all-appointments-of-doctor/{d_id}")
+    public  ResponseEntity<List<Appointment>> getAllAppointmentsOfDoctorId(@PathVariable("d_id") Integer id){
+        List<Appointment> appointments = this.appointmentServices.getAppointmentByDoctorId(id);
+        return new ResponseEntity<>(appointments,HttpStatus.ACCEPTED);
+    }
 }
