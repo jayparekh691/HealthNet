@@ -19,7 +19,9 @@ public class Diagnostics {
     private int d_id;
     private String diagnosis;
     private String remarks;
+    private String prescription;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    List<Tablet> prescription;
+    @OneToOne
+    private Appointment appointment;
+
 }
