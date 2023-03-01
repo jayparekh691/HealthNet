@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table
@@ -22,16 +23,12 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int e_id;
     private String name;
-    private Date DOB;
     private String email;
     private String password;
-    private String mobile_number;
     private char gender;
-    private String address;
-    private String qualification;
     private String role;
-    private String photo;
-    private String license_number;
     private String specialization;
 
+    @OneToMany
+    private List<Visit> visitList;
 }

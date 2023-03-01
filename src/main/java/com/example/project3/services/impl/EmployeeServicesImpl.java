@@ -36,13 +36,9 @@ public class EmployeeServicesImpl implements EmployeeServices {
         Employee employee1 = new Employee();
         employee1.setEmail(employee.getEmail());
         employee1.setName(employee.getName());
-        employee1.setPhoto(employee.getPhoto());
         employee1.setSpecialization(employee.getSpecialization());
         employee1.setName(employee.getName());
-        employee1.setDOB(employee.getDOB());
-        employee1.setLicense_number(employee.getLicense_number());
         employee1.setGender(employee.getGender());
-        employee1.setMobile_number(employee.getMobile_number());
         employee1.setPassword(employee.getPassword());
         employee1.setRole(employee.getRole());
         return employee1;

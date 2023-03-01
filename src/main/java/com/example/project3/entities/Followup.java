@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table
 @NoArgsConstructor
@@ -19,5 +21,7 @@ public class Followup {
     private int numberOfFollowup;
     private int secheduleCount;
     private String scheduleType;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Visit> visitList;
 
 }
