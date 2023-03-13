@@ -26,7 +26,7 @@ public class Appointment {
     private Employee doctor;
     @OneToOne
     private Diagnostics diagnostics;
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Followup> followup;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Followup followup;
 
 }

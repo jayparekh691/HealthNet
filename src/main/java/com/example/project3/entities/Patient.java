@@ -30,4 +30,7 @@ public class Patient {
 
     @OneToMany(fetch = FetchType.EAGER)
     List<Appointment> appointments;
+
+    @OneToOne
+    private Employee fieldworker;
 }
