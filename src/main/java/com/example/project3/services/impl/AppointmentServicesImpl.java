@@ -27,6 +27,8 @@ public class AppointmentServicesImpl implements AppointmentServices {
         Employee employee = this.employeeRepo.findById(d_id).orElseThrow();
         appointment.setPatient(patient);
         appointment.setDoctor(employee);
+//        patient.getAppointments().add(appointment);
+//        this.patientRepo.save(patient);
         this.appointmentRepo.save(appointment);
         return appointment;
     }
@@ -46,13 +48,6 @@ public class AppointmentServicesImpl implements AppointmentServices {
     public Appointment getAppointmentById(Integer id) {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
-    }
-
-    @Override
-    public List<Appointment> getAppointmentByDoctorId(Integer id) {
-        Employee employee = this.employeeRepo.findById(id).orElseThrow();
-        List<Appointment> appointments = this.appointmentRepo.findByDoctor(employee);
-        return appointments;
     }
 
     @Override

@@ -19,8 +19,11 @@ public class Followup {
     private int f_id;
     private String instructions;
     private int numberOfFollowup;
-    private int secheduleCount;
     private String scheduleType;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private Appointment appointment;
+
     @OneToMany(fetch = FetchType.EAGER)
     private List<Visit> visitList;
 

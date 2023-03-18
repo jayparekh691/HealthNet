@@ -19,6 +19,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentServices appointmentServices;
 
+
     @PostMapping("/add-appointment/{p_id}/{d_id}")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment, @PathVariable("p_id") Integer p_id, @PathVariable("d_id") Integer d_id){
         Appointment appointment1 = this.appointmentServices.createAppointment(appointment,p_id,d_id);
@@ -47,11 +48,5 @@ public class AppointmentController {
     public ResponseEntity deleteAppointment(@PathVariable("a_id") Integer a_id){
         this.appointmentServices.deleteAppointment(a_id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/get-all-appointments-of-doctor/{d_id}")
-    public  ResponseEntity<List<Appointment>> getAllAppointmentsOfDoctorId(@PathVariable("d_id") Integer id){
-        List<Appointment> appointments = this.appointmentServices.getAppointmentByDoctorId(id);
-        return new ResponseEntity<>(appointments,HttpStatus.ACCEPTED);
     }
 }
