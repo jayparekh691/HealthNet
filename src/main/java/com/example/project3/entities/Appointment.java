@@ -20,6 +20,7 @@ public class Appointment {
     private int a_id;
     private Date curr_date;
     private boolean isTreated;
+    private boolean followupRemaining;
     @OneToOne
     private Patient patient;
     @OneToOne
@@ -29,4 +30,7 @@ public class Appointment {
     @OneToOne(fetch = FetchType.EAGER)
     private Followup followup;
 
+    public boolean getFollowupRemaining() {
+        return this.followupRemaining;
+    }
 }

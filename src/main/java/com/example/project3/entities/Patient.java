@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.cfg.annotations.reflection.internal.XMLContext;
 
 import java.util.List;
 
@@ -16,11 +17,11 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int p_id;
+    private int pid;
 
     private String name;
     private int age;
-    private String mobile_number;
+    private String mobilenumber;
     private char gender;
     private String address;
     private String town;
@@ -31,6 +32,6 @@ public class Patient {
     @OneToMany(fetch = FetchType.EAGER)
     List<Appointment> appointments;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Employee fieldworker;
 }

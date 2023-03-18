@@ -12,4 +12,6 @@ public interface PatientServices {
     Patient updatePatient(Patient patient, Integer id);
     Patient getPatientById(Integer id);
     List<Patient> getAllPatient();
+
+    Patient searchPatient(Patient patient);
 }

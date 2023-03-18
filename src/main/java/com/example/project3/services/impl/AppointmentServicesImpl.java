@@ -27,9 +27,8 @@ public class AppointmentServicesImpl implements AppointmentServices {
         Employee employee = this.employeeRepo.findById(d_id).orElseThrow();
         appointment.setPatient(patient);
         appointment.setDoctor(employee);
-//        List<Appointment> appointments = patient.getAppointments();
-//        appointments.add(appointment);
-//        patient.setAppointments(appointments);
+//        patient.getAppointments().add(appointment);
+//        this.patientRepo.save(patient);
         this.appointmentRepo.save(appointment);
         return appointment;
     }

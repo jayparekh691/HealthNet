@@ -42,6 +42,7 @@ public class DoctorServicesImpl implements DoctorServices {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
 //        diagnostics.setAppointment(appointment);
         appointment.setFollowup(followup);
+        appointment.setFollowupRemaining(true);
         this.followupRepo.save(followup);
         return appointment;
     }
