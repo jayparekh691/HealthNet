@@ -13,20 +13,16 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Autowired
     private EmployeeRepo employeeRepo;
-
     @Override
     public Employee login(Employee employee) {
         Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
         return employee1;
     }
-
     @Override
     public Employee createEmployee(Employee employee) {
         this.employeeRepo.save(employee);
         return employee;
     }
-
-
 
     @Override
     public Employee updateEmployee(Employee employee, Integer id) {
@@ -66,9 +62,8 @@ public class EmployeeServicesImpl implements EmployeeServices {
         List<Employee> employees=this.employeeRepo.findEmployeeByName(name);
         return employees;
     }
-
     @Override
     public void deactivateEmployee(Integer id) {
-
+        employeeRepo.deleteById(id);
     }
 }
