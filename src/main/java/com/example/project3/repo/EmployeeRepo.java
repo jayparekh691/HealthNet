@@ -13,4 +13,6 @@ import java.util.List;
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     Employee findEmployeeByEmailAndPassword(String email,String password);
     List<Employee> findEmployeeByRole(String role);
+
+    List<Employee> findEmployeeByName(String name);
 }
