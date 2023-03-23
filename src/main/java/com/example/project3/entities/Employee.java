@@ -18,7 +18,6 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE employee SET deleted = true WHERE e_id=?")
 @Where(clause = "deleted=false")
 public class Employee {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int e_id;
@@ -29,7 +28,6 @@ public class Employee {
     private String role;
     private String specialization;
     private boolean deleted=Boolean.FALSE;
-
     @OneToMany(fetch = FetchType.EAGER)
     private List<Patient> patients;
 }
