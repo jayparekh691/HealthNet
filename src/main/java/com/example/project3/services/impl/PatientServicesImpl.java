@@ -33,7 +33,7 @@ public class PatientServicesImpl implements PatientServices {
         patient1.setCity(patient.getCity());
         patient1.setName(patient.getName());
         patient1.setAge(patient.getAge());
-        patient1.setMobile_number(patient.getMobile_number());
+        patient1.setMobilenumber(patient.getMobilenumber());
         patient1.setPincode(patient.getPincode());
         this.patientRepo.save(patient1);
         return patient1;
@@ -49,5 +49,12 @@ public class PatientServicesImpl implements PatientServices {
     public List<Patient> getAllPatient() {
         List<Patient> patients = this.patientRepo.findAll();
         return patients;
+    }
+
+    @Override
+    public Patient searchPatient(Patient patient) {
+        String name=patient.getName();
+        Patient patient1 = this.patientRepo.findPatientByNameAndMobilenumber(name, patient.getMobilenumber());
+        return patient1;
     }
 }

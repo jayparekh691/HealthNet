@@ -29,6 +29,7 @@ public class Employee {
     private String role;
     private String specialization;
 
-    @OneToMany
-    private List<Visit> visitList;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Patient> patients;
 }

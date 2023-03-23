@@ -19,7 +19,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Override
     public Employee login(Employee employee) {
-        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPasswordAndRole(employee.getEmail(), employee.getPassword(), employee.getRole());
+        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
         return employee1;
     }
 
