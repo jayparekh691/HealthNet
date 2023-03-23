@@ -18,12 +18,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeServices employeeServices;
 
-    @PostMapping("/create-employee/")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee){
-            Employee employee1 = this.employeeServices.createEmployee(employee);
-            return new ResponseEntity<>(employee1, HttpStatus.CREATED);
-    }
-
     @PostMapping("/login")
     public ResponseEntity<Employee> login(@RequestBody Employee employee){
         Employee employee1 = this.employeeServices.login(employee);
