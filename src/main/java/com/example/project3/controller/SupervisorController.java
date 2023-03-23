@@ -39,6 +39,11 @@ public class SupervisorController {
         return new ResponseEntity<>(employees,HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/delete-employee/{e_id}")
+    public void deactivateEmployee(@PathVariable("e_id") Integer id){
+        employeeServices.deactivateEmployee(id);
+    }
+
     @PostMapping("/assign-fieldworker/{p_id}/{f_id}")
     public ResponseEntity<Patient> assignFieldWorker(@PathVariable("p_id") Integer pid,@PathVariable("f_id") Integer fid){
         Patient patient1 = this.supervisorServices.assignFieldWorker(pid,fid);

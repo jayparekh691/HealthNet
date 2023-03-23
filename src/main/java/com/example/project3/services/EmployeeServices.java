@@ -11,10 +11,8 @@ public interface EmployeeServices {
     Employee createEmployee(Employee employeeDto);
     Employee updateEmployee(Employee employeeDto, Integer id);
     Employee getEmployeeById(Integer id);
-    List<Employee> getAllEmployees();
-
-    List<Employee> findEmployeeByName(String name);
-
     void deactivateEmployee(Integer id);
+    List<Employee> getAllEmployees();
+    List<Employee> findEmployeeByName(String name);
     List<Employee> getAllDoctors();
 }
