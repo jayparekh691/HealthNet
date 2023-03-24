@@ -1,58 +1,71 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerEmployee } from "../services/adminServices";
+import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { updateEmployee } from "../services/adminServices";
 
-function EmployeeRegistration() {
+function UpdateEmployeeDetails() {
+  const state = useLocation().state;
   const navigate = useNavigate();
+  const [employeeObj, setEmplyeeObj] = useState({});
   const [disabled, setDisabled] = useState(true);
-  const [employeeData, setEmployeeData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    gender: "",
-    specialization: "",
-    role: "receptionist",
+  const [updatedEmployeeDate, setUpdatedEmployeeData] = useState({
+    e_id: state.employeeObj.e_id,
+    name: state.employeeObj.name,
+    email: state.employeeObj.email,
+    password: state.employeeObj.password,
+    gender: state.employeeObj.gender,
+    specialization: state.employeeObj.specialization,
+    role: state.employeeObj.role,
   });
+  const [genderDefault, setGenderDefault] = useState(state.employeeObj.gender);
+  useEffect(() => {
+    setEmplyeeObj(state.employeeObj);
+    if (state.employeeObj.role === "Doctor") {
+      setDisabled((pv) => {
+        return false;
+      });
+    } else {
+      setDisabled((pv) => {
+        return true;
+      });
+    }
+  }, [state.employeeObj, state.employeeObj.role]);
 
   function handleChange(event) {
     // event.preventDefault();
     const { name, value } = event.target;
-    setEmployeeData((pv) => {
+    setUpdatedEmployeeData((pv) => {
       return {
         ...pv,
         [name]: value,
       };
     });
-    console.log(employeeData.name);
-    if (name === "role" && value === "doctor") {
-      setDisabled((pv) => {
-        return false;
-      });
-    } else if (name === "role") {
-      setDisabled((pv) => {
-        return true;
-      });
+    if (name === "gender") {
+      setGenderDefault(value);
     }
   }
 
-  async function onRegisteration() {
-    console.log(employeeData);
+  async function onUpdate() {
+    console.log(updatedEmployeeDate);
     // add employee data
-    const responseData = await registerEmployee(employeeData);
+    const responseData = await updateEmployee(
+      updatedEmployeeDate.e_id,
+      updatedEmployeeDate
+    );
     if (responseData.data) {
-      toast.success(`Employee Added`);
+      toast.success(`Updated Employee Data`);
       navigate(-1);
     } else {
-      toast.error("Unable to Add Employee");
+      toast.error("Unable to Update Employee data");
     }
   }
 
   return (
     <div className="formPage">
       <div className="container">
-        <div className="title">Employee Registration</div>
+        <div className="title">Update Employee Data</div>
         <div className="content">
           <form action="#">
             <div className="user-details">
@@ -61,8 +74,8 @@ function EmployeeRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Entername"
-                  value={employeeData.name}
+                  placeholder={employeeObj.name}
+                  value={updatedEmployeeDate.name}
                   onChange={handleChange}
                   required
                 />
@@ -74,6 +87,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-1"
                 value="M"
+                checked={genderDefault === "M"}
                 onChange={handleChange}
               />
               <input
@@ -81,6 +95,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-2"
                 value="F"
+                checked={genderDefault === "F"}
                 onChange={handleChange}
               />
               <input
@@ -88,6 +103,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-3"
                 value="O"
+                checked={genderDefault === "O"}
                 onChange={handleChange}
               />
               <span className="gender-title">Gender</span>
@@ -112,33 +128,22 @@ function EmployeeRegistration() {
                 <input
                   name="email"
                   type="email"
-                  placeholder="Enter email"
-                  value={employeeData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="input-box">
-                <span className="details">Password</span>
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="Enter password"
-                  value={employeeData.password}
+                  placeholder={employeeObj.email}
+                  value={updatedEmployeeDate.email}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="select-box">
                 <select
-                  value={employeeData.role}
+                  value={updatedEmployeeDate.role}
                   name="role"
                   onChange={handleChange}
+                  disabled={true}
                 >
-                  <option value="receptionist">Receptionist</option>
-                  <option value="doctor">Doctor</option>
-                  <option value="supervisor">Supervisor</option>
-                  <option value="fieldworker">Field Worker</option>
+                  <option value={updatedEmployeeDate.role}>
+                    {updatedEmployeeDate.role}
+                  </option>
                 </select>
               </div>
               <div className="input-box">
@@ -147,15 +152,15 @@ function EmployeeRegistration() {
                   disabled={disabled}
                   name="specialization"
                   type="text"
-                  placeholder="Enter specialization"
-                  value={employeeData.specialization}
+                  placeholder={updatedEmployeeDate.specialization}
+                  value={updatedEmployeeDate.specialization}
                   onChange={handleChange}
                   required
                 />
               </div>
             </div>
             <div className="button">
-              <input onClick={onRegisteration} type="button" value="REGISTER" />
+              <input onClick={onUpdate} type="button" value="UPDATE" />
             </div>
           </form>
         </div>
@@ -163,5 +168,4 @@ function EmployeeRegistration() {
     </div>
   );
 }
-
-export default EmployeeRegistration;
+export default UpdateEmployeeDetails;

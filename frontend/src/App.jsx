@@ -7,6 +7,7 @@ import RDashboard from "./pages/RDashboard";
 import DDashboard from "./pages/DDashboard";
 import ADashboard from "./pages/ADashboard";
 import EmployeeRegistration from "./pages/EmployeeRegistration";
+import UpdateEmployeeDetails from "./pages/UpdateEmployeeDetails";
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
       <Route path="/patient-registration" element={<PatientRegistration />} />
       <Route path="/admin-dashboard" element={<ADashboard />} />
       <Route path="/employee-registration" element={<EmployeeRegistration />} />
+      <Route
+        path="/update-employee-details"
+        element={<UpdateEmployeeDetails />}
+      />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -5,12 +5,12 @@
 }
 
 .formPage {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background: linear-gradient(135deg, #614385, #516395);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: linear-gradient(135deg, #614385, #516395);
 }
 .container {
   max-width: 700px;
@@ -207,6 +207,30 @@ button {
   position: absolute;
 }
 
-.paddingPage{ 
+.paddingPage {
   padding: 10px;
+}
+
+.main {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+h1 {
+  margin: 10px;
+  font-size: 40px;
+  color: rgb(1, 1, 59);
+}
+
+.search {
+  width: 30%;
+  padding: 10px;
+}
+
+ul li {
+  font-size: 20px;
 }
