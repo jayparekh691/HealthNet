@@ -1,18 +1,13 @@
 package com.example.project3.services.impl;
 
-import com.example.project3.entities.Appointment;
-import com.example.project3.entities.Employee;
-import com.example.project3.entities.Followup;
-import com.example.project3.entities.Patient;
-import com.example.project3.repo.AppointmentRepo;
-import com.example.project3.repo.EmployeeRepo;
-import com.example.project3.repo.FollowupRepo;
-import com.example.project3.repo.PatientRepo;
+import com.example.project3.entities.*;
+import com.example.project3.repo.*;
 import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +20,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private FollowupRepo followupRepo;
     @Autowired
     private AppointmentRepo appointmentRepo;
+    @Autowired
+    private VisitRepo visitRepo;
+
+    @Autowired
+    private MedicalRepo medicalRepo;
     @Override
     public List<Patient> getPatientList(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
@@ -44,9 +44,24 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
             if(appointment.getFollowupRemaining()==false) {
                 appointments.remove(appointment);
             }
-
         }
         return appointments;
     }
 
+    @Override
+    public Appointment getVisitDetails(Integer id) {
+        Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
+        return appointment;
+    }
+//    @Override
+//    public  Visit saveVisit(MedicalData medicalData,Integer id) {
+//        Followup followup=this.followupRepo.findById(id).orElseThrow();
+//        Visit visit=new Visit();
+//        visit.setMedicalData(medicalData);
+//        List<Visit> visits=followup.getVisitList();
+//        visits.add(visit);
+//        followup.setVisitList(visits);
+//        this.medicalRepo.save(medicalData);
+//        return visit;
+//    }
 }

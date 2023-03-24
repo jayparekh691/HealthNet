@@ -1,9 +1,6 @@
 package com.example.project3.controller;
 
-import com.example.project3.entities.Appointment;
-import com.example.project3.entities.Employee;
-import com.example.project3.entities.Followup;
-import com.example.project3.entities.Patient;
+import com.example.project3.entities.*;
 import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,4 +26,14 @@ public class FieldWorkerController {
         List<Appointment> followupList = this.fieldWorkerServices.getPatientFollowups(id);
         return new ResponseEntity<>(followupList,HttpStatus.ACCEPTED);
     }
+    @GetMapping("/get-visit-details/{p_id}")
+    public ResponseEntity<Appointment> getVisitDetails(@PathVariable("p_id") Integer id) {
+        Appointment appointment=this.fieldWorkerServices.getVisitDetails(id);
+        return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
+    }
+//    @PostMapping("/save-visit/{f_id}")
+//    public ResponseEntity<Visit> saveVisit(@RequestBody MedicalData medicalData, @PathVariable("f_id") Integer id) {
+//        Visit visit=this.fieldWorkerServices.saveVisit(medicalData,id);
+//        return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
+//    }
 }
