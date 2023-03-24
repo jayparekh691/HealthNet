@@ -59,7 +59,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Override
     public List<Employee> findEmployeeByName(String name){
-        List<Employee> employees=this.employeeRepo.findEmployeeByName(name);
+        List<Employee> employees=this.employeeRepo.findEmployeeByNameContaining(name);
         return employees;
     }
     @Override
