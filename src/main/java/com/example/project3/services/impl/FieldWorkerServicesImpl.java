@@ -22,7 +22,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private AppointmentRepo appointmentRepo;
     @Autowired
     private VisitRepo visitRepo;
-
     @Autowired
     private MedicalRepo medicalRepo;
     @Override
@@ -53,15 +52,16 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-//    @Override
-//    public  Visit saveVisit(MedicalData medicalData,Integer id) {
-//        Followup followup=this.followupRepo.findById(id).orElseThrow();
-//        Visit visit=new Visit();
-//        visit.setMedicalData(medicalData);
-//        List<Visit> visits=followup.getVisitList();
-//        visits.add(visit);
-//        followup.setVisitList(visits);
-//        this.medicalRepo.save(medicalData);
-//        return visit;
-//    }
+    @Override
+    public  Visit saveVisit(MedicalData medicalData,Integer id) {
+        Followup followup=this.followupRepo.findById(id).orElseThrow();
+        Visit visit=new Visit();
+        visit.setMedicalData(medicalData);
+        List<Visit> visits=followup.getVisitList();
+        visits.add(visit);
+        followup.setVisitList(visits);
+        this.visitRepo.save(visit);
+        this.medicalRepo.save(medicalData);
+        return visit;
+    }
 }
