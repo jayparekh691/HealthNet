@@ -42,7 +42,7 @@ public class PatientController {
         return new ResponseEntity<>(patients,HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/search-patient-receptionist")
+    @PostMapping("/search-patient-receptionist")
     public ResponseEntity<Patient> allPatient(@RequestBody Patient patient){
         Patient patient1 = this.patientServices.searchPatient(patient);
         return new ResponseEntity<Patient>(patient1,HttpStatus.ACCEPTED);

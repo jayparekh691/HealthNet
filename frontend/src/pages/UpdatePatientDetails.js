@@ -1,79 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  addPatientAppointment,
-  getDoctorList,
-  registerPatient,
-} from "../services/receptionistServices";
+import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { updatePatientDetails } from "../services/receptionistServices";
 
-function PatientRegistration() {
+function UpdatePatientDetails() {
+  const state = useLocation().state;
   const navigate = useNavigate();
-  const [doctorList, setDoctorList] = useState([]);
-  const [doctorID, setDoctorID] = useState(null);
-  const [patientData, setPatientData] = useState({
-    name: "",
-    address: "",
-    city: "",
-    gender: "",
-    pincode: "",
-    state: "",
-    town: "",
-    mobilenumber: "",
-    age: "",
+  const [patientObj, setPatientObj] = useState({});
+  const [updatedPatientDate, setUpdatedPatientData] = useState({
+    name: state.patientObj.name,
+    address: state.patientObj.address,
+    city: state.patientObj.city,
+    gender: state.patientObj.gender,
+    pincode: state.patientObj.pincode,
+    state: state.patientObj.state,
+    town: state.patientObj.town,
+    mobilenumber: state.patientObj.mobilenumber,
+    age: state.patientObj.age,
   });
 
-  // storing the doctorlist from location.state into doctorList state
+  const [genderDefault, setGenderDefault] = useState(state.patientObj.gender);
   useEffect(() => {
-    async function getDoctors() {
-      const responseData = await getDoctorList();
-      let doctorList = responseData.data;
-      if (doctorList) {
-        setDoctorList(doctorList);
-        setDoctorID(doctorList[0].e_id);
-      }
-    }
-    getDoctors();
-  }, []);
+    setPatientObj(state.patientObj);
+  }, [state.patientObj]);
 
   function handleChange(event) {
     // event.preventDefault();
     const { name, value } = event.target;
-    setPatientData((pv) => {
+    setUpdatedPatientData((pv) => {
       return {
         ...pv,
         [name]: value,
       };
     });
-  }
-
-  async function onRegisteration() {
-    console.log(patientData);
-    // add patient data
-    const responseData = await registerPatient(patientData);
-    const registrationData = responseData.data;
-    if (registrationData) {
-      console.log(registrationData);
-      const pid = registrationData.pid;
-      // add appointment for patient using pid
-      const responseData = await addPatientAppointment(pid, doctorID);
-      const appointmentData = responseData.data;
-      console.log(appointmentData);
-      toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-      navigate(-1);
+    if (name === "gender") {
+      setGenderDefault(value);
     }
   }
-  function handleChangeInDoctor(event) {
-    event.preventDefault();
-    const value = event.target.value;
-    setDoctorID(value);
+
+  async function onUpdatePatientDetails() {
+    console.log(updatedPatientDate);
+    const responseData = await updatePatientDetails(
+      state.patientObj.pid,
+      updatedPatientDate
+    );
+    if (responseData.data) {
+      toast.success(`Updated Patient Data`);
+      navigate(-1);
+    } else {
+      toast.error("Unable to Update Patient data");
+    }
   }
 
   return (
     <div className="formPage">
       <div className="container">
-        <div className="title">Patient Registration</div>
+        <div className="title">Update Patient Details</div>
         <div className="content">
           <form action="#">
             <div className="user-details">
@@ -82,8 +66,8 @@ function PatientRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter your name"
-                  value={patientData.name}
+                  placeholder={patientObj.name}
+                  value={updatedPatientDate.name}
                   onChange={handleChange}
                   required
                 />
@@ -95,8 +79,8 @@ function PatientRegistration() {
                   type="number"
                   min={0}
                   max={120}
-                  placeholder="Enter your age"
-                  value={patientData.age}
+                  placeholder={patientObj.age}
+                  value={updatedPatientDate.age}
                   onChange={handleChange}
                   required
                 />
@@ -108,6 +92,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-1"
                 value="M"
+                checked={genderDefault === "M"}
                 onChange={handleChange}
               />
               <input
@@ -115,6 +100,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-2"
                 value="F"
+                checked={genderDefault === "F"}
                 onChange={handleChange}
               />
               <input
@@ -122,6 +108,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-3"
                 value="O"
+                checked={genderDefault === "O"}
                 onChange={handleChange}
               />
               <span className="gender-title">Gender</span>
@@ -148,9 +135,9 @@ function PatientRegistration() {
                   type="textarea"
                   rows={5}
                   cols={40}
-                  value={patientData.address}
+                  placeholder={patientObj.address}
+                  value={updatedPatientDate.address}
                   onChange={handleChange}
-                  required
                 />
               </div>
               <div className="input-box">
@@ -158,10 +145,9 @@ function PatientRegistration() {
                 <input
                   name="mobilenumber"
                   type="text"
-                  placeholder="Enter your mobile_number"
-                  value={patientData.mobilenumber}
+                  placeholder={patientObj.mobilenumber}
+                  value={updatedPatientDate.mobilenumber}
                   onChange={handleChange}
-                  required
                 />
               </div>
             </div>
@@ -171,8 +157,8 @@ function PatientRegistration() {
                 <input
                   name="town"
                   type="text"
-                  placeholder="Enter your town"
-                  value={patientData.town}
+                  placeholder={patientObj.town}
+                  value={updatedPatientDate.town}
                   onChange={handleChange}
                   required
                 />
@@ -182,8 +168,8 @@ function PatientRegistration() {
                 <input
                   name="city"
                   type="text"
-                  placeholder="Enter your city"
-                  value={patientData.city}
+                  placeholder={patientObj.city}
+                  value={updatedPatientDate.city}
                   onChange={handleChange}
                   required
                 />
@@ -193,8 +179,8 @@ function PatientRegistration() {
                 <input
                   name="state"
                   type="text"
-                  placeholder="Enter your state"
-                  value={patientData.state}
+                  placeholder={patientObj.state}
+                  value={updatedPatientDate.state}
                   onChange={handleChange}
                   required
                 />
@@ -206,26 +192,19 @@ function PatientRegistration() {
                   type="number"
                   min={100000}
                   max={999999}
-                  placeholder="Enter pincode"
-                  value={patientData.pincode}
+                  placeholder={patientObj.pincode}
+                  value={updatedPatientDate.pincode}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="select-box">
-                <select name="role" onChange={handleChangeInDoctor}>
-                  {doctorList.map((e, i) => {
-                    return (
-                      <option value={e.e_id} key={e.e_id}>
-                        {e.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
             </div>
             <div className="button">
-              <input onClick={onRegisteration} type="button" value="REGISTER" />
+              <input
+                onClick={onUpdatePatientDetails}
+                type="button"
+                value="UPDATE"
+              />
             </div>
           </form>
         </div>
@@ -233,5 +212,4 @@ function PatientRegistration() {
     </div>
   );
 }
-
-export default PatientRegistration;
+export default UpdatePatientDetails;

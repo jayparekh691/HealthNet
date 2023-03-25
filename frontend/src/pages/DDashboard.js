@@ -19,6 +19,8 @@ function DDashboard() {
         console.log("error! ");
       }
     })();
+
+    (async function () {})();
   }, []);
 
   function onDiagnoseButtonClicked(event) {
