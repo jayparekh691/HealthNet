@@ -20,11 +20,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private FollowupRepo followupRepo;
     @Autowired
     private AppointmentRepo appointmentRepo;
-    @Autowired
-    private VisitRepo visitRepo;
+//    @Autowired
+//    private VisitRepo visitRepo;
 
-    @Autowired
-    private MedicalRepo medicalRepo;
+//    @Autowired
+//    private MedicalRepo medicalRepo;
     @Override
     public List<Patient> getPatientList(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
