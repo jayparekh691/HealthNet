@@ -38,7 +38,8 @@ function DiagnosePatient() {
     });
   }
 
-  async function onSubmit() {
+  async function onSubmit(event) {
+    event.preventDefault();
     console.log(writtenData);
     const responseData = await writeDiagnosis(appointmentID, writtenData);
     if (responseData.data) {
@@ -54,7 +55,7 @@ function DiagnosePatient() {
       <div className="container">
         <div className="title">Diagnosis and Prescription</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={onSubmit}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Diagnosis</span>
@@ -112,7 +113,7 @@ function DiagnosePatient() {
             </div>
 
             <div className="button">
-              <input onClick={onSubmit} type="button" value="SUBMIT" />
+              <input type="submit" value="SUBMIT" />
             </div>
           </form>
         </div>

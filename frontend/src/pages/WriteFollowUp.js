@@ -14,7 +14,7 @@ function WriteFollowUp() {
     instructions: "",
     numberOfFollowup: "",
     secheduleCount: "",
-    scheduleType: "",
+    scheduleType: "Weekly",
   });
 
   useEffect(() => {
@@ -32,16 +32,21 @@ function WriteFollowUp() {
     });
   }
 
-  async function submitFollowUpDetails() {
+  async function submitFollowUpDetails(event) {
+    event.preventDefault();
+    console.log(appointmentID);
+    console.log(writtenData);
     console.log(followUpDetails);
     const responseData = await submitFollowUp(appointmentID, followUpDetails);
-    const registrationData = responseData.data;
-    if (registrationData.data) {
-      console.log(registrationData.data);
+    const data = responseData.data;
+    if (data) {
+      console.log(data);
       const responseData = await writeDiagnosis(appointmentID, writtenData);
-      if (responseData.data) {
+      const wData = responseData.data;
+      if (wData) {
+        console.log(wData);
         toast.success(`Diagnosis and Prescription Written and FollowUp Added`);
-        navigate(-1);
+        navigate(-2);
       } else {
         toast.error("Unable to write Diagnosis and Prescription / follow up");
       }
@@ -53,7 +58,7 @@ function WriteFollowUp() {
       <div className="container">
         <div className="title">Follow Up</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={submitFollowUpDetails}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Instructions</span>
@@ -84,7 +89,7 @@ function WriteFollowUp() {
               </div>
               <div className="select-box">
                 <select
-                  value={followUpDetails.scheduleType}
+                  defaultValue={followUpDetails.scheduleType}
                   name="scheduleType"
                   onChange={handleChange}
                   required
@@ -110,11 +115,7 @@ function WriteFollowUp() {
               </div>
             </div>
             <div className="button">
-              <input
-                onClick={submitFollowUpDetails}
-                type="button"
-                value="Submit Follow Up"
-              />
+              <input type="submit" value="Submit Follow Up" />
             </div>
           </form>
         </div>
