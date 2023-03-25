@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 
 function DDashboard() {
   const state = useLocation().state;
+  const navigate = useNavigate();
   const [doctorID, setDoctorID] = useState(null);
   const [patientList, setPatientList] = useState([]);
 
@@ -19,12 +20,11 @@ function DDashboard() {
         console.log("error! ");
       }
     })();
+  }, [state.d_id]);
 
-    (async function () {})();
-  }, []);
-
-  function onDiagnoseButtonClicked(event) {
+  function onCheckUPButtonClicked(e, event) {
     console.log(event.target.value);
+    console.log(e.a_id);
     const index = Number(event.target.value);
     setPatientList((list) => {
       let filteredList = list.filter((_, i) => {
@@ -32,6 +32,12 @@ function DDashboard() {
       });
       console.log(filteredList);
       return [...filteredList];
+    });
+
+    navigate("/diagnose-patient", {
+      state: {
+        a_id: e.a_id,
+      },
     });
   }
 
@@ -68,9 +74,9 @@ function DDashboard() {
                       <button
                         className="button"
                         value={i}
-                        onClick={onDiagnoseButtonClicked}
+                        onClick={(event) => onCheckUPButtonClicked(e, event)}
                       >
-                        Diagnose
+                        Check-up
                       </button>
                     </td>
                   </tr>
