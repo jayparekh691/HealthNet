@@ -20,7 +20,7 @@ public class Followup {
     private String instructions;
     private int numberOfFollowup;
     private String scheduleType;
-
+    private int scheduleCount;
     @OneToOne(fetch = FetchType.EAGER)
     private Appointment appointment;
 
