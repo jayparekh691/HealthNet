@@ -12,6 +12,8 @@ function PatientRegistration() {
   const navigate = useNavigate();
   const [doctorList, setDoctorList] = useState([]);
   const [doctorID, setDoctorID] = useState(null);
+  const [genderDefault, setGenderDefault] = useState("M");
+
   const [patientData, setPatientData] = useState({
     name: "",
     address: "",
@@ -40,6 +42,9 @@ function PatientRegistration() {
   function handleChange(event) {
     // event.preventDefault();
     const { name, value } = event.target;
+    if (name === "gender") {
+      setGenderDefault(value);
+    }
     setPatientData((pv) => {
       return {
         ...pv,
@@ -48,7 +53,8 @@ function PatientRegistration() {
     });
   }
 
-  async function onRegisteration() {
+  async function onRegisteration(event) {
+    event.preventDefault();
     console.log(patientData);
     // add patient data
     const responseData = await registerPatient(patientData);
@@ -75,7 +81,7 @@ function PatientRegistration() {
       <div className="container">
         <div className="title">Patient Registration</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={onRegisteration}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Full Name</span>
@@ -108,6 +114,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-1"
                 value="M"
+                checked={genderDefault === "M"}
                 onChange={handleChange}
               />
               <input
@@ -115,6 +122,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-2"
                 value="F"
+                checked={genderDefault === "F"}
                 onChange={handleChange}
               />
               <input
@@ -122,6 +130,7 @@ function PatientRegistration() {
                 name="gender"
                 id="dot-3"
                 value="O"
+                checked={genderDefault === "O"}
                 onChange={handleChange}
               />
               <span className="gender-title">Gender</span>
@@ -225,7 +234,7 @@ function PatientRegistration() {
               </div>
             </div>
             <div className="button">
-              <input onClick={onRegisteration} type="button" value="REGISTER" />
+              <input type="submit" value="REGISTER" />
             </div>
           </form>
         </div>

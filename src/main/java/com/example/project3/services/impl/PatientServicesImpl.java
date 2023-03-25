@@ -52,9 +52,10 @@ public class PatientServicesImpl implements PatientServices {
     }
 
     @Override
-    public Patient searchPatient(Patient patient) {
-        String name=patient.getName();
-        Patient patient1 = this.patientRepo.findPatientByNameAndMobilenumber(name, patient.getMobilenumber());
-        return patient1;
+    public List<Patient> searchPatient(String id) {
+        List<Patient> l1=this.patientRepo.findPatientByName(id);
+        List<Patient> l2=this.patientRepo.findPatientByMobilenumber(id);
+        l1.addAll(l2);
+        return l1;
     }
 }

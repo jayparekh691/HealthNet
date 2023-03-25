@@ -11,10 +11,12 @@ function EmployeeRegistration() {
     name: "",
     email: "",
     password: "",
-    gender: "",
+    gender: "M",
     specialization: "",
     role: "receptionist",
   });
+
+  const [genderDefault, setGenderDefault] = useState("M");
 
   function handleChange(event) {
     // event.preventDefault();
@@ -25,7 +27,9 @@ function EmployeeRegistration() {
         [name]: value,
       };
     });
-    console.log(employeeData.name);
+    if (name === "gender") {
+      setGenderDefault(value);
+    }
     if (name === "role" && value === "doctor") {
       setDisabled((pv) => {
         return false;
@@ -37,7 +41,8 @@ function EmployeeRegistration() {
     }
   }
 
-  async function onRegisteration() {
+  async function onRegisteration(e) {
+    e.preventDefault();
     console.log(employeeData);
     // add employee data
     const responseData = await registerEmployee(employeeData);
@@ -54,7 +59,7 @@ function EmployeeRegistration() {
       <div className="container">
         <div className="title">Employee Registration</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={onRegisteration}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Full Name</span>
@@ -74,6 +79,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-1"
                 value="M"
+                checked={genderDefault === "M"}
                 onChange={handleChange}
               />
               <input
@@ -81,6 +87,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-2"
                 value="F"
+                checked={genderDefault === "F"}
                 onChange={handleChange}
               />
               <input
@@ -88,6 +95,7 @@ function EmployeeRegistration() {
                 name="gender"
                 id="dot-3"
                 value="O"
+                checked={genderDefault === "O"}
                 onChange={handleChange}
               />
               <span className="gender-title">Gender</span>
@@ -150,12 +158,12 @@ function EmployeeRegistration() {
                   placeholder="Enter specialization"
                   value={employeeData.specialization}
                   onChange={handleChange}
-                  required
+                  required={disabled === false ? true : false}
                 />
               </div>
             </div>
             <div className="button">
-              <input onClick={onRegisteration} type="button" value="REGISTER" />
+              <input type="submit" value="REGISTER" />
             </div>
           </form>
         </div>
