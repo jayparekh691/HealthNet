@@ -40,7 +40,8 @@ function UpdatePatientDetails() {
     }
   }
 
-  async function onUpdatePatientDetails() {
+  async function onUpdatePatientDetails(event) {
+    event.preventDefault();
     console.log(updatedPatientDate);
     const responseData = await updatePatientDetails(
       state.patientObj.pid,
@@ -59,7 +60,7 @@ function UpdatePatientDetails() {
       <div className="container">
         <div className="title">Update Patient Details</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={onUpdatePatientDetails}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Full Name</span>
@@ -138,6 +139,7 @@ function UpdatePatientDetails() {
                   placeholder={patientObj.address}
                   value={updatedPatientDate.address}
                   onChange={handleChange}
+                  required
                 />
               </div>
               <div className="input-box">
@@ -148,6 +150,7 @@ function UpdatePatientDetails() {
                   placeholder={patientObj.mobilenumber}
                   value={updatedPatientDate.mobilenumber}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -200,11 +203,7 @@ function UpdatePatientDetails() {
               </div>
             </div>
             <div className="button">
-              <input
-                onClick={onUpdatePatientDetails}
-                type="button"
-                value="UPDATE"
-              />
+              <input type="submit" value="UPDATE" />
             </div>
           </form>
         </div>
