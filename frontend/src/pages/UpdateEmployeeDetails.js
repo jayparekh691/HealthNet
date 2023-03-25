@@ -47,7 +47,8 @@ function UpdateEmployeeDetails() {
     }
   }
 
-  async function onUpdate() {
+  async function onUpdate(event) {
+    event.preventDefault();
     console.log(updatedEmployeeDate);
     // add employee data
     const responseData = await updateEmployee(
@@ -67,7 +68,7 @@ function UpdateEmployeeDetails() {
       <div className="container">
         <div className="title">Update Employee Data</div>
         <div className="content">
-          <form action="#">
+          <form onSubmit={onUpdate}>
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Full Name</span>
@@ -160,7 +161,7 @@ function UpdateEmployeeDetails() {
               </div>
             </div>
             <div className="button">
-              <input onClick={onUpdate} type="button" value="UPDATE" />
+              <input type="submit" value="UPDATE" />
             </div>
           </form>
         </div>
