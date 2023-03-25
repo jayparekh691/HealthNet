@@ -9,6 +9,8 @@ import ADashboard from "./pages/ADashboard";
 import EmployeeRegistration from "./pages/EmployeeRegistration";
 import UpdateEmployeeDetails from "./pages/UpdateEmployeeDetails";
 import UpdatePatientDetails from "./pages/UpdatePatientDetails";
+import DiagnosePatient from "./pages/DiagnosePatient";
+import WriteFollowUp from "./pages/WriteFollowUp";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         path="/update-employee-details"
         element={<UpdateEmployeeDetails />}
       />
+      <Route path="/diagnose-patient" element={<DiagnosePatient />} />
+      <Route path="/write-follow-up" element={<WriteFollowUp />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
