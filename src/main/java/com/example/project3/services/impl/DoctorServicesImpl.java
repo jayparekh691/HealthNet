@@ -66,7 +66,7 @@ public class DoctorServicesImpl implements DoctorServices {
             patients.add(patient);
         }
         catch (Exception e){
-            patients=this.patientRepo.findPatientByName(id);
+            patients=this.patientRepo.findPatientByNameContaining(id);
         }
         return patients;
     }
