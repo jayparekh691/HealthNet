@@ -38,9 +38,9 @@ public class DoctorController {
         return new ResponseEntity<Appointment>(followup1, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/view-patient-history/{p_id}")
-    public ResponseEntity<List<Appointment>> viewPatientHistory(@PathVariable("p_id") Integer id){
-        List<Appointment> appointments = this.doctorServices.viewPatientHistory(id);
+    @GetMapping("/view-patient-history/{d_id}/{p_id}")
+    public ResponseEntity<List<Appointment>> viewPatientHistory(@PathVariable("d_id") Integer did,@PathVariable("p_id") Integer pid){
+        List<Appointment> appointments = this.doctorServices.viewPatientHistory(did,pid);
         return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
     }
 
