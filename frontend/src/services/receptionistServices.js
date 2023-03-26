@@ -4,7 +4,8 @@ const registerPatientAPI = `http://localhost:9080/api/patient/add-patient`;
 const addPatientAppointmentAPI = (patientID, doctorID) =>
   `http://localhost:9080/api/appointment/add-appointment/${patientID}/${doctorID}`;
 const getALLAppointmentAPI = `http://localhost:9080/api/appointment/get-all-appointments`;
-const searchPatientAPI = `http://localhost:9080/api/patient/search-patient-receptionist`;
+const searchPatientAPI = (searchValue) =>
+  `http://localhost:9080/api/patient/search-patient-receptionist/${searchValue}`;
 const updatePatientAPI = (patientID) =>
   `http://localhost:9080/api/patient/update-patient/${patientID}`;
 
@@ -38,9 +39,9 @@ async function getAllPatientList() {
   return responseData;
 }
 
-async function searchPatient(searchValues) {
-  console.log(searchValues);
-  const responseData = await axios.post(searchPatientAPI, searchValues);
+async function searchPatient(searchValue) {
+  console.log(searchValue);
+  const responseData = await axios.get(searchPatientAPI(searchValue));
   return responseData;
 }
 
