@@ -18,6 +18,8 @@ import java.util.List;
 public class DoctorController {
     @Autowired
     private DoctorServices doctorServices;
+//    @Autowired
+//    private AppointmentServices appointmentServices;
 
     @GetMapping("/get-all-appointments-of-doctor/{d_id}")
     public ResponseEntity<List<Appointment>> getAllAppointmentsOfDoctorId(@PathVariable("d_id") Integer id){
@@ -41,5 +43,26 @@ public class DoctorController {
         List<Appointment> appointments = this.doctorServices.viewPatientHistory(id);
         return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/search-patient-doctor/{nORpid}")
+    public ResponseEntity<List<Patient>> searchPatientByNameOrPid(@PathVariable("nORpid") String id)
+    {
+        List<Patient> patients=this.doctorServices.searchPatientByNameORpid(id);
+        return new ResponseEntity<List<Patient>>(patients,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-appointments-pid/{pid}")
+    public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("pid") Integer id)
+    {
+        List<Appointment> appointments=this.doctorServices.viewAppointments(id);
+        return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
+    }
+
+//    @GetMapping("/view-patient-with-followup/{pidORname")
+//    public ResponseEntity<List<Appointment>> viewPatientWithFollowup(@PathVariable("pidORname") String id)
+//    {
+//        List<Appointment> appointments = this.appointmentServices.searchAppByPIDorName(id);
+//        return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
+//    }
 
 }

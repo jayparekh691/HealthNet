@@ -60,4 +60,19 @@ public class AppointmentServicesImpl implements AppointmentServices {
     public void deleteAppointment(Integer id) {
         this.appointmentRepo.deleteById(id);
     }
+
+//    @Override
+//    public List<Appointment> searchAppByPIDorName(String id) {
+//        List<Appointment> appointments;
+//        try{
+//            int i=Integer.parseInt(id);
+//            Patient patient=this.patientRepo.findById(i).orElseThrow();
+//            appointments=this.appointmentRepo.findByPatient(patient);
+//        }
+//        catch(Exception e){
+//
+//
+//        }
+//
+//    }
 }

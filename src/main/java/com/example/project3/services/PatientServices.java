@@ -14,4 +14,5 @@ public interface PatientServices {
     List<Patient> getAllPatient();
 
     List<Patient> searchPatient(String id);
+
 }
