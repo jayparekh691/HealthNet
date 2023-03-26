@@ -51,10 +51,17 @@ public class DoctorServicesImpl implements DoctorServices {
     }
 
     @Override
-    public List<Appointment> viewPatientHistory(Integer id) {
-        Patient patient = this.patientRepo.findById(id).orElseThrow();
+    public List<Appointment> viewPatientHistory(Integer did,Integer pid) {
+        Patient patient = this.patientRepo.findById(pid).orElseThrow();
         List<Appointment> appointments = this.appointmentRepo.findByPatient(patient);
-        return appointments;
+        List<Appointment> finalAppointments=new ArrayList<Appointment>();
+        for(Appointment i:appointments)
+        {
+            Employee doctor=i.getDoctor();
+            if(doctor.getE_id()==did)
+                finalAppointments.add(i);
+        }
+        return finalAppointments;
     }
 
     @Override
