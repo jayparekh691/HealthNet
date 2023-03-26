@@ -15,6 +15,6 @@ public interface DoctorServices {
     List<Appointment> viewPatientHistory(Integer id);
 
     List<Patient> searchPatientByNameORpid(String id);
-
     List<Appointment> viewAppointments(Integer id);
+    Followup getFollowupByAid(Integer id);
 }
