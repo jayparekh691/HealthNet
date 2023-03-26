@@ -15,7 +15,11 @@ function DDashboard() {
       const data = responseData.data;
       console.log(data);
       if (data) {
-        setPatientList([...data]);
+        setPatientList(
+          data.filter((e) => {
+            return e.treated === false;
+          })
+        );
       } else {
         console.log("error! ");
       }
@@ -41,6 +45,10 @@ function DDashboard() {
     });
   }
 
+  function viewAnyPatientHistory() {
+    navigate("/view-any-patient-history");
+  }
+
   return (
     <div className="paddingPage">
       <div>
@@ -59,31 +67,32 @@ function DDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList
-              .filter((e) => {
-                return e.treated === false;
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={e.a_id}>
-                    <th>{e.a_id}</th>
-                    <th>{e.patient.name}</th>
-                    <th>{e.patient.age}</th>
-                    <th>{e.patient.gender}</th>
-                    <td>
-                      <button
-                        className="button"
-                        value={i}
-                        onClick={(event) => onCheckUPButtonClicked(e, event)}
-                      >
-                        Check-up
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+            {patientList.map((e, i) => {
+              return (
+                <tr key={e.a_id}>
+                  <th>{e.a_id}</th>
+                  <th>{e.patient.name}</th>
+                  <th>{e.patient.age}</th>
+                  <th>{e.patient.gender}</th>
+                  <td>
+                    <button
+                      className="button"
+                      value={i}
+                      onClick={(event) => onCheckUPButtonClicked(e, event)}
+                    >
+                      Check-up
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
+      </div>
+      <div>
+        <button className="button" onClick={viewAnyPatientHistory}>
+          View Patient History
+        </button>
       </div>
     </div>
   );
