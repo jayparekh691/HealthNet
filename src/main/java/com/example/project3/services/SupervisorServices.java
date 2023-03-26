@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SupervisorServices {
     Patient assignFieldWorker(Integer pid,Integer fid);
+    List<Patient> reassignFieldWorker(Integer oid,Integer nid);
 }
