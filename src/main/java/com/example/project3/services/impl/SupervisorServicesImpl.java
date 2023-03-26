@@ -10,6 +10,9 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class SupervisorServicesImpl implements SupervisorServices {
 
@@ -25,5 +28,19 @@ public class SupervisorServicesImpl implements SupervisorServices {
         this.patientRepo.save(patient);
 //        employee.getPatients().add(patient);
         return patient;
+    }
+
+    @Override
+    public List<Patient> reassignFieldWorker(Integer oid, Integer nid) {
+        Employee employee = this.employeeRepo.findById(oid).orElseThrow();
+        List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
+        List<Patient> newPatients = new ArrayList<Patient>();
+        for(Patient i:patients)
+        {
+            int id=i.getPid();
+            assignFieldWorker(id,nid);
+            newPatients.add(patientRepo.findById(id).orElseThrow());
+        }
+        return newPatients;
     }
 }
