@@ -6,7 +6,6 @@ import com.example.project3.services.DoctorServices;
 import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class DoctorServicesImpl implements DoctorServices {
     }
 
     @Override
-    public List<Patient> searchPatientByNameORpid(String id) {
+    public List<Patient> searchPatientByNameORpid(Integer did,String id) {
         List<Patient> patients=new ArrayList<Patient>();
         try{
             int i=Integer.parseInt(id);
@@ -75,7 +74,20 @@ public class DoctorServicesImpl implements DoctorServices {
         catch (Exception e){
             patients=this.patientRepo.findPatientByNameContaining(id);
         }
-        return patients;
+        List<Patient> finalPatients=new ArrayList<Patient>();
+        for(Patient p:patients)
+        {
+            List<Appointment> appointments=this.appointmentRepo.findByPatient(p);
+            for(Appointment a:appointments)
+            {
+                if(a.getDoctor().getE_id()==did)
+                {
+                    finalPatients.add(p);
+                    break;
+                }
+            }
+        }
+        return finalPatients;
     }
 
     @Override
