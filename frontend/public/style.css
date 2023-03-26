@@ -234,3 +234,36 @@ h1 {
 ul li {
   font-size: 20px;
 }
+
+.popup-box {
+  width: 400px;
+}
+
+.popup-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #614385;
+}
+
+.popup-select-box {
+  margin-top: 10px;
+  height: 70px;
+  width: 100;
+  margin-bottom: 5px;
+}
+
+.popup-select-box select {
+  height: 45px;
+  width: 100%;
+  font-size: 16px;
+  background-color: white;
+  border: 0.5px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.popup-select-box span {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
