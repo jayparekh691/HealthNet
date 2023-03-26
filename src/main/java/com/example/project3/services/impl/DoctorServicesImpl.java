@@ -77,4 +77,10 @@ public class DoctorServicesImpl implements DoctorServices {
         List<Appointment> appointments=this.appointmentRepo.findByPatient(patient);
         return appointments;
     }
+    @Override
+    public Followup getFollowupByAid(Integer id) {
+        Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
+        Followup followup=appointment.getFollowup();
+        return followup;
+    }
 }

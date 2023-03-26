@@ -58,6 +58,13 @@ public class DoctorController {
         return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/get-followup-aid/{aid}")
+    public ResponseEntity<Followup> getFollowup(@PathVariable("aid") Integer id)
+    {
+        Followup followup=this.doctorServices.getFollowupByAid(id);
+        return new ResponseEntity<Followup>(followup,HttpStatus.ACCEPTED);
+    }
+
 //    @GetMapping("/view-patient-with-followup/{pidORname")
 //    public ResponseEntity<List<Appointment>> viewPatientWithFollowup(@PathVariable("pidORname") String id)
 //    {
