@@ -46,7 +46,11 @@ function DDashboard() {
   }
 
   function viewAnyPatientHistory() {
-    navigate("/view-any-patient-history");
+    navigate("/view-any-patient-history", {
+      state: {
+        d_id: doctorID,
+      },
+    });
   }
 
   return (

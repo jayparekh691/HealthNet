@@ -1,12 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPatientList } from "../services/doctorServices";
 
 function ViewAnyPatientHistory() {
   const navigate = useNavigate();
+  const state = useLocation().state;
+  const [doctorID, setDoctorID] = useState(null);
   const [searchedPatientList, setSearchedPatientList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    setDoctorID(state.d_id);
+  }, [state.d_id]);
 
   function searchBarOnChange(event) {
     event.preventDefault();
@@ -15,7 +21,7 @@ function ViewAnyPatientHistory() {
     // api call to get list
     if (value !== "") {
       (async function getsearchedPatientList() {
-        const responseData = await getPatientList(value);
+        const responseData = await getPatientList(doctorID, value);
         const patientList = responseData.data;
         if (patientList) {
           console.log(patientList);
@@ -28,7 +34,8 @@ function ViewAnyPatientHistory() {
   function onViewHistoryButtonClicked(pid) {
     navigate("/patient-medical-history", {
       state: {
-        pid: pid,
+        p_id: pid,
+        d_id: doctorID,
       },
     });
   }
