@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "reactjs-popup/dist/index.css";
 import Popup from "reactjs-popup";
 import TextField from "@mui/material/TextField";
-import { width } from "@mui/system";
 
 function RDashboard() {
   const navigate = useNavigate();
@@ -28,7 +27,11 @@ function RDashboard() {
       const data = responseData.data;
       console.log(data);
       if (data) {
-        setPatientList(data);
+        setPatientList(
+          data.filter((e) => {
+            return e.treated === false;
+          })
+        );
       }
     })();
 
@@ -103,21 +106,17 @@ function RDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList
-              .filter((e) => {
-                return e.treated === false;
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{e.a_id}</th>
-                    <th>{e.patient.name}</th>
-                    <th>{e.patient.age}</th>
-                    <th>{e.patient.gender}</th>
-                    <th>{e.doctor.name}</th>
-                  </tr>
-                );
-              })}
+            {patientList.map((e, i) => {
+              return (
+                <tr key={i}>
+                  <th>{e.a_id}</th>
+                  <th>{e.patient.name}</th>
+                  <th>{e.patient.age}</th>
+                  <th>{e.patient.gender}</th>
+                  <th>{e.doctor.name}</th>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
