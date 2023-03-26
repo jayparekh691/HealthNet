@@ -55,4 +55,10 @@ public class SupervisorController {
         List<Patient> patients=this.supervisorServices.reassignFieldWorker(oid,nid);
         return new ResponseEntity<List<Patient>>(patients,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/get-valid-patients/")
+    public ResponseEntity<List<Patient>> getPatients(){
+        List<Patient> patients=this.supervisorServices.getPatients();
+        return new ResponseEntity<List<Patient>>(patients,HttpStatus.CREATED);
+    }
 }
