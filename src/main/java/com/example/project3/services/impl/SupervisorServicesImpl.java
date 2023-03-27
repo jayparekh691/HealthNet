@@ -69,4 +69,11 @@ public class SupervisorServicesImpl implements SupervisorServices {
         }
         return validPatients;
     }
+
+    @Override
+    public List<Employee> getFieldWorkerList() {
+        String role="FieldWorker";
+        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        return employees;
+    }
 }
