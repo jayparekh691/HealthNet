@@ -8,11 +8,11 @@ const writeDiagnosisAPI = (appointmentID) =>
 const writeFollowUpAPI = (appointmentID) =>
   `http://localhost:9080/api/doctor/write-follow-up/${appointmentID}`;
 
-const searchedPatientListAPI = (searchValue) =>
-  `http://localhost:9080/api/doctor/search-patient-doctor/${searchValue}`;
+const searchedPatientListAPI = (doctorID, searchValue) =>
+  `http://localhost:9080/api/doctor/search-patient-doctor/${doctorID}/${searchValue}`;
 
-const patientMedicalHistoryAPI = (patientID) =>
-  `http://localhost:9080/api/doctor/view-patient-history/${patientID}`;
+const patientMedicalHistoryAPI = (doctorID, patientID) =>
+  `http://localhost:9080/api/doctor/view-patient-history/${doctorID}/${patientID}`;
 
 async function getAllPatients(doctorID) {
   const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID));
@@ -35,13 +35,17 @@ async function submitFollowUp(appointmentID, followUpDetails) {
   return responseData;
 }
 
-async function getPatientList(searchValue) {
-  const responseData = await axios.get(searchedPatientListAPI(searchValue));
+async function getPatientList(doctorID, searchValue) {
+  const responseData = await axios.get(
+    searchedPatientListAPI(doctorID, searchValue)
+  );
   return responseData;
 }
 
-async function getPatientHistory(patientID) {
-  const responseData = await axios.get(patientMedicalHistoryAPI(patientID));
+async function getPatientHistory(doctorID, patientID) {
+  const responseData = await axios.get(
+    patientMedicalHistoryAPI(doctorID, patientID)
+  );
   return responseData;
 }
 export {
