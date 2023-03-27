@@ -1,5 +1,6 @@
 package com.example.project3.services;
 
+import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
 import org.springframework.stereotype.Service;
 
@@ -10,4 +11,6 @@ public interface SupervisorServices {
     List<Patient> reassignFieldWorker(Integer oid,Integer nid);
 
     List<Patient> getPatients();
+
+    List<Employee> getFieldWorkerList();
 }

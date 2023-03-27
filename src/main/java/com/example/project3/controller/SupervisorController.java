@@ -61,4 +61,10 @@ public class SupervisorController {
         List<Patient> patients=this.supervisorServices.getPatients();
         return new ResponseEntity<List<Patient>>(patients,HttpStatus.CREATED);
     }
+
+    @GetMapping("/get-fieldworker-list/")
+    public ResponseEntity<List<Employee>> getFieldWorker(){
+        List<Employee> employees=this.supervisorServices.getFieldWorkerList();
+        return new ResponseEntity<List<Employee>>(employees,HttpStatus.CREATED);
+    }
 }
