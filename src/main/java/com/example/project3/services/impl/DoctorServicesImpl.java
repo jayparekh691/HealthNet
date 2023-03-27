@@ -57,7 +57,7 @@ public class DoctorServicesImpl implements DoctorServices {
         for(Appointment i:appointments)
         {
             Employee doctor=i.getDoctor();
-            if(doctor.getE_id()==did)
+            if(doctor.getE_id()==did && i.getDiagnostics()!=null)
                 finalAppointments.add(i);
         }
         return finalAppointments;
