@@ -11,5 +11,5 @@ public interface FieldWorkerServices {
     List<Appointment> getPatientFollowups(Integer id);
     Appointment getVisitDetails(Integer id);
 
-//    Visit saveVisit(MedicalData medicalData, Integer f_id);
+    Visit saveVisit(MedicalData medicalData, Integer f_id);
 }
