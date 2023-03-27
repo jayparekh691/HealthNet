@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PatientServicesImpl implements PatientServices {
@@ -54,7 +53,7 @@ public class PatientServicesImpl implements PatientServices {
     @Override
     public List<Patient> searchPatient(String id) {
         List<Patient> l1=this.patientRepo.findPatientByName(id);
-        List<Patient> l2=this.patientRepo.findPatientByMobilenumber(id);
+        List<Patient> l2=this.patientRepo.findPatientsByMobilenumber(id);
         l1.addAll(l2);
         return l1;
     }

@@ -20,11 +20,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private FollowupRepo followupRepo;
     @Autowired
     private AppointmentRepo appointmentRepo;
-//    @Autowired
-//    private VisitRepo visitRepo;
+    @Autowired
+    private VisitRepo visitRepo;
 
-//    @Autowired
-//    private MedicalRepo medicalRepo;
+    @Autowired
+    private MedicalRepo medicalRepo;
     @Override
     public List<Patient> getPatientList(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
@@ -53,15 +53,25 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-//    @Override
-//    public  Visit saveVisit(MedicalData medicalData,Integer id) {
-//        Followup followup=this.followupRepo.findById(id).orElseThrow();
-//        Visit visit=new Visit();
-//        visit.setMedicalData(medicalData);
-//        List<Visit> visits=followup.getVisitList();
-//        visits.add(visit);
-//        followup.setVisitList(visits);
-//        this.medicalRepo.save(medicalData);
-//        return visit;
-//    }
+    @Override
+    public  Visit saveVisit(MedicalData medicalData,Integer id) {
+        Followup followup=this.followupRepo.findById(id).orElseThrow();
+        Visit visit=new Visit();
+        this.medicalRepo.save(medicalData);
+        visit.setMedicalData(medicalData);
+        this.visitRepo.save(visit);
+        List<Visit> visits=followup.getVisitList();
+        visits.add(visit);
+        followup.setVisitList(visits);
+        int t = followup.getNumberOfFollowup();
+        t--;
+        if(t==0){
+            Appointment appointment = this.appointmentRepo.findByFollowup(followup);
+            appointment.setFollowupRemaining(false);
+        }
+        followup.setNumberOfFollowup(t);
+        this.followupRepo.save(followup);
+//        visit.setFollowup(followup);
+        return visit;
+    }
 }
