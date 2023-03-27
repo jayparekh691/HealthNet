@@ -31,9 +31,9 @@ public class FieldWorkerController {
         Appointment appointment=this.fieldWorkerServices.getVisitDetails(id);
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
-//    @PostMapping("/save-visit/{f_id}")
-//    public ResponseEntity<Visit> saveVisit(@RequestBody MedicalData medicalData, @PathVariable("f_id") Integer id) {
-//        Visit visit=this.fieldWorkerServices.saveVisit(medicalData,id);
-//        return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
-//    }
+    @PostMapping("/save-visit/{f_id}")
+    public ResponseEntity<Visit> saveVisit(@RequestBody MedicalData medicalData, @PathVariable("f_id") Integer id) {
+        Visit visit=this.fieldWorkerServices.saveVisit(medicalData,id);
+        return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
+    }
 }

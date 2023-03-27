@@ -5,26 +5,21 @@ import { searchPatient, getDoctorList } from "../services/receptionistServices";
 import { addPatientAppointment } from "../services/receptionistServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-bootstrap/Modal";
+import "reactjs-popup/dist/index.css";
+import Popup from "reactjs-popup";
+import TextField from "@mui/material/TextField";
 
 function RDashboard() {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
   const [patientList, setPatientList] = useState([]);
-  const [searchedPatientList, setSearchedPatientList] = useState({});
+  const [searchedPatientList, setSearchedPatientList] = useState([]);
   const [doctorList, setDoctorList] = useState([]);
   const [doctorID, setDoctorID] = useState(null);
-  const [searchValues, setSearchValues] = useState({
-    name: "",
-    mobilenumber: "",
-  });
+  const [searchValue, setSearchValue] = useState("");
 
   function addPatient() {
     navigate("/patient-registration");
   }
-
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
 
   useEffect(() => {
     (async function () {
@@ -32,7 +27,11 @@ function RDashboard() {
       const data = responseData.data;
       console.log(data);
       if (data) {
-        setPatientList(data);
+        setPatientList(
+          data.filter((e) => {
+            return e.treated === false;
+          })
+        );
       }
     })();
 
@@ -46,50 +45,44 @@ function RDashboard() {
     })();
   }, []);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setSearchValues((pv) => {
-      return {
-        ...pv,
-        [name]: value,
-      };
-    });
-  }
-
-  async function addAppointment() {
+  async function addAppointment(p_id) {
     // add appointment for patient using pid
-    const responseData = await addPatientAppointment(
-      searchedPatientList.pid,
-      doctorID
-    );
+    const responseData = await addPatientAppointment(p_id, doctorID);
     const appointmentData = responseData.data;
     console.log(appointmentData);
     toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-    handleClose();
   }
 
   function handleChangeInDoctor(event) {
     event.preventDefault();
     const value = event.target.value;
+    console.log(value);
     setDoctorID(value);
   }
 
-  function onUpdatePatientData() {
+  function onUpdatePatientData(searchedPatientObj) {
     navigate("/update-patient-details", {
       state: {
-        patientObj: searchedPatientList,
+        patientObj: searchedPatientObj,
       },
     });
   }
 
-  async function onSearchPatient() {
-    console.log(searchValues);
-    // add patient data
-    const responseData = await searchPatient(searchValues);
-    const searchedPatientData = responseData.data;
-    if (searchedPatientData) {
-      console.log(searchedPatientData);
-      setSearchedPatientList(searchedPatientData);
+  function searchBarOnChange(event) {
+    event.preventDefault();
+    const { value } = event.target;
+    setSearchValue(value);
+    setDoctorID(doctorList[0].e_id);
+    // api call to get list
+    if (value !== "") {
+      (async function getSearchedPatientList() {
+        const responseData = await searchPatient(value);
+        let searchedPatientList = responseData.data;
+        if (searchedPatientList) {
+          console.log(searchedPatientList);
+          setSearchedPatientList(searchedPatientList);
+        }
+      })();
     }
   }
 
@@ -113,81 +106,102 @@ function RDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList
-              .filter((e) => {
-                return e.treated === false;
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{e.a_id}</th>
-                    <th>{e.patient.name}</th>
-                    <th>{e.patient.age}</th>
-                    <th>{e.patient.gender}</th>
-                    <th>{e.doctor.name}</th>
-                  </tr>
-                );
-              })}
+            {patientList.map((e, i) => {
+              return (
+                <tr key={i}>
+                  <th>{e.a_id}</th>
+                  <th>{e.patient.name}</th>
+                  <th>{e.patient.age}</th>
+                  <th>{e.patient.gender}</th>
+                  <th>{e.doctor.name}</th>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
       <div>
-        <div className="user-details">
-          <div className="input-box">
-            <span className="details">Full Name</span>
-            <input
-              name="name"
-              type="text"
-              placeholder="Enter name"
-              value={searchValues.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="input-box">
-            <span className="details">Mobile Number</span>
-            <input
-              name="mobilenumber"
-              type="text"
-              placeholder="Enter mobile number"
-              value={searchValues.mobilenumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-        <div className="button">
-          <button onClick={onSearchPatient}>Search</button>
-        </div>
         <div>
-          <table>
-            <tbody>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Gender</th>
-              </tr>
-            </tbody>
-            <tbody>
-              {
+          <div className="search">
+            <TextField
+              name="Patient Search"
+              id="outlined-basic"
+              variant="outlined"
+              fullWidth
+              label="Search"
+              onChange={searchBarOnChange}
+              value={searchValue}
+            />
+          </div>
+          <div>
+            <table>
+              <tbody>
                 <tr>
-                  <th>{searchedPatientList.name}</th>
-                  <th>{searchedPatientList.age}</th>
-                  <th>{searchedPatientList.gender}</th>
-                  <td>
-                    <button className="button" onClick={handleShow}>
-                      AddAppointment
-                    </button>
-                  </td>
-                  <td>
-                    <button className="button" onClick={onUpdatePatientData}>
-                      UpdatePatientData
-                    </button>
-                  </td>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </tbody>
+              <tbody>
+                {searchedPatientList.map((e, i) => {
+                  return (
+                    <tr key={i}>
+                      <th>{e.name}</th>
+                      <th>{e.age}</th>
+                      <th>{e.gender}</th>
+                      <td>
+                        <div>
+                          <Popup
+                            contentStyle={{ width: "20%", height: "30%" }}
+                            trigger={<button> Add Appointment</button>}
+                            position="right center"
+                          >
+                            <div style={{ padding: 10 }}>
+                              <label className="popup-heading">
+                                Select Doctor
+                              </label>
+                              <div className="popup-select-box">
+                                <select
+                                  name="role"
+                                  onChange={handleChangeInDoctor}
+                                >
+                                  {doctorList.map((e) => {
+                                    return (
+                                      <option value={e.e_id} key={e.e_id}>
+                                        {e.name}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                              </div>
+                              <div>
+                                <button
+                                  className="button"
+                                  value={i}
+                                  onClick={() => addAppointment(e.pid)}
+                                >
+                                  CONFIRM
+                                </button>
+                              </div>
+                            </div>
+                          </Popup>
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          className="button"
+                          value={i}
+                          onClick={() => onUpdatePatientData(e)}
+                        >
+                          UpdatePatientData
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div>
@@ -212,36 +226,6 @@ function RDashboard() {
             })}
           </tbody>
         </table>
-      </div>
-      <div>
-        <Modal
-          show={showModal}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Select Doctor</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="select-box">
-              <select name="role" onChange={handleChangeInDoctor}>
-                {doctorList.map((e, i) => {
-                  return (
-                    <option value={e.e_id} key={e.e_id}>
-                      {e.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <button className="button" onClick={addAppointment}>
-              Add Appointment
-            </button>
-          </Modal.Footer>
-        </Modal>
       </div>
     </div>
   );

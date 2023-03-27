@@ -11,6 +11,8 @@ import UpdateEmployeeDetails from "./pages/UpdateEmployeeDetails";
 import UpdatePatientDetails from "./pages/UpdatePatientDetails";
 import DiagnosePatient from "./pages/DiagnosePatient";
 import WriteFollowUp from "./pages/WriteFollowUp";
+import ViewAnyPatientHistory from "./pages/ViewAnyPatientHistory";
+import PatientMedicalHistory from "./pages/PatientMedicalHistory";
 
 function App() {
   return (
@@ -28,6 +30,14 @@ function App() {
       <Route
         path="/update-employee-details"
         element={<UpdateEmployeeDetails />}
+      />
+      <Route
+        path="/view-any-patient-history"
+        element={<ViewAnyPatientHistory />}
+      />
+      <Route
+        path="/patient-medical-history"
+        element={<PatientMedicalHistory />}
       />
       <Route path="/diagnose-patient" element={<DiagnosePatient />} />
       <Route path="/write-follow-up" element={<WriteFollowUp />} />
