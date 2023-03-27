@@ -22,7 +22,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private AppointmentRepo appointmentRepo;
     @Autowired
     private VisitRepo visitRepo;
-
     @Autowired
     private MedicalRepo medicalRepo;
     @Override
@@ -71,7 +70,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         }
         followup.setNumberOfFollowup(t);
         this.followupRepo.save(followup);
-//        visit.setFollowup(followup);
         return visit;
     }
 }
