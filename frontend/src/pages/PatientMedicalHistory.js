@@ -23,16 +23,16 @@ function PatientMedicalHistory() {
         <div>
           <label className="tableHeading">
             <span className="spaceBetweenLabels">
-              ID : {state.patientHistory[0].patient.pid}
+              ID: {state.patientHistory[0].patient.pid}
             </span>
             <span className="spaceBetweenLabels">
-              Name :{state.patientHistory[0].patient.name}
+              Name: {state.patientHistory[0].patient.name}
             </span>
             <span className="spaceBetweenLabels">
-              Age :{state.patientHistory[0].patient.age}
+              Age: {state.patientHistory[0].patient.age}
             </span>
             <span className="spaceBetweenLabels">
-              Gender : {state.patientHistory[0].patient.gender}
+              Gender: {state.patientHistory[0].patient.gender}
             </span>
           </label>
         </div>
@@ -58,7 +58,7 @@ function PatientMedicalHistory() {
                       Appointment ID : {e.a_id}
                     </span>
                     <span className="spaceBetweenLabels">
-                      Date : {e.curr_date}
+                      Date : {e.curr_date.split("T")[0]}
                     </span>
                     <span className="spaceBetweenLabels">
                       Field Worker :{" "}
