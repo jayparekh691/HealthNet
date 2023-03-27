@@ -12,5 +12,9 @@ public interface DoctorServices {
     Appointment writeDiagnostics(Diagnostics diagnostics,Integer id);
 
     Appointment writeFollowup(Followup followup, Integer id);
-    List<Appointment> viewPatientHistory(Integer id);
+    List<Appointment> viewPatientHistory(Integer did,Integer pid);
+
+    List<Patient> searchPatientByNameORpid(Integer did,String id);
+    List<Appointment> viewAppointments(Integer id);
+    Followup getFollowupByAid(Integer id);
 }

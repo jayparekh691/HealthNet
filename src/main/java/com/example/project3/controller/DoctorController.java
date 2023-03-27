@@ -18,6 +18,8 @@ import java.util.List;
 public class DoctorController {
     @Autowired
     private DoctorServices doctorServices;
+//    @Autowired
+//    private AppointmentServices appointmentServices;
 
     @GetMapping("/get-all-appointments-of-doctor/{d_id}")
     public ResponseEntity<List<Appointment>> getAllAppointmentsOfDoctorId(@PathVariable("d_id") Integer id){
@@ -36,10 +38,38 @@ public class DoctorController {
         return new ResponseEntity<Appointment>(followup1, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/view-patient-history/{p_id}")
-    public ResponseEntity<List<Appointment>> viewPatientHistory(@PathVariable("p_id") Integer id){
-        List<Appointment> appointments = this.doctorServices.viewPatientHistory(id);
+    @GetMapping("/view-patient-history/{d_id}/{p_id}")
+    public ResponseEntity<List<Appointment>> viewPatientHistory(@PathVariable("d_id") Integer did,@PathVariable("p_id") Integer pid){
+        List<Appointment> appointments = this.doctorServices.viewPatientHistory(did,pid);
         return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/search-patient-doctor/{did}/{nORpid}")
+    public ResponseEntity<List<Patient>> searchPatientByNameOrPid(@PathVariable("did") Integer did,@PathVariable("nORpid") String id)
+    {
+        List<Patient> patients=this.doctorServices.searchPatientByNameORpid(did,id);
+        return new ResponseEntity<List<Patient>>(patients,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-appointments-pid/{pid}")
+    public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("pid") Integer id)
+    {
+        List<Appointment> appointments=this.doctorServices.viewAppointments(id);
+        return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-followup-aid/{aid}")
+    public ResponseEntity<Followup> getFollowup(@PathVariable("aid") Integer id)
+    {
+        Followup followup=this.doctorServices.getFollowupByAid(id);
+        return new ResponseEntity<Followup>(followup,HttpStatus.ACCEPTED);
+    }
+
+//    @GetMapping("/view-patient-with-followup/{pidORname")
+//    public ResponseEntity<List<Appointment>> viewPatientWithFollowup(@PathVariable("pidORname") String id)
+//    {
+//        List<Appointment> appointments = this.appointmentServices.searchAppByPIDorName(id);
+//        return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
+//    }
 
 }

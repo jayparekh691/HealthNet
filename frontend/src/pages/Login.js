@@ -40,6 +40,8 @@ function Login() {
             d_id: data.e_id,
           },
         });
+      } else if (loginData.role === "admin") {
+        navigate("/admin-dashboard");
       }
     } else {
       // incorrect email or password
@@ -80,6 +82,7 @@ function Login() {
                 >
                   <option value="receptionist">Receptionist</option>
                   <option value="doctor">Doctor</option>
+                  <option value="admin">Admin</option>
                 </select>
               </div>
             </div>

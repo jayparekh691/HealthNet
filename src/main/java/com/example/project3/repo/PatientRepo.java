@@ -13,5 +13,9 @@ public interface PatientRepo extends JpaRepository<Patient,Integer> {
 //    Patient findPatientByNameOrMobilenumber(String name,String mobilenumber);
     List<Patient> findPatientByFieldworker(Employee employee);
 
-    Patient findPatientByNameAndMobilenumber(String name, String mobilenumber);
+    List<Patient> findPatientByName(String name);
+
+    List<Patient> findPatientByNameContaining(String name);
+
+    List<Patient> findPatientsByMobilenumber(String mobilenumber);
 }

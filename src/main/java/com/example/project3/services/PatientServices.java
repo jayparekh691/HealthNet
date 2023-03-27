@@ -13,5 +13,5 @@ public interface PatientServices {
     Patient getPatientById(Integer id);
     List<Patient> getAllPatient();
 
-    Patient searchPatient(Patient patient);
+    List<Patient> searchPatient(String id);
 }

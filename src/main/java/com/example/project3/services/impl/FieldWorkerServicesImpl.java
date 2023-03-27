@@ -56,12 +56,20 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     public  Visit saveVisit(MedicalData medicalData,Integer id) {
         Followup followup=this.followupRepo.findById(id).orElseThrow();
         Visit visit=new Visit();
+        this.medicalRepo.save(medicalData);
         visit.setMedicalData(medicalData);
+        this.visitRepo.save(visit);
         List<Visit> visits=followup.getVisitList();
         visits.add(visit);
         followup.setVisitList(visits);
-        this.visitRepo.save(visit);
-        this.medicalRepo.save(medicalData);
+        int t = followup.getNumberOfFollowup();
+        t--;
+        if(t==0){
+            Appointment appointment = this.appointmentRepo.findByFollowup(followup);
+            appointment.setFollowupRemaining(false);
+        }
+        followup.setNumberOfFollowup(t);
+        this.followupRepo.save(followup);
         return visit;
     }
 }

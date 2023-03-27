@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 
 function DDashboard() {
   const state = useLocation().state;
+  const navigate = useNavigate();
   const [doctorID, setDoctorID] = useState(null);
   const [patientList, setPatientList] = useState([]);
 
@@ -14,15 +15,20 @@ function DDashboard() {
       const data = responseData.data;
       console.log(data);
       if (data) {
-        setPatientList([...data]);
+        setPatientList(
+          data.filter((e) => {
+            return e.treated === false;
+          })
+        );
       } else {
         console.log("error! ");
       }
     })();
-  }, []);
+  }, [state.d_id]);
 
-  function onDiagnoseButtonClicked(event) {
+  function onCheckUPButtonClicked(e, event) {
     console.log(event.target.value);
+    console.log(e.a_id);
     const index = Number(event.target.value);
     setPatientList((list) => {
       let filteredList = list.filter((_, i) => {
@@ -31,6 +37,16 @@ function DDashboard() {
       console.log(filteredList);
       return [...filteredList];
     });
+
+    navigate("/diagnose-patient", {
+      state: {
+        a_id: e.a_id,
+      },
+    });
+  }
+
+  function viewAnyPatientHistory() {
+    navigate("/view-any-patient-history");
   }
 
   return (
@@ -51,31 +67,32 @@ function DDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList
-              .filter((e) => {
-                return e.treated === false;
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={e.a_id}>
-                    <th>{e.a_id}</th>
-                    <th>{e.patient.name}</th>
-                    <th>{e.patient.age}</th>
-                    <th>{e.patient.gender}</th>
-                    <td>
-                      <button
-                        className="button"
-                        value={i}
-                        onClick={onDiagnoseButtonClicked}
-                      >
-                        Diagnose
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+            {patientList.map((e, i) => {
+              return (
+                <tr key={e.a_id}>
+                  <th>{e.a_id}</th>
+                  <th>{e.patient.name}</th>
+                  <th>{e.patient.age}</th>
+                  <th>{e.patient.gender}</th>
+                  <td>
+                    <button
+                      className="button"
+                      value={i}
+                      onClick={(event) => onCheckUPButtonClicked(e, event)}
+                    >
+                      Check-up
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
+      </div>
+      <div>
+        <button className="button" onClick={viewAnyPatientHistory}>
+          View Patient History
+        </button>
       </div>
     </div>
   );

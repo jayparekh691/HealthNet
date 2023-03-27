@@ -5,12 +5,12 @@
 }
 
 .formPage {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background: linear-gradient(135deg, #614385, #516395);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: linear-gradient(135deg, #614385, #516395);
 }
 .container {
   max-width: 700px;
@@ -207,6 +207,63 @@ button {
   position: absolute;
 }
 
-.paddingPage{ 
+.paddingPage {
   padding: 10px;
+}
+
+.main {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+h1 {
+  margin: 10px;
+  font-size: 40px;
+  color: rgb(1, 1, 59);
+}
+
+.search {
+  width: 30%;
+  padding: 10px;
+}
+
+ul li {
+  font-size: 20px;
+}
+
+.popup-box {
+  width: 400px;
+}
+
+.popup-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #614385;
+}
+
+.popup-select-box {
+  margin-top: 10px;
+  height: 70px;
+  width: 100;
+  margin-bottom: 5px;
+}
+
+.popup-select-box select {
+  height: 45px;
+  width: 100%;
+  font-size: 16px;
+  background-color: white;
+  border: 0.5px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.popup-select-box span {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
 }

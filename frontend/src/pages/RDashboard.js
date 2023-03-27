@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllPatientList } from "../services/receptionistServices";
+import { searchPatient, getDoctorList } from "../services/receptionistServices";
+import { addPatientAppointment } from "../services/receptionistServices";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "reactjs-popup/dist/index.css";
+import Popup from "reactjs-popup";
+import TextField from "@mui/material/TextField";
 
 function RDashboard() {
   const navigate = useNavigate();
   const [patientList, setPatientList] = useState([]);
+  const [searchedPatientList, setSearchedPatientList] = useState([]);
+  const [doctorList, setDoctorList] = useState([]);
+  const [doctorID, setDoctorID] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
   function addPatient() {
     navigate("/patient-registration");
@@ -16,10 +27,64 @@ function RDashboard() {
       const data = responseData.data;
       console.log(data);
       if (data) {
-        setPatientList(data);
+        setPatientList(
+          data.filter((e) => {
+            return e.treated === false;
+          })
+        );
+      }
+    })();
+
+    (async function getDoctors() {
+      const responseData = await getDoctorList();
+      let doctorListData = responseData.data;
+      console.log(doctorListData);
+      if (doctorListData) {
+        setDoctorList(doctorListData);
       }
     })();
   }, []);
+
+  async function addAppointment(p_id) {
+    // add appointment for patient using pid
+    const responseData = await addPatientAppointment(p_id, doctorID);
+    const appointmentData = responseData.data;
+    console.log(appointmentData);
+    toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+  }
+
+  function handleChangeInDoctor(event) {
+    event.preventDefault();
+    const value = event.target.value;
+    console.log(value);
+    setDoctorID(value);
+  }
+
+  function onUpdatePatientData(searchedPatientObj) {
+    navigate("/update-patient-details", {
+      state: {
+        patientObj: searchedPatientObj,
+      },
+    });
+  }
+
+  function searchBarOnChange(event) {
+    event.preventDefault();
+    const { value } = event.target;
+    setSearchValue(value);
+    setDoctorID(doctorList[0].e_id);
+    // api call to get list
+    if (value !== "") {
+      (async function getSearchedPatientList() {
+        const responseData = await searchPatient(value);
+        let searchedPatientList = responseData.data;
+        if (searchedPatientList) {
+          console.log(searchedPatientList);
+          setSearchedPatientList(searchedPatientList);
+        }
+      })();
+    }
+  }
 
   return (
     <div className="paddingPage ">
@@ -41,21 +106,124 @@ function RDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList
-              .filter((e) => {
-                return e.treated === false;
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{e.a_id}</th>
-                    <th>{e.patient.name}</th>
-                    <th>{e.patient.age}</th>
-                    <th>{e.patient.gender}</th>
-                    <th>{e.doctor.name}</th>
-                  </tr>
-                );
-              })}
+            {patientList.map((e, i) => {
+              return (
+                <tr key={i}>
+                  <th>{e.a_id}</th>
+                  <th>{e.patient.name}</th>
+                  <th>{e.patient.age}</th>
+                  <th>{e.patient.gender}</th>
+                  <th>{e.doctor.name}</th>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div>
+          <div className="search">
+            <TextField
+              name="Patient Search"
+              id="outlined-basic"
+              variant="outlined"
+              fullWidth
+              label="Search"
+              onChange={searchBarOnChange}
+              value={searchValue}
+            />
+          </div>
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                </tr>
+              </tbody>
+              <tbody>
+                {searchedPatientList.map((e, i) => {
+                  return (
+                    <tr key={i}>
+                      <th>{e.name}</th>
+                      <th>{e.age}</th>
+                      <th>{e.gender}</th>
+                      <td>
+                        <div>
+                          <Popup
+                            contentStyle={{ width: "20%", height: "30%" }}
+                            trigger={<button> Add Appointment</button>}
+                            position="right center"
+                          >
+                            <div style={{ padding: 10 }}>
+                              <label className="popup-heading">
+                                Select Doctor
+                              </label>
+                              <div className="popup-select-box">
+                                <select
+                                  name="role"
+                                  onChange={handleChangeInDoctor}
+                                >
+                                  {doctorList.map((e) => {
+                                    return (
+                                      <option value={e.e_id} key={e.e_id}>
+                                        {e.name}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                              </div>
+                              <div>
+                                <button
+                                  className="button"
+                                  value={i}
+                                  onClick={() => addAppointment(e.pid)}
+                                >
+                                  CONFIRM
+                                </button>
+                              </div>
+                            </div>
+                          </Popup>
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          className="button"
+                          value={i}
+                          onClick={() => onUpdatePatientData(e)}
+                        >
+                          UpdatePatientData
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <label className="tableHeading">Doctors Available</label>
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Specialization</th>
+            </tr>
+          </tbody>
+          <tbody>
+            {doctorList.map((e, i) => {
+              return (
+                <tr key={i}>
+                  <th>{e.name}</th>
+                  <th>{e.specialization}</th>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
