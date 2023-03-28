@@ -1,21 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { writeDiagnosis, getPatientHistory } from "../services/doctorServices";
+import {
+  getPatientHistory,
+  writeDiagnosis,
+  submitFollowUp,
+} from "../services/doctorServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  DiagnoseContext,
+  diagnoseData,
+  resetDiagnoseData,
+} from "../contexts/DiagnoseContext";
+import {
+  resetFollowupData,
+  WriteFollowUpContext,
+} from "../contexts/WriteFollowUpContext";
 
 function DiagnosePatient() {
   const state = useLocation().state;
   const navigate = useNavigate();
   const [appointmentID, setAppointmentID] = useState(null);
-  const [writtenData, setWrittenData] = useState({
-    diagnosis: "",
-    remarks: "",
-    prescription: "",
-  });
   const [patientObj, setPatientObj] = useState({});
   const [doctorID, setDoctorID] = useState(null);
   const [patientHistory, setPatientHistory] = useState([]);
+  const [writtenData, setWrittenData] = useContext(DiagnoseContext);
+  const [followUpDetails, setFollowUpDetails] =
+    useContext(WriteFollowUpContext);
 
   useEffect(() => {
     setAppointmentID(state.a_id);
@@ -52,12 +63,7 @@ function DiagnosePatient() {
   }
 
   function writeFollowUp() {
-    navigate("/write-follow-up", {
-      state: {
-        a_id: appointmentID,
-        writtenData: writtenData,
-      },
-    });
+    navigate("/write-follow-up");
   }
 
   async function onSubmit(event) {
@@ -65,8 +71,18 @@ function DiagnosePatient() {
     console.log(writtenData);
     const responseData = await writeDiagnosis(appointmentID, writtenData);
     if (responseData.data) {
-      toast.success(`Diagnosis and Prescription Written`);
-      navigate(-1);
+      console.log(followUpDetails);
+      const responseData = await submitFollowUp(appointmentID, followUpDetails);
+      const wData = responseData.data;
+      if (wData) {
+        setWrittenData(resetDiagnoseData);
+        setFollowUpDetails(resetFollowupData);
+        console.log(wData);
+        toast.success(`Diagnosis and Prescription Written and FollowUp Added`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to write Diagnosis and Prescription / follow up");
+      }
     } else {
       toast.error("Unable to write Diagnosis and Prescription");
     }

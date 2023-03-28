@@ -80,6 +80,7 @@ function PatientMedicalHistory() {
                     <br />
                   </Typography>
                 </AccordionDetails>
+
                 <Accordion style={{ margin: "10px" }}>
                   <AccordionSummary
                     sx={{

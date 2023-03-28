@@ -27,7 +27,6 @@ function DDashboard() {
   }, [state.d_id]);
 
   function onCheckUPButtonClicked(p, event) {
-    console.log(event.target.value);
     console.log(p.a_id);
     const index = Number(event.target.value);
     setPatientList((list) => {
