@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface FieldWorkerServices {
-    List<Appointment> getPatientFollowups(Integer fid);
+    List<Appointment> getAppointmentListFW(Integer fid);
     Appointment getVisitDetails(Integer id);
 
     Visit saveVisit(MedicalData medicalData, Integer f_id);

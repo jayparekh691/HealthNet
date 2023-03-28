@@ -16,9 +16,9 @@ public class FieldWorkerController {
     @Autowired
     private FieldWorkerServices fieldWorkerServices;
 
-    @GetMapping("/get-patientList-fieldWorker/{f_id}")
-    public ResponseEntity<List<Appointment>> getPatientFollowup(@PathVariable("f_id") Integer fid){
-        List<Appointment> followupList = this.fieldWorkerServices.getPatientFollowups(fid);
+    @GetMapping("/get-appointmentList-fieldWorker/{f_id}")
+    public ResponseEntity<List<Appointment>> getAppointmentListFW(@PathVariable("f_id") Integer fid){
+        List<Appointment> followupList = this.fieldWorkerServices.getAppointmentListFW(fid);
         return new ResponseEntity<>(followupList,HttpStatus.ACCEPTED);
     }
     @GetMapping("/get-visit-details/{p_id}")
