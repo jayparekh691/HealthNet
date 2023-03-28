@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { writeDiagnosis } from "../services/doctorServices";
+import { writeDiagnosis, getPatientHistory } from "../services/doctorServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,10 +13,15 @@ function DiagnosePatient() {
     remarks: "",
     prescription: "",
   });
+  const [patientObj, setPatientObj] = useState({});
+  const [doctorID, setDoctorID] = useState(null);
+  const [patientHistory, setPatientHistory] = useState([]);
 
   useEffect(() => {
     setAppointmentID(state.a_id);
-  }, [state.a_id]);
+    setPatientObj(state.patientObj);
+    setDoctorID(state.doctorID);
+  }, [state.a_id, state.patientObj, state.doctorID]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -27,7 +32,24 @@ function DiagnosePatient() {
       };
     });
   }
-  function checkPatientHistory() {}
+  function viewPatientHistory() {
+    console.log(appointmentID);
+    console.log(patientObj);
+    (async function getPatientMedicalHistory() {
+      const responseData = await getPatientHistory(doctorID, patientObj.pid);
+      let data = responseData.data;
+      if (data) {
+        setPatientHistory(data);
+      }
+      console.log(data);
+      navigate("/patient-medical-history", {
+        state: {
+          patientHistory: data,
+          patientObj: patientObj,
+        },
+      });
+    })();
+  }
 
   function writeFollowUp() {
     navigate("/write-follow-up", {
@@ -98,9 +120,9 @@ function DiagnosePatient() {
 
             <div className="button">
               <input
-                onClick={checkPatientHistory}
+                onClick={viewPatientHistory}
                 type="button"
-                value="Check Patient History"
+                value="View Patient History"
               />
             </div>
 

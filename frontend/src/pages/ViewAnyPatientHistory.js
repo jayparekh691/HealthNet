@@ -32,9 +32,9 @@ function ViewAnyPatientHistory() {
     }
   }
 
-  function onViewHistoryButtonClicked(pid) {
+  function onViewHistoryButtonClicked(p) {
     (async function getPatientMedicalHistory() {
-      const responseData = await getPatientHistory(doctorID, pid);
+      const responseData = await getPatientHistory(doctorID, p.pid);
       let data = responseData.data;
       if (data) {
         setPatientHistory(data);
@@ -43,6 +43,7 @@ function ViewAnyPatientHistory() {
       navigate("/patient-medical-history", {
         state: {
           patientHistory: data,
+          patientObj: p,
         },
       });
     })();
@@ -85,7 +86,7 @@ function ViewAnyPatientHistory() {
                     <button
                       className="button"
                       value={i}
-                      onClick={() => onViewHistoryButtonClicked(p.pid)}
+                      onClick={() => onViewHistoryButtonClicked(p)}
                     >
                       View History
                     </button>

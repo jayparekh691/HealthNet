@@ -9,10 +9,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 function PatientMedicalHistory() {
   const state = useLocation().state;
   const [patientHistory, setPatientHistory] = useState([]);
+  const [patientObj, setPatientObj] = useState({});
 
   useEffect(() => {
     setPatientHistory(state.patientHistory);
-  }, [state.patientHistory]);
+    setPatientObj(state.patientObj);
+  }, [state.patientHistory, state.patientObj]);
 
   return (
     <div>
@@ -22,17 +24,11 @@ function PatientMedicalHistory() {
         </div>
         <div>
           <label className="tableHeading">
+            <span className="spaceBetweenLabels">ID: {patientObj.pid}</span>
+            <span className="spaceBetweenLabels">Name: {patientObj.name}</span>
+            <span className="spaceBetweenLabels">Age: {patientObj.age}</span>
             <span className="spaceBetweenLabels">
-              ID : {state.patientHistory[0].patient.pid}
-            </span>
-            <span className="spaceBetweenLabels">
-              Name :{state.patientHistory[0].patient.name}
-            </span>
-            <span className="spaceBetweenLabels">
-              Age :{state.patientHistory[0].patient.age}
-            </span>
-            <span className="spaceBetweenLabels">
-              Gender : {state.patientHistory[0].patient.gender}
+              Gender: {patientObj.gender}
             </span>
           </label>
         </div>
@@ -58,7 +54,7 @@ function PatientMedicalHistory() {
                       Appointment ID : {e.a_id}
                     </span>
                     <span className="spaceBetweenLabels">
-                      Date : {e.curr_date}
+                      Date : {e.curr_date.split("T")[0]}
                     </span>
                     <span className="spaceBetweenLabels">
                       Field Worker :{" "}
