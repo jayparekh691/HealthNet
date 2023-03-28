@@ -26,9 +26,9 @@ function DDashboard() {
     })();
   }, [state.d_id]);
 
-  function onCheckUPButtonClicked(e, event) {
+  function onCheckUPButtonClicked(p, event) {
     console.log(event.target.value);
-    console.log(e.a_id);
+    console.log(p.a_id);
     const index = Number(event.target.value);
     setPatientList((list) => {
       let filteredList = list.filter((_, i) => {
@@ -40,7 +40,9 @@ function DDashboard() {
 
     navigate("/diagnose-patient", {
       state: {
-        a_id: e.a_id,
+        doctorID: doctorID,
+        a_id: p.a_id,
+        patientObj: p.patient,
       },
     });
   }
@@ -71,18 +73,18 @@ function DDashboard() {
             </tr>
           </tbody>
           <tbody>
-            {patientList.map((e, i) => {
+            {patientList.map((p, i) => {
               return (
-                <tr key={e.a_id}>
-                  <th>{e.a_id}</th>
-                  <th>{e.patient.name}</th>
-                  <th>{e.patient.age}</th>
-                  <th>{e.patient.gender}</th>
+                <tr key={p.a_id}>
+                  <th>{p.a_id}</th>
+                  <th>{p.patient.name}</th>
+                  <th>{p.patient.age}</th>
+                  <th>{p.patient.gender}</th>
                   <td>
                     <button
                       className="button"
                       value={i}
-                      onClick={(event) => onCheckUPButtonClicked(e, event)}
+                      onClick={(event) => onCheckUPButtonClicked(p, event)}
                     >
                       Check-up
                     </button>
