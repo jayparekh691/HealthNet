@@ -90,7 +90,7 @@ function ADashboard() {
           <tbody>
             {employeeList
               .filter((e) => {
-                return e.deleted === false;
+                return e.deleted === false && e.role !== "Admin";
               })
               .map((e, i) => {
                 return (

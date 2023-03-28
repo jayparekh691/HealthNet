@@ -23,25 +23,27 @@ function Login() {
 
   async function onSubmit(event) {
     event.preventDefault();
-    console.log("clicked");
     const responseData = await loginService(loginData);
     console.log(responseData);
     console.log(loginData);
     const data = responseData.data;
     console.log(data);
     if (loginData.email === data.email) {
-      if (loginData.role === "receptionist") {
+      if (data.role === "receptionist") {
         // show receptionist dashboard
         navigate("/receptionist-dashboard");
-      } else if (loginData.role === "doctor") {
+      } else if (data.role === "doctor") {
         // show doctor dashboard
         navigate("/doctor-dashboard", {
           state: {
             d_id: data.e_id,
           },
         });
-      } else if (loginData.role === "admin") {
+      } else if (data.role === "Admin") {
         navigate("/admin-dashboard");
+      } else {
+        // when role is not corretly selected
+        console.log("incorrect role selected");
       }
     } else {
       // incorrect email or password
@@ -73,17 +75,6 @@ function Login() {
                   value={loginData.password}
                   onChange={handleChange}
                 />
-              </div>
-              <div className="select-box">
-                <select
-                  value={loginData.role}
-                  name="role"
-                  onChange={handleChange}
-                >
-                  <option value="receptionist">Receptionist</option>
-                  <option value="doctor">Doctor</option>
-                  <option value="admin">Admin</option>
-                </select>
               </div>
             </div>
             <div className="button">

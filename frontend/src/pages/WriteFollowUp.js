@@ -1,26 +1,12 @@
-import { useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { writeDiagnosis, submitFollowUp } from "../services/doctorServices";
+import React, { useContext } from "react";
+import { WriteFollowUpContext } from "../contexts/WriteFollowUpContext";
 
 function WriteFollowUp() {
-  const state = useLocation().state;
   const navigate = useNavigate();
-  const [appointmentID, setAppointmentID] = useState(null);
-  const [writtenData, setWrittenData] = useState({});
-  const [followUpDetails, setFollowUpDetails] = useState({
-    instructions: "",
-    numberOfFollowup: "",
-    secheduleCount: "",
-    scheduleType: "Weekly",
-  });
-
-  useEffect(() => {
-    setAppointmentID(state.a_id);
-    setWrittenData(state.writtenData);
-  }, [state.a_id, state.writtenData]);
+  const [followUpDetails, setFollowUpDetails] =
+    useContext(WriteFollowUpContext);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -32,25 +18,9 @@ function WriteFollowUp() {
     });
   }
 
-  async function submitFollowUpDetails(event) {
+  function submitFollowUpDetails(event) {
     event.preventDefault();
-    console.log(appointmentID);
-    console.log(writtenData);
-    console.log(followUpDetails);
-    const responseData = await submitFollowUp(appointmentID, followUpDetails);
-    const data = responseData.data;
-    if (data) {
-      console.log(data);
-      const responseData = await writeDiagnosis(appointmentID, writtenData);
-      const wData = responseData.data;
-      if (wData) {
-        console.log(wData);
-        toast.success(`Diagnosis and Prescription Written and FollowUp Added`);
-        navigate(-2);
-      } else {
-        toast.error("Unable to write Diagnosis and Prescription / follow up");
-      }
-    }
+    navigate(-1);
   }
 
   return (
@@ -115,7 +85,7 @@ function WriteFollowUp() {
               </div>
             </div>
             <div className="button">
-              <input type="submit" value="Submit Follow Up" />
+              <input type="submit" value="Submit" />
             </div>
           </form>
         </div>
