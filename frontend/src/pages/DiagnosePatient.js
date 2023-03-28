@@ -101,7 +101,6 @@ function DiagnosePatient() {
                   cols={40}
                   value={writtenData.prescription}
                   onChange={handleChange}
-                  required
                 />
               </div>
 

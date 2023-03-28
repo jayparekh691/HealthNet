@@ -18,7 +18,7 @@ function PatientRegistration() {
     name: "",
     address: "",
     city: "",
-    gender: "",
+    gender: "M",
     pincode: "",
     state: "",
     town: "",

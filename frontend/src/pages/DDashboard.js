@@ -95,7 +95,7 @@ function DDashboard() {
           </tbody>
         </table>
       </div>
-      <div>
+      <div style={{ margin: "10px" }}>
         <button className="button" onClick={viewAnyPatientHistory}>
           View Patient History
         </button>

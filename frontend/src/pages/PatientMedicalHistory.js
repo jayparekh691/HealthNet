@@ -102,11 +102,11 @@ function PatientMedicalHistory() {
                         <br />
                         <span>{e.followup.instructions}</span>
                         <br />
-                        <label className="tableHeading">schedule Type: </label>
+                        <label className="tableHeading">Schedule Type: </label>
                         <br />
                         <span>{e.followup.scheduleType}</span>
                         <br />
-                        <label className="tableHeading">schedule Count: </label>
+                        <label className="tableHeading">Schedule Count: </label>
                         <br />
                         <span>{e.followup.scheduleCount}</span>
                         <br />
