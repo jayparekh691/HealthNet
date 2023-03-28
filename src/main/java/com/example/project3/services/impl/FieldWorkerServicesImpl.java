@@ -5,7 +5,6 @@ import com.example.project3.repo.*;
 import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,26 +24,24 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     @Autowired
     private MedicalRepo medicalRepo;
     @Override
-    public List<Patient> getPatientList(Integer id) {
-        Employee employee = this.employeeRepo.findById(id).orElseThrow();
+    public List<Appointment> getPatientFollowups(Integer fid) {
+        Employee employee = this.employeeRepo.findById(fid).orElseThrow();
         List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
-        return patients;
-    }
-
-
-    @Override
-    public List<Appointment> getPatientFollowups(Integer id) {
-        Patient patient = this.patientRepo.findById(id).orElseThrow();
-        List<Appointment> appointments = this.appointmentRepo.findByPatient(patient);
-//        List<Appointment> appointmentList=new ArrayList<Appointment>();
-        for(Appointment appointment : appointments){
-            appointment.setDiagnostics(null);
-            appointment.setDoctor(null);
-            if(appointment.getFollowupRemaining()==false) {
-                appointments.remove(appointment);
+        List<Appointment> finalAppointments=new ArrayList<Appointment>();
+        for(Patient p:patients)
+        {
+            List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
+            for (Appointment appointment : appointments) {
+                appointment.setDiagnostics(null);
+                appointment.setDoctor(null);
+                if (appointment.getFollowupRemaining() == false) {
+                    appointments.remove(appointment);
+                }
             }
+            for(Appointment appointment:appointments)
+                finalAppointments.add(appointment);
         }
-        return appointments;
+        return finalAppointments;
     }
 
     @Override
