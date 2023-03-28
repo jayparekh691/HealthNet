@@ -24,7 +24,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     @Autowired
     private MedicalRepo medicalRepo;
     @Override
-    public List<Appointment> getPatientFollowups(Integer fid) {
+    public List<Appointment> getAppointmentListFW(Integer fid) {
         Employee employee = this.employeeRepo.findById(fid).orElseThrow();
         List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
         List<Appointment> finalAppointments=new ArrayList<Appointment>();
