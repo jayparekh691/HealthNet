@@ -52,6 +52,5 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     @Override
     public  void saveVisit(Visit visit,Integer id) {
         this.visitRepo.save(visit);
-
     }
 }

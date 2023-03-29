@@ -3,19 +3,15 @@ package com.example.project3.services.impl;
 import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
-import com.example.project3.repo.EmployeeRepo;
-import com.example.project3.repo.PatientRepo;
-import com.example.project3.repo.AppointmentRepo;
+import com.example.project3.entities.Visit;
+import com.example.project3.repo.*;
 import com.example.project3.services.EmployeeServices;
 import com.example.project3.services.SupervisorServices;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SupervisorServicesImpl implements SupervisorServices {
@@ -26,13 +22,27 @@ public class SupervisorServicesImpl implements SupervisorServices {
     private EmployeeRepo employeeRepo;
     @Autowired
     private AppointmentRepo appointmentRepo;
+    @Autowired
+    private VisitRepo visitRepo;
+
+    @Autowired
+    private FollowupRepo followupRepo;
     @Override
     public Patient assignFieldWorker(Integer pid, Integer fid) {
         Patient patient = this.patientRepo.findById(pid).orElseThrow();
         Employee employee = this.employeeRepo.findById(fid).orElseThrow();
         patient.setFieldworker(employee);
         this.patientRepo.save(patient);
-//        employee.getPatients().add(patient);
+        List<Appointment> appointments=this.appointmentRepo.findByPatient(patient);
+        for(Appointment appointment:appointments)
+        {
+            List<Visit> visits=appointment.getFollowup().getVisitList();
+            for(Visit v:visits)
+            {
+                v.setFieldWorker(employee);
+                this.visitRepo.save(v);
+            }
+        }
         return patient;
     }
 
@@ -75,5 +85,22 @@ public class SupervisorServicesImpl implements SupervisorServices {
         String role="FieldWorker";
         List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
         return employees;
+    }
+    @Override
+    public List<Patient> getPatientList(Integer id) {
+        Employee employee = this.employeeRepo.findById(id).orElseThrow();
+        List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
+        return patients;
+    }
+
+    @Override
+    public List<Visit> getDueVisitList() {
+        Date  date = new Date();
+        List<Visit> visits = this.visitRepo.findByDateBefore(date);
+        for(Visit visit:visits){
+            if(visit.isVisited()==true)
+                visits.remove(visit);
+        }
+        return visits;
     }
 }

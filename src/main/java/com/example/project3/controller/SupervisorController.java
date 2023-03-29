@@ -2,6 +2,7 @@ package com.example.project3.controller;
 
 import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
+import com.example.project3.entities.Visit;
 import com.example.project3.services.SupervisorServices;
 import com.example.project3.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,4 +68,16 @@ public class SupervisorController {
         List<Employee> employees=this.supervisorServices.getFieldWorkerList();
         return new ResponseEntity<List<Employee>>(employees,HttpStatus.CREATED);
     }
+    @GetMapping("/get-patient-list/{f_id}")
+    public ResponseEntity<List<Patient>> getPatientListForFieldWorker(@PathVariable("f_id") Integer id){
+        List<Patient> patients = this.supervisorServices.getPatientList(id);
+        return new ResponseEntity<>(patients, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/due-visits")
+    public ResponseEntity<List<Visit>> getDueVisitList(){
+        List<Visit> visits = this.supervisorServices.getDueVisitList();
+        return new ResponseEntity<>(visits,HttpStatus.ACCEPTED);
+    }
+
 }
