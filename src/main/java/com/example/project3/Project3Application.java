@@ -14,9 +14,9 @@ public class Project3Application {
 
     @PostConstruct
     public void initTwilio(){
+
         Twilio.init(twilioConfig.getAccountSid(),twilioConfig.getAuthToken());
     }
-
     public static void main(String[] args) {
         SpringApplication.run(Project3Application.class, args);
 

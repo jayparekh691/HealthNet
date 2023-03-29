@@ -1,11 +1,16 @@
 package com.example.project3.services.impl;
 
+import com.example.project3.dto.FollowupOTPDto;
+import com.example.project3.dto.FollowupOTPResponseDto;
+import com.example.project3.dto.OtpStatus;
 import com.example.project3.entities.*;
 import com.example.project3.repo.*;
 import com.example.project3.services.DoctorServices;
+import com.example.project3.services.TwilioOTPService;
 import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -17,6 +22,8 @@ import java.util.List;
 @Service
 public class DoctorServicesImpl implements DoctorServices {
 
+    @Autowired
+    private TwilioOTPService twilioOTPService;
     @Autowired
     private AppointmentRepo appointmentRepo;
     @Autowired
@@ -49,7 +56,6 @@ public class DoctorServicesImpl implements DoctorServices {
     @Override
     public Appointment writeFollowup(Followup followup, Integer id) {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
-//        diagnostics.setAppointment(appointment);
         appointment.setFollowup(followup);
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
@@ -57,6 +63,7 @@ public class DoctorServicesImpl implements DoctorServices {
         Date date = new Date();
         this.followupRepo.save(followup);
         List<Visit> visits=new ArrayList<Visit>();
+        int counter=1;
         while(count!=0){
             count--;
             Visit visit = new Visit();
@@ -65,6 +72,17 @@ public class DoctorServicesImpl implements DoctorServices {
             c.add(Calendar.DATE, gap);
             date = c.getTime();
             visit.setDate(date);
+            Appointment appointment1 = this.appointmentRepo.findByFollowup(followup);
+            String mobilenumber = appointment1.getPatient().getMobilenumber();
+            FollowupOTPDto followupOTPDto = new FollowupOTPDto();
+            followupOTPDto.setPhonenumber(mobilenumber);
+            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id);
+            counter++;
+            if(followupOTPResponseDto.getStatus()!= OtpStatus.DELIVERED){
+                System.out.println(followupOTPResponseDto.getMessage());
+                return null;
+            }
+            visit.setOtp(followupOTPResponseDto.getOtp());
             this.visitRepo.save(visit);
             visits.add(visit);
         }
@@ -156,5 +174,13 @@ public class DoctorServicesImpl implements DoctorServices {
         visit.setSeenByDoctor(true);
         this.visitRepo.save(visit);
         return visit;
+    }
+
+    @Override
+    public Appointment deactivateFollowup(Integer id) {
+        Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
+        appointment.setFollowupRemaining(false);
+        this.appointmentRepo.save(appointment);
+        return appointment;
     }
 }
