@@ -6,7 +6,12 @@ import com.example.project3.services.DoctorServices;
 import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,6 +25,8 @@ public class DoctorServicesImpl implements DoctorServices {
     private EmployeeRepo employeeRepo;
     @Autowired
     private FollowupRepo followupRepo;
+    @Autowired
+    private VisitRepo visitRepo;
     @Autowired
     private DiagnosticsRepo diagnosticsRepo;
     @Override
@@ -45,6 +52,23 @@ public class DoctorServicesImpl implements DoctorServices {
 //        diagnostics.setAppointment(appointment);
         appointment.setFollowup(followup);
         appointment.setFollowupRemaining(true);
+        int count=followup.getVisitCount();
+        int gap=followup.getGap();
+        Date date = new Date();
+        this.followupRepo.save(followup);
+        List<Visit> visits=new ArrayList<Visit>();
+        while(count!=0){
+            count--;
+            Visit visit = new Visit();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, gap);
+            date = c.getTime();
+            visit.setDate(date);
+            this.visitRepo.save(visit);
+            visits.add(visit);
+        }
+        followup.setVisitList(visits);
         this.followupRepo.save(followup);
         return appointment;
     }
