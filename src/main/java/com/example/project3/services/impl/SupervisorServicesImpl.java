@@ -39,8 +39,11 @@ public class SupervisorServicesImpl implements SupervisorServices {
             List<Visit> visits=appointment.getFollowup().getVisitList();
             for(Visit v:visits)
             {
-                v.setFieldWorker(employee);
-                this.visitRepo.save(v);
+                if(v.isVisited()==false)
+                {
+                    v.setFieldWorker(employee);
+                    this.visitRepo.save(v);
+                }
             }
         }
         return patient;
