@@ -126,4 +126,35 @@ public class DoctorServicesImpl implements DoctorServices {
         Followup followup=appointment.getFollowup();
         return followup;
     }
+
+    @Override
+    public List<Appointment> getUnseenListByDoctorId(Integer did) {
+        List<Appointment> appointments=getAppointmentByDoctorId(did);
+        List<Appointment> finalAppointments=new ArrayList<>();
+        for(Appointment a:appointments)
+        {
+            List<Visit> visits=a.getFollowup().getVisitList();
+            for(Visit v:visits)
+            {
+                if(v.isVisited()==false)
+                    break;
+                if(v.isSeenByDoctor()==true)
+                    continue;
+                else
+                {
+                    finalAppointments.add(a);
+                    break;
+                }
+            }
+        }
+        return finalAppointments;
+    }
+
+    @Override
+    public Visit setVisitSeen(Integer vid) {
+        Visit visit=this.visitRepo.findById(vid).orElseThrow();
+        visit.setSeenByDoctor(true);
+        this.visitRepo.save(visit);
+        return visit;
+    }
 }

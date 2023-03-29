@@ -1,9 +1,6 @@
 package com.example.project3.controller;
 
-import com.example.project3.entities.Appointment;
-import com.example.project3.entities.Diagnostics;
-import com.example.project3.entities.Followup;
-import com.example.project3.entities.Patient;
+import com.example.project3.entities.*;
 import com.example.project3.services.AppointmentServices;
 import com.example.project3.services.DoctorServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +60,20 @@ public class DoctorController {
     {
         Followup followup=this.doctorServices.getFollowupByAid(id);
         return new ResponseEntity<Followup>(followup,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-unseen-list/{did}")
+    public ResponseEntity<List<Appointment>> getUnseenListOfUnseenVisits(@PathVariable("did") Integer did)
+    {
+        List<Appointment> appointments=this.doctorServices.getUnseenListByDoctorId(did);
+        return new ResponseEntity<>(appointments,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/set-visit-as-seen/{vid}")
+    public ResponseEntity<Visit> setVisitSeen(@PathVariable("vid") Integer vid)
+    {
+        Visit visit=this.doctorServices.setVisitSeen(vid);
+        return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 
 //    @GetMapping("/view-patient-with-followup/{pidORname")

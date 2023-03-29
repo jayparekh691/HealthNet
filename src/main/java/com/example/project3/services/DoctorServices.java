@@ -1,9 +1,6 @@
 package com.example.project3.services;
 
-import com.example.project3.entities.Appointment;
-import com.example.project3.entities.Diagnostics;
-import com.example.project3.entities.Followup;
-import com.example.project3.entities.Patient;
+import com.example.project3.entities.*;
 
 import java.util.List;
 
@@ -17,4 +14,8 @@ public interface DoctorServices {
     List<Patient> searchPatientByNameORpid(Integer did,String id);
     List<Appointment> viewAppointments(Integer id);
     Followup getFollowupByAid(Integer id);
+
+    List<Appointment> getUnseenListByDoctorId(Integer did);
+
+    Visit setVisitSeen(Integer vid);
 }
