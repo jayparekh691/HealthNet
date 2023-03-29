@@ -2,6 +2,7 @@ package com.example.project3.services;
 
 import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
+import com.example.project3.entities.Visit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface SupervisorServices {
     List<Patient> getPatients();
 
     List<Employee> getFieldWorkerList();
+
+    List<Patient> getPatientList(Integer id);
+
+    List<Visit> getDueVisitList();
 }

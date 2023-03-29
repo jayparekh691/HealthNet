@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,9 +19,10 @@ public class Followup {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int f_id;
     private String instructions;
-    private int numberOfFollowup;
-    private String scheduleType;
-    private int scheduleCount;
+    private int gap;
+    private int visitCount;
+    private boolean isActive=Boolean.TRUE;
+
     @OneToOne(fetch = FetchType.EAGER)
     private Appointment appointment;
 
