@@ -59,10 +59,16 @@ function ADashboard() {
     });
   }
 
+  function assignFieldWorkers(event) {
+    event.preventDefault();
+    navigate("/supervisor-dashboard");
+  }
+
   return (
     <div className="paddingPage">
       <div className="paddingPage ">
         <button onClick={addEmployee}>Add Employee</button>
+        <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
       </div>
       <div className="search">
         <TextField
