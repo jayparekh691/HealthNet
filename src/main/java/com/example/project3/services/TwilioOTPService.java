@@ -22,14 +22,14 @@ public class TwilioOTPService {
     @Autowired
     private VisitRepo visitRepo;
 
-    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto,Integer x) {
+    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto,Integer x,Integer id) {
 
         FollowupOTPResponseDto followupOTPResponseDto = null;
         try {
             PhoneNumber to = new PhoneNumber(followupOTPDto.getPhonenumber());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
             String otp = generateOTP();
-            String otpMessage = "Dear Customer, your OTP for Visit No. "+x+" is ##" + otp + "##. ";
+            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. ";
             Message message = Message
                     .creator(to, from,
                             otpMessage)

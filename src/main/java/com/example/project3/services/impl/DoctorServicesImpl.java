@@ -56,7 +56,6 @@ public class DoctorServicesImpl implements DoctorServices {
     @Override
     public Appointment writeFollowup(Followup followup, Integer id) {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
-//        diagnostics.setAppointment(appointment);
         appointment.setFollowup(followup);
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
@@ -77,7 +76,7 @@ public class DoctorServicesImpl implements DoctorServices {
             String mobilenumber = appointment1.getPatient().getMobilenumber();
             FollowupOTPDto followupOTPDto = new FollowupOTPDto();
             followupOTPDto.setPhonenumber(mobilenumber);
-            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter);
+            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id);
             counter++;
             if(followupOTPResponseDto.getStatus()!= OtpStatus.DELIVERED){
                 System.out.println(followupOTPResponseDto.getMessage());
@@ -175,5 +174,13 @@ public class DoctorServicesImpl implements DoctorServices {
         visit.setSeenByDoctor(true);
         this.visitRepo.save(visit);
         return visit;
+    }
+
+    @Override
+    public Appointment deactivateFollowup(Integer id) {
+        Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
+        appointment.setFollowupRemaining(false);
+        this.appointmentRepo.save(appointment);
+        return appointment;
     }
 }

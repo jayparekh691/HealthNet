@@ -3,6 +3,7 @@ package com.example.project3.controller;
 import com.example.project3.entities.*;
 import com.example.project3.services.AppointmentServices;
 import com.example.project3.services.DoctorServices;
+import com.twilio.rest.microvisor.v1.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,11 +77,9 @@ public class DoctorController {
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 
-//    @GetMapping("/view-patient-with-followup/{pidORname")
-//    public ResponseEntity<List<Appointment>> viewPatientWithFollowup(@PathVariable("pidORname") String id)
-//    {
-//        List<Appointment> appointments = this.appointmentServices.searchAppByPIDorName(id);
-//        return new ResponseEntity<List<Appointment>>(appointments,HttpStatus.ACCEPTED);
-//    }
-
+    @PostMapping("/deactivate-followup/{a_id}")
+    public ResponseEntity deactivateFollowup(@PathVariable("a_id") Integer id){
+        Appointment appointment1 = this.doctorServices.deactivateFollowup(id);
+        return new ResponseEntity(appointment1,HttpStatus.ACCEPTED);
+    }
 }
