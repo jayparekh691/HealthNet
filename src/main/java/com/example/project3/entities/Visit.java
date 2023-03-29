@@ -16,7 +16,8 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int v_id;
     private Date date;
-
+    private int otp;
+    private boolean isVisited;
     @OneToOne
     private Followup followup;
 

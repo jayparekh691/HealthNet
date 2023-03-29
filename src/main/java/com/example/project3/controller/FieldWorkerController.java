@@ -27,8 +27,8 @@ public class FieldWorkerController {
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
     @PostMapping("/save-visit/{f_id}")
-    public ResponseEntity<Visit> saveVisit(@RequestBody MedicalData medicalData, @PathVariable("f_id") Integer id) {
-        Visit visit=this.fieldWorkerServices.saveVisit(medicalData,id);
+    public ResponseEntity<Visit> saveVisit(@RequestBody Visit visit, @PathVariable("f_id") Integer id) {
+        this.fieldWorkerServices.saveVisit(visit,id);
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 }
