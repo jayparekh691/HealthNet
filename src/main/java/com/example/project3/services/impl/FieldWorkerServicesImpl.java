@@ -50,7 +50,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         return appointment;
     }
     @Override
-    public  void saveVisit(Visit visit,Integer id) {
+    public  Visit saveVisit(MedicalData v,Integer id) {
+        Visit visit=this.visitRepo.findById(id).orElseThrow();
+        this.medicalRepo.save(v);
+        visit.setMedicalData(v);
         this.visitRepo.save(visit);
+        return visit;
     }
 }

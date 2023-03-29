@@ -9,5 +9,5 @@ public interface FieldWorkerServices {
     List<Appointment> getAppointmentListFW(Integer fid);
     Appointment getVisitDetails(Integer id);
 
-    void saveVisit(Visit visit, Integer f_id);
+    Visit saveVisit(MedicalData md, Integer f_id);
 }

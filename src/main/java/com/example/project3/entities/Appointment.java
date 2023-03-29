@@ -4,15 +4,19 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name ="appointment")
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE appointment SET deleted = true WHERE e_id=?")
+@Where(clause = "deleted=false")
 public class Appointment {
 
     @Id
@@ -21,6 +25,7 @@ public class Appointment {
     private Date curr_date;
     private boolean isTreated;
     private boolean followupRemaining;
+    private boolean deleted=Boolean.FALSE;
     @OneToOne
     private Patient patient;
     @OneToOne
