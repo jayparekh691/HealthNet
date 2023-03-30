@@ -106,4 +106,11 @@ public class SupervisorServicesImpl implements SupervisorServices {
         }
         return visits;
     }
+
+    @Override
+    public List<Employee> searchFieldWorkerByName(String name) {
+        List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
+        return employees;
+    }
+
 }
