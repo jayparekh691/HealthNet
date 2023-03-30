@@ -60,7 +60,7 @@ public class DoctorServicesImpl implements DoctorServices {
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
         int gap=followup.getGap();
-        Date date = new Date();
+        Date date = new Date(123,02,16);
         this.followupRepo.save(followup);
         List<Visit> visits=new ArrayList<Visit>();
         int counter=1;

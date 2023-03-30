@@ -1,5 +1,6 @@
 package com.example.project3.controller;
 
+import com.example.project3.config.Pair;
 import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
 import com.example.project3.entities.Visit;
@@ -75,9 +76,9 @@ public class SupervisorController {
     }
 
     @GetMapping("/due-visits")
-    public ResponseEntity<List<Visit>> getDueVisitList(){
-        List<Visit> visits = this.supervisorServices.getDueVisitList();
-        return new ResponseEntity<>(visits,HttpStatus.ACCEPTED);
+    public ResponseEntity<List<Pair>> getDueVisitList(){
+        List<Pair> list = this.supervisorServices.getDueVisitList();
+        return new ResponseEntity<>(list,HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/search-fieldworker/{name}")
