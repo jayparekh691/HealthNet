@@ -27,6 +27,9 @@ function PatientMedicalHistory() {
   return (
     <div>
       <div style={{ padding: "10px" }}>
+        <div style={{ textAlign: "center" }}>
+          <label className="tableHeading">View Patient Medical History</label>
+        </div>
         <div>
           <label className="tableHeading">Patient Details:</label>
         </div>

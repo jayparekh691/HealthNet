@@ -13,7 +13,7 @@ function EmployeeRegistration() {
     password: "",
     gender: "M",
     specialization: "",
-    role: "receptionist",
+    role: "Receptionist",
   });
 
   const [genderDefault, setGenderDefault] = useState("M");
@@ -143,10 +143,10 @@ function EmployeeRegistration() {
                   name="role"
                   onChange={handleChange}
                 >
-                  <option value="receptionist">Receptionist</option>
-                  <option value="doctor">Doctor</option>
-                  <option value="supervisor">Supervisor</option>
-                  <option value="fieldworker">Field Worker</option>
+                  <option value="Receptionist">Receptionist</option>
+                  <option value="Doctor">Doctor</option>
+                  <option value="Supervisor">Supervisor</option>
+                  <option value="FieldWorker">Field Worker</option>
                 </select>
               </div>
               <div className="input-box">

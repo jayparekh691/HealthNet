@@ -15,6 +15,7 @@ import ViewAnyPatientHistory from "./pages/ViewAnyPatientHistory";
 import PatientMedicalHistory from "./pages/PatientMedicalHistory";
 import SDashboard from "./pages/SDashboard";
 import VisitsDueByFieldWorker from "./pages/VisitsDueByFieldWorker";
+import ViewNewVisitRecords from "./pages/ViewNewVisitRecords";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         path="/visits-due-by-fieldworker"
         element={<VisitsDueByFieldWorker />}
       />
+      <Route path="/view-new-visit-records" element={<ViewNewVisitRecords />} />
       <Route path="/write-follow-up" element={<WriteFollowUp />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<PageNotFound />} />

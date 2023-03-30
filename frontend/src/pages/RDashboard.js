@@ -92,7 +92,12 @@ function RDashboard() {
 
   return (
     <div className="paddingPage ">
-      <button onClick={addPatient}>Add Patient</button>
+      <div style={{ textAlign: "center" }}>
+        <label className="tableHeading">Your Dashboard</label>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <button onClick={addPatient}>Add Patient</button>
+      </div>
       <div>
         <div>
           <label className="tableHeading">
