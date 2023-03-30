@@ -3,9 +3,8 @@ export const WriteFollowUpContext = React.createContext({});
 
 export const resetFollowupData = {
   instructions: "",
-  numberOfFollowup: "",
-  secheduleCount: "",
-  scheduleType: "Weekly",
+  gap: "",
+  visitCount: "",
 };
 
 export function WriteFollowUpProvider({ children }) {
