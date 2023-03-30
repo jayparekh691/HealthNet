@@ -54,6 +54,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Visit visit=this.visitRepo.findById(id).orElseThrow();
         this.medicalRepo.save(v);
         visit.setMedicalData(v);
+        visit.setVisited(true);
         this.visitRepo.save(visit);
         return visit;
     }
