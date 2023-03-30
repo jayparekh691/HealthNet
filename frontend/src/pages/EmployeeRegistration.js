@@ -30,7 +30,7 @@ function EmployeeRegistration() {
     if (name === "gender") {
       setGenderDefault(value);
     }
-    if (name === "role" && value === "doctor") {
+    if (name === "role" && value === "Doctor") {
       setDisabled((pv) => {
         return false;
       });

@@ -28,16 +28,20 @@ const Modal = ({
           </select>
         </div>
         <div>
-          <button
-            className="button"
-            value={data.e_id}
-            onClick={() => reassign(data.e_id)}
-          >
-            Reassign
-          </button>
-          <button className="button" onClick={closeModal}>
-            Cancel
-          </button>
+          <span style={{ marginRight: "10px" }}>
+            <button
+              className="button"
+              value={data.e_id}
+              onClick={() => reassign(data.e_id)}
+            >
+              Reassign
+            </button>
+          </span>
+          <span style={{ marginRight: "10px" }}>
+            <button className="button" onClick={closeModal}>
+              Cancel
+            </button>
+          </span>
         </div>
       </div>
     </div>

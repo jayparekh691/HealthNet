@@ -163,14 +163,11 @@ function PatientMedicalHistory() {
                                       Medical Data:
                                     </label>
                                     <br />
-                                    <span>
-                                      BP: {v.medicalData && v.medicalData.bp}
-                                    </span>
+                                    <span>BP: {v.medicalData.bp}</span>
                                     <br />
                                     <span>
                                       Sugar:
-                                      {v.medicalData &&
-                                        v.medicalData.sugar_level}
+                                      {v.medicalData.sugar_level}
                                     </span>
                                     <br />
                                     <span>

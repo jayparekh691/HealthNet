@@ -154,7 +154,7 @@ public class DoctorServicesImpl implements DoctorServices {
             List<Visit> visits=a.getFollowup().getVisitList();
             for(Visit v:visits)
             {
-                if(v.isVisited()==true)  //false
+                if(v.isVisited()==false)  //false
                     break;
                 if(v.isSeenByDoctor()==true)
                     continue;
