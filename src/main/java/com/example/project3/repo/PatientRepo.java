@@ -10,12 +10,11 @@ import java.util.List;
 
 public interface PatientRepo extends JpaRepository<Patient,Integer> {
 
-//    Patient findPatientByNameOrMobilenumber(String name,String mobilenumber);
     List<Patient> findPatientByFieldworker(Employee employee);
 
-    List<Patient> findPatientByName(String name);
+    List<Patient> findAllByNameContaining(String name);
 
-    List<Patient> findPatientByNameContaining(String name);
+    List<Patient> findPatientsByMobilenumberContaining(String mobilenumber);
 
-    List<Patient> findPatientsByMobilenumber(String mobilenumber);
+
 }

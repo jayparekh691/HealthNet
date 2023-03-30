@@ -1,6 +1,7 @@
 package com.example.project3.services;
 
 import com.example.project3.entities.*;
+import com.twilio.rest.microvisor.v1.App;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface DoctorServices {
     List<Appointment> getUnseenListByDoctorId(Integer did);
 
     Visit setVisitSeen(Integer vid);
+
+    Appointment deactivateFollowup(Integer id);
 }

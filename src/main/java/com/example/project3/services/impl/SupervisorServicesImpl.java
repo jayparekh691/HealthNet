@@ -1,12 +1,11 @@
 package com.example.project3.services.impl;
 
-import com.example.project3.entities.Appointment;
-import com.example.project3.entities.Employee;
-import com.example.project3.entities.Patient;
-import com.example.project3.entities.Visit;
+import com.example.project3.config.Pair;
+import com.example.project3.entities.*;
 import com.example.project3.repo.*;
 import com.example.project3.services.EmployeeServices;
 import com.example.project3.services.SupervisorServices;
+import com.twilio.rest.microvisor.v1.App;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,13 +96,26 @@ public class SupervisorServicesImpl implements SupervisorServices {
     }
 
     @Override
-    public List<Visit> getDueVisitList() {
+    public List<Pair> getDueVisitList() {
         Date  date = new Date();
         List<Visit> visits = this.visitRepo.findByDateBefore(date);
         for(Visit visit:visits){
             if(visit.isVisited()==true)
                 visits.remove(visit);
         }
-        return visits;
+        List<Pair> list = new ArrayList<>();
+        for(Visit visit:visits){
+            Followup followup = this.followupRepo.findAllByVisitListContaining(visit);
+            Appointment appointment = this.appointmentRepo.findByFollowup(followup);
+            Pair pair = new Pair(appointment.getPatient(),visit);
+            list.add(pair);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Employee> searchFieldWorkerByName(String name) {
+        List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
+        return employees;
     }
 }

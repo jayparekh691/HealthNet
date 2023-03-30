@@ -21,7 +21,6 @@ public class Followup {
     private String instructions;
     private int gap;
     private int visitCount;
-    private boolean isActive=Boolean.TRUE;
 
     @OneToOne(fetch = FetchType.EAGER)
     private Appointment appointment;

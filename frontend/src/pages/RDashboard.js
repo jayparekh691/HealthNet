@@ -50,7 +50,11 @@ function RDashboard() {
     const responseData = await addPatientAppointment(p_id, doctorID);
     const appointmentData = responseData.data;
     console.log(appointmentData);
-    toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+    if (appointmentData) {
+      toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+    } else {
+      toast.error(`Unable to generate Appointment`);
+    }
   }
 
   function handleChangeInDoctor(event) {
@@ -88,7 +92,12 @@ function RDashboard() {
 
   return (
     <div className="paddingPage ">
-      <button onClick={addPatient}>Add Patient</button>
+      <div style={{ textAlign: "center" }}>
+        <label className="tableHeading">Your Dashboard</label>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <button onClick={addPatient}>Add Patient</button>
+      </div>
       <div>
         <div>
           <label className="tableHeading">
@@ -162,7 +171,7 @@ function RDashboard() {
                               </label>
                               <div className="popup-select-box">
                                 <select
-                                  name="role"
+                                  name="doctor"
                                   onChange={handleChangeInDoctor}
                                 >
                                   {doctorList.map((e) => {

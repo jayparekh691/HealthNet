@@ -1,5 +1,6 @@
 package com.example.project3.services;
 
+import com.example.project3.config.Pair;
 import com.example.project3.entities.Employee;
 import com.example.project3.entities.Patient;
 import com.example.project3.entities.Visit;
@@ -17,5 +18,7 @@ public interface SupervisorServices {
 
     List<Patient> getPatientList(Integer id);
 
-    List<Visit> getDueVisitList();
+    List<Pair> getDueVisitList();
+
+    List<Employee> searchFieldWorkerByName(String name);
 }

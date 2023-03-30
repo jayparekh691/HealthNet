@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getEmployeeList, deleteEmployee } from "../services/adminServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { textAlign } from "@mui/system";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -59,10 +60,23 @@ function ADashboard() {
     });
   }
 
+  function assignFieldWorkers(event) {
+    event.preventDefault();
+    navigate("/supervisor-dashboard");
+  }
+
   return (
     <div className="paddingPage">
-      <div className="paddingPage ">
-        <button onClick={addEmployee}>Add Employee</button>
+      <div style={{ textAlign: "center" }}>
+        <label className="tableHeading">Your Dashboard</label>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <span style={{ margin: "10px" }}>
+          <button onClick={addEmployee}>Add Employee</button>
+        </span>
+        <span style={{ margin: "10px" }}>
+          <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
+        </span>
       </div>
       <div className="search">
         <TextField
@@ -76,18 +90,27 @@ function ADashboard() {
         />
       </div>
       {/* TODO: Change gender to display full form */}
-      <div className="paddingPage">
+      <div
+        style={{
+          width: "100%",
+          height: "80%",
+          maxHeight: "400px",
+          overflowY: "scroll",
+        }}
+      >
         <table>
           <tbody>
             <tr>
-              <th>Employee Id</th>
+              <th>E_Id</th>
               <th>Name</th>
               <th>Gender</th>
               <th>Role</th>
               <th>Email</th>
+              <th>Update</th>
+              <th>Remove</th>
             </tr>
           </tbody>
-          <tbody>
+          <tbody style={{}}>
             {employeeList
               .filter((e) => {
                 return e.deleted === false && e.role !== "Admin";
