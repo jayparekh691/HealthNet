@@ -70,18 +70,29 @@ function DiagnosePatient() {
     event.preventDefault();
     console.log(writtenData);
     const responseData = await writeDiagnosis(appointmentID, writtenData);
-    if (responseData.data) {
-      console.log(followUpDetails);
-      const responseData = await submitFollowUp(appointmentID, followUpDetails);
-      const wData = responseData.data;
-      if (wData) {
-        setWrittenData(resetDiagnoseData);
-        setFollowUpDetails(resetFollowupData);
-        console.log(wData);
-        toast.success(`Diagnosis and Prescription Written and FollowUp Added`);
-        navigate(-1);
+    const Ddata = responseData.data;
+    if (Ddata) {
+      setWrittenData(resetDiagnoseData);
+      // TODO: find out the best condition for below, visitCOunt != "" is a temporary solution
+      if (followUpDetails.visitCount !== "") {
+        console.log(followUpDetails);
+        const responseData = await submitFollowUp(
+          appointmentID,
+          followUpDetails
+        );
+        const wData = responseData.data;
+        if (wData) {
+          setFollowUpDetails(resetFollowupData);
+          console.log(wData);
+          toast.success(
+            `Diagnosis and Prescription Written and FollowUp Added`
+          );
+          navigate(-1);
+        } else {
+          toast.error("Unable to write Diagnosis and Prescription / follow up");
+        }
       } else {
-        toast.error("Unable to write Diagnosis and Prescription / follow up");
+        toast.success(`Diagnosis and Prescription Written`);
       }
     } else {
       toast.error("Unable to write Diagnosis and Prescription");
