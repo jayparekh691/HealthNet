@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import loginService from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
-    role: "receptionist",
   });
 
   function handleChange(event) {
@@ -29,10 +29,10 @@ function Login() {
     const data = responseData.data;
     console.log(data);
     if (loginData.email === data.email) {
-      if (data.role === "receptionist") {
+      if (data.role === "Receptionist") {
         // show receptionist dashboard
         navigate("/receptionist-dashboard");
-      } else if (data.role === "doctor") {
+      } else if (data.role === "Doctor") {
         // show doctor dashboard
         navigate("/doctor-dashboard", {
           state: {
@@ -43,11 +43,11 @@ function Login() {
         navigate("/admin-dashboard");
       } else {
         // when role is not corretly selected
-        console.log("incorrect role selected");
+        toast.error("Incorrect role selected");
       }
     } else {
       // incorrect email or password
-      console.log("incorrect email or password or role");
+      toast.error("Incorrect email or password");
     }
   }
 

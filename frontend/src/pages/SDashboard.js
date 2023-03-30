@@ -206,7 +206,7 @@ function SDashboard() {
           }}
         >
           <div>
-            <label className="tableHeading">Reassign Patients</label>
+            <label className="tableHeading">Reassign Field Worker</label>
           </div>
           <div className="table-wrapper">
             <table
