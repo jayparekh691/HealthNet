@@ -59,10 +59,16 @@ function ADashboard() {
     });
   }
 
+  function assignFieldWorkers(event) {
+    event.preventDefault();
+    navigate("/supervisor-dashboard");
+  }
+
   return (
     <div className="paddingPage">
       <div className="paddingPage ">
         <button onClick={addEmployee}>Add Employee</button>
+        <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
       </div>
       <div className="search">
         <TextField
@@ -76,55 +82,75 @@ function ADashboard() {
         />
       </div>
       {/* TODO: Change gender to display full form */}
-      <div className="paddingPage">
+      <div
+        style={{
+          width: "40%",
+        }}
+      >
         <table>
           <tbody>
             <tr>
-              <th>Employee Id</th>
+              <th>Id</th>
               <th>Name</th>
               <th>Gender</th>
               <th>Role</th>
               <th>Email</th>
+              <th>Update Patient</th>
+              <th>Remove Patient</th>
             </tr>
           </tbody>
-          <tbody>
-            {employeeList
-              .filter((e) => {
-                return e.deleted === false && e.role !== "Admin";
-              })
-              .map((e, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{e.e_id}</th>
-                    <th>{e.name}</th>
-                    <th>{e.gender}</th>
-                    <th>{e.role}</th>
-                    <th>{e.email}</th>
-                    <td>
-                      <button
-                        className="button"
-                        value={i}
-                        onClick={() => onUpdateButtonClicked(e)}
-                      >
-                        Update
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="button"
-                        value={i}
-                        onClick={(event) =>
-                          onDeleteButtonClicked(event, e.e_id)
-                        }
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
         </table>
+        <div
+          // className="paddingPage"
+          style={{
+            height: "80%",
+            maxHeight: "400px",
+            overflowY: "scroll",
+            borderStyle: "solid",
+            borderWidth: "2px",
+            borderRadius: "10px",
+          }}
+        >
+          <table>
+            <tbody style={{}}>
+              {employeeList
+                .filter((e) => {
+                  return e.deleted === false && e.role !== "Admin";
+                })
+                .map((e, i) => {
+                  return (
+                    <tr key={i}>
+                      <th>{e.e_id}</th>
+                      <th>{e.name}</th>
+                      <th>{e.gender}</th>
+                      <th>{e.role}</th>
+                      <th>{e.email}</th>
+                      <td>
+                        <button
+                          className="button"
+                          value={i}
+                          onClick={() => onUpdateButtonClicked(e)}
+                        >
+                          Update
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="button"
+                          value={i}
+                          onClick={(event) =>
+                            onDeleteButtonClicked(event, e.e_id)
+                          }
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

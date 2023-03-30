@@ -13,6 +13,7 @@ import DiagnosePatient from "./pages/DiagnosePatient";
 import WriteFollowUp from "./pages/WriteFollowUp";
 import ViewAnyPatientHistory from "./pages/ViewAnyPatientHistory";
 import PatientMedicalHistory from "./pages/PatientMedicalHistory";
+import SDashboard from "./pages/SDashboard";
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
         element={<PatientMedicalHistory />}
       />
       <Route path="/diagnose-patient" element={<DiagnosePatient />} />
+      <Route path="/supervisor-dashboard" element={<SDashboard />} />
+
       <Route path="/write-follow-up" element={<WriteFollowUp />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<PageNotFound />} />
