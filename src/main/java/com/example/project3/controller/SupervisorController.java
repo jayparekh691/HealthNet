@@ -80,4 +80,10 @@ public class SupervisorController {
         return new ResponseEntity<>(visits,HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/search-fieldworker/{name}")
+    public ResponseEntity<List<Employee>> searchFieldWorkerByName(@PathVariable("name") String name){
+        List<Employee> employees = this.supervisorServices.searchFieldWorkerByName(name);
+        return new ResponseEntity<>(employees,HttpStatus.ACCEPTED);
+    }
+
 }

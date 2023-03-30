@@ -18,4 +18,6 @@ public interface SupervisorServices {
     List<Patient> getPatientList(Integer id);
 
     List<Visit> getDueVisitList();
+
+    List<Employee> searchFieldWorkerByName(String name);
 }

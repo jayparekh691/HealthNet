@@ -52,7 +52,7 @@ public class PatientServicesImpl implements PatientServices {
 
     @Override
     public List<Patient> searchPatient(String id) {
-        List<Patient> l1=this.patientRepo.findPatientByName(id);
+        List<Patient> l1=this.patientRepo.findPatientByNameContaining(id);
         List<Patient> l2=this.patientRepo.findPatientsByMobilenumber(id);
         l1.addAll(l2);
         return l1;
