@@ -66,9 +66,13 @@ function ADashboard() {
 
   return (
     <div className="paddingPage">
-      <div className="paddingPage ">
-        <button onClick={addEmployee}>Add Employee</button>
-        <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
+      <div>
+        <span>
+          <button onClick={addEmployee}>Add Employee</button>
+        </span>
+        <span>
+          <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
+        </span>
       </div>
       <div className="search">
         <TextField
