@@ -157,6 +157,7 @@ function SDashboard() {
                                 name="name"
                                 onChange={handleChangeInFieldWorker}
                               >
+                                <option hidden>Select</option>
                                 {fieldWorkerList.map((e) => {
                                   return (
                                     <option value={e.e_id} key={e.e_id}>

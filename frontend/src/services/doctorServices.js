@@ -14,6 +14,9 @@ const searchedPatientListAPI = (doctorID, searchValue) =>
 const patientMedicalHistoryAPI = (doctorID, patientID) =>
   `http://localhost:9080/api/doctor/view-patient-history/${doctorID}/${patientID}`;
 
+const deactivateFollowUpAPI = (appointmentID) =>
+  `http://localhost:9080/api/doctor/deactivate-followup/${appointmentID}`;
+
 async function getAllPatients(doctorID) {
   const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID));
   return responseData;
@@ -48,10 +51,16 @@ async function getPatientHistory(doctorID, patientID) {
   );
   return responseData;
 }
+
+async function deactivateFollowUp(appointmentID) {
+  const responseData = await axios.post(deactivateFollowUpAPI(appointmentID));
+  return responseData;
+}
 export {
   getAllPatients,
   writeDiagnosis,
   submitFollowUp,
   getPatientList,
   getPatientHistory,
+  deactivateFollowUp,
 };
