@@ -12,9 +12,9 @@ public interface PatientRepo extends JpaRepository<Patient,Integer> {
 
     List<Patient> findPatientByFieldworker(Employee employee);
 
-    List<Patient> findPatientByNameContaining(String name);
+    List<Patient> findAllByNameContaining(String name);
 
-    List<Patient> findPatientsByMobilenumber(String mobilenumber);
+    List<Patient> findPatientsByMobilenumberContaining(String mobilenumber);
 
 
 }

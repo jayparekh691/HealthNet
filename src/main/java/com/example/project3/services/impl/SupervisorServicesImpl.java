@@ -112,5 +112,4 @@ public class SupervisorServicesImpl implements SupervisorServices {
         List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
         return employees;
     }
-
 }
