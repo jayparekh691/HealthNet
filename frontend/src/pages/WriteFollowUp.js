@@ -45,40 +45,28 @@ function WriteFollowUp() {
             </div>
             <div className="user-details">
               <div className="input-box">
-                <span className="details">Schecule Count</span>
+                <span className="details">Interval</span>
                 <input
-                  name="secheduleCount"
+                  name="gap"
                   type="number"
                   min={1}
                   max={100}
-                  placeholder="Schedule Count"
-                  value={followUpDetails.secheduleCount}
+                  placeholder="Interval"
+                  value={followUpDetails.gap}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="select-box">
-                <select
-                  defaultValue={followUpDetails.scheduleType}
-                  name="scheduleType"
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="weekly">Weekly</option>
-                  <option value="bi-weekly">Bi-Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
 
               <div className="input-box">
-                <span className="details">Follow Up Count</span>
+                <span className="details">Visit Count</span>
                 <input
-                  name="numberOfFollowup"
+                  name="visitCount"
                   type="number"
                   min={1}
                   max={100}
-                  placeholder="Follow Up Count"
-                  value={followUpDetails.numberOfFollowup}
+                  placeholder="Visit Count"
+                  value={followUpDetails.visitCount}
                   onChange={handleChange}
                   required
                 />
