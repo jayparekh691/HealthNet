@@ -65,7 +65,7 @@ function DDashboard() {
   return (
     <div className="paddingPage">
       <div style={{ textAlign: "center" }}>
-        <label className="tableHeading">Your Dashboard</label>
+        <label className="tableHeading">Doctor Dashboard</label>
       </div>
       <div style={{ textAlign: "right" }}>
         <span style={{ margin: "10px" }}>

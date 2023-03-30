@@ -68,7 +68,7 @@ function ADashboard() {
   return (
     <div className="paddingPage">
       <div style={{ textAlign: "center" }}>
-        <label className="tableHeading">Your Dashboard</label>
+        <label className="tableHeading">Admin Dashboard</label>
       </div>
       <div style={{ textAlign: "right" }}>
         <span style={{ margin: "10px" }}>
@@ -106,8 +106,6 @@ function ADashboard() {
               <th>Gender</th>
               <th>Role</th>
               <th>Email</th>
-              <th>Update</th>
-              <th>Remove</th>
             </tr>
           </tbody>
           <tbody style={{}}>

@@ -24,7 +24,7 @@ function ViewNewVisitRecords() {
       }
       console.log(data);
     })();
-  }, []);
+  }, [state.doctorID]);
 
   async function markAsSeenByDoctor(visitID) {
     console.log(visitID);
@@ -41,16 +41,16 @@ function ViewNewVisitRecords() {
   return (
     <div>
       <div>
-        {newVisitList.length !== 0 && (
-          <label className="tableHeading" style={{ textAlign: "center" }}>
-            New Visit Records
-          </label>
-        )}
-        {newVisitList.length === 0 && (
+        {/* {newVisitList.length !== 0 && ( */}
+        <label className="tableHeading" style={{ textAlign: "center" }}>
+          New Visit Records
+        </label>
+        {/*)*/}
+        {/* {newVisitList.length === 0 && (
           <label className="tableHeading" style={{ textAlign: "center" }}>
             No New Visit Records
           </label>
-        )}
+        )} */}
       </div>
       <div>
         {newVisitList.map((e, i) => {
@@ -131,7 +131,7 @@ function ViewNewVisitRecords() {
                 {e.followup &&
                   e.followup.visitList
                     .filter((v, i) => {
-                      return v.visited === false && v.seenByDoctor === false;
+                      return v.visited === true && v.seenByDoctor === false;
                     })
                     .map((v, i) => {
                       return (

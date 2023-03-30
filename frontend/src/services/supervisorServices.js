@@ -10,6 +10,8 @@ const assignFieldworkerAPI = (patientID, fieldWorkerID) =>
 const reassignFieldworkerAPI = (oldFieldWorkerID, reassignedFieldWorkerID) =>
   `http://localhost:9080/api/supervisor/reassign-fieldworker/${oldFieldWorkerID}/${reassignedFieldWorkerID}`;
 
+const dueVisitsByFieldWorkerAPI = `http://localhost:9080/api/supervisor/due-visits`;
+
 async function getPatientList() {
   const responseData = await axios.get(unassignedPatientListAPI);
   return responseData;
@@ -34,9 +36,15 @@ async function reassignFieldWorker(oldFieldWorkerID, reassignedFieldWorkerID) {
   return responseData;
 }
 
+async function dueVisits() {
+  const responseData = await axios.get(dueVisitsByFieldWorkerAPI);
+  return responseData;
+}
+
 export {
   getPatientList,
   getFieldworkerList,
   assignFieldworker,
   reassignFieldWorker,
+  dueVisits,
 };
