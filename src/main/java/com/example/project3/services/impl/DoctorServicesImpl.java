@@ -114,7 +114,7 @@ public class DoctorServicesImpl implements DoctorServices {
             patients.add(patient);
         }
         catch (Exception e){
-            patients=this.patientRepo.findPatientByNameContaining(id);
+            patients=this.patientRepo.findAllByNameContaining(id);
         }
         List<Patient> finalPatients=new ArrayList<Patient>();
         for(Patient p:patients)
@@ -154,7 +154,7 @@ public class DoctorServicesImpl implements DoctorServices {
             List<Visit> visits=a.getFollowup().getVisitList();
             for(Visit v:visits)
             {
-                if(v.isVisited()==false)
+                if(v.isVisited()==true)  //false
                     break;
                 if(v.isSeenByDoctor()==true)
                     continue;
