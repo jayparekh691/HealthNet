@@ -24,16 +24,6 @@ function PatientMedicalHistory() {
     }
   }
 
-  const Deactivate = ({ data }) => {
-    return (
-      <span style={{ textAlign: "right" }}>
-        <button onClick={() => onDeactivateFollowUp(data)}>
-          Deactivate Follow Up
-        </button>
-      </span>
-    );
-  };
-
   return (
     <div>
       <div style={{ padding: "10px" }}>
@@ -140,44 +130,59 @@ function PatientMedicalHistory() {
                         </Typography>
                       }
                     </AccordionDetails>
-                    {e.followup.visitList.map((v, i) => {
-                      return (
-                        <div key={i}>
-                          <Accordion style={{ margin: "10px" }}>
-                            <AccordionSummary
-                              sx={{
-                                backgroundColor: "lavender",
-                              }}
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                            >
-                              <Typography>
-                                <span className="spaceBetweenLabels">
-                                  Visit ID : {v.v_id}
-                                </span>
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              {
+                    {e.followup.visitList
+                      .filter((v, i) => v.visited === true)
+                      .map((v, i) => {
+                        return (
+                          <div key={i}>
+                            <Accordion style={{ margin: "10px" }}>
+                              <AccordionSummary
+                                sx={{
+                                  backgroundColor: "lavender",
+                                }}
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                              >
                                 <Typography>
-                                  <label className="tableHeading">
-                                    Medical Data:
-                                  </label>
-                                  <br />
-                                  <span>BP: {v.medicalData.bp}</span>
-                                  <br />
-                                  <span>
-                                    Sugar : {v.medicalData.sugar_level}
+                                  <span className="spaceBetweenLabels">
+                                    Visit ID : {v.v_id}
                                   </span>
-                                  <br />
+                                  <span className="spaceBetweenLabels">
+                                    Visit Date : {v.date.split("T")[0]}
+                                  </span>
                                 </Typography>
-                              }
-                            </AccordionDetails>
-                          </Accordion>
-                        </div>
-                      );
-                    })}
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                {
+                                  <Typography>
+                                    <label className="tableHeading">
+                                      Medical Data:
+                                    </label>
+                                    <br />
+                                    <span>
+                                      BP: {v.medicalData && v.medicalData.bp}
+                                    </span>
+                                    <br />
+                                    <span>
+                                      Sugar:
+                                      {v.medicalData &&
+                                        v.medicalData.sugar_level}
+                                    </span>
+                                    <br />
+                                    <span>
+                                      Temperature:
+                                      {v.medicalData &&
+                                        v.medicalData.temperature}
+                                    </span>
+                                    <br />
+                                  </Typography>
+                                }
+                              </AccordionDetails>
+                            </Accordion>
+                          </div>
+                        );
+                      })}
                   </Accordion>
                 )}
               </Accordion>
