@@ -84,7 +84,13 @@ function ADashboard() {
       {/* TODO: Change gender to display full form */}
       <div
         style={{
-          width: "40%",
+          width: "50%",
+          height: "80%",
+          maxHeight: "400px",
+          overflowY: "scroll",
+          borderStyle: "solid",
+          borderWidth: "2px",
+          borderRadius: "10px",
         }}
       >
         <table>
@@ -95,62 +101,48 @@ function ADashboard() {
               <th>Gender</th>
               <th>Role</th>
               <th>Email</th>
-              <th>Update Patient</th>
-              <th>Remove Patient</th>
+              <th>Update</th>
+              <th>Remove</th>
             </tr>
           </tbody>
+          <tbody style={{}}>
+            {employeeList
+              .filter((e) => {
+                return e.deleted === false && e.role !== "Admin";
+              })
+              .map((e, i) => {
+                return (
+                  <tr key={i}>
+                    <th>{e.e_id}</th>
+                    <th>{e.name}</th>
+                    <th>{e.gender}</th>
+                    <th>{e.role}</th>
+                    <th>{e.email}</th>
+                    <td>
+                      <button
+                        className="button"
+                        value={i}
+                        onClick={() => onUpdateButtonClicked(e)}
+                      >
+                        Update
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="button"
+                        value={i}
+                        onClick={(event) =>
+                          onDeleteButtonClicked(event, e.e_id)
+                        }
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
         </table>
-        <div
-          // className="paddingPage"
-          style={{
-            height: "80%",
-            maxHeight: "400px",
-            overflowY: "scroll",
-            borderStyle: "solid",
-            borderWidth: "2px",
-            borderRadius: "10px",
-          }}
-        >
-          <table>
-            <tbody style={{}}>
-              {employeeList
-                .filter((e) => {
-                  return e.deleted === false && e.role !== "Admin";
-                })
-                .map((e, i) => {
-                  return (
-                    <tr key={i}>
-                      <th>{e.e_id}</th>
-                      <th>{e.name}</th>
-                      <th>{e.gender}</th>
-                      <th>{e.role}</th>
-                      <th>{e.email}</th>
-                      <td>
-                        <button
-                          className="button"
-                          value={i}
-                          onClick={() => onUpdateButtonClicked(e)}
-                        >
-                          Update
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="button"
-                          value={i}
-                          onClick={(event) =>
-                            onDeleteButtonClicked(event, e.e_id)
-                          }
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );

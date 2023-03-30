@@ -5,6 +5,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { deactivateFollowUp } from "../services/doctorServices";
 
 function PatientMedicalHistory() {
   const state = useLocation().state;
@@ -15,6 +16,23 @@ function PatientMedicalHistory() {
     setPatientHistory(state.patientHistory);
     setPatientObj(state.patientObj);
   }, [state.patientHistory, state.patientObj]);
+
+  async function onDeactivateFollowUp(e_id) {
+    const responseData = await deactivateFollowUp(e_id);
+    if (responseData) {
+      console.log("deactivated");
+    }
+  }
+
+  const Deactivate = ({ data }) => {
+    return (
+      <span style={{ textAlign: "right" }}>
+        <button onClick={() => onDeactivateFollowUp(data)}>
+          Deactivate Follow Up
+        </button>
+      </span>
+    );
+  };
 
   return (
     <div>
@@ -62,6 +80,13 @@ function PatientMedicalHistory() {
                         ? "Not Assigned"
                         : e.patient.fieldworker.name}
                     </span>
+                    {e.followupRemaining === true && (
+                      <span style={{ textAlign: "right" }}>
+                        <button onClick={() => onDeactivateFollowUp(e.a_id)}>
+                          Deactivate Follow Up
+                        </button>
+                      </span>
+                    )}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -81,76 +106,80 @@ function PatientMedicalHistory() {
                   </Typography>
                 </AccordionDetails>
 
-                <Accordion style={{ margin: "10px" }}>
-                  <AccordionSummary
-                    sx={{
-                      backgroundColor: "lavender",
-                    }}
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography>
-                      <span className="spaceBetweenLabels">
-                        Follow Up ID : {e.followup.f_id}
-                      </span>
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {
+                {e.followup && (
+                  <Accordion style={{ margin: "10px" }}>
+                    <AccordionSummary
+                      sx={{
+                        backgroundColor: "lavender",
+                      }}
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
                       <Typography>
-                        <label className="tableHeading">Instructions: </label>
-                        <br />
-                        <span>{e.followup.instructions}</span>
-                        <br />
-                        <label className="tableHeading">Schedule Type: </label>
-                        <br />
-                        <span>{e.followup.scheduleType}</span>
-                        <br />
-                        <label className="tableHeading">Schedule Count: </label>
-                        <br />
-                        <span>{e.followup.scheduleCount}</span>
-                        <br />
+                        <span className="spaceBetweenLabels">
+                          Follow Up ID : {e.followup.f_id}
+                        </span>
                       </Typography>
-                    }
-                  </AccordionDetails>
-                  {e.followup.visitList.map((v, i) => {
-                    return (
-                      <div key={i}>
-                        <Accordion style={{ margin: "10px" }}>
-                          <AccordionSummary
-                            sx={{
-                              backgroundColor: "lavender",
-                            }}
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                          >
-                            <Typography>
-                              <span className="spaceBetweenLabels">
-                                Visit ID : {v.v_id}
-                              </span>
-                            </Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            {
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {
+                        <Typography>
+                          <label className="tableHeading">Instructions: </label>
+                          <br />
+                          <span>{e.followup.instructions}</span>
+                          <br />
+                          <label className="tableHeading">Interval: </label>
+                          <br />
+                          <span>{e.followup.gap}</span>
+                          <br />
+                          <label className="tableHeading">Visit Count: </label>
+                          <br />
+                          <span>{e.followup.visitCount}</span>
+                          <br />
+                        </Typography>
+                      }
+                    </AccordionDetails>
+                    {e.followup.visitList.map((v, i) => {
+                      return (
+                        <div key={i}>
+                          <Accordion style={{ margin: "10px" }}>
+                            <AccordionSummary
+                              sx={{
+                                backgroundColor: "lavender",
+                              }}
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                            >
                               <Typography>
-                                <label className="tableHeading">
-                                  Medical Data:
-                                </label>
-                                <br />
-                                <span>BP: {v.medicalData.bp}</span>
-                                <br />
-                                <span>Sugar : {v.medicalData.sugar_level}</span>
-                                <br />
+                                <span className="spaceBetweenLabels">
+                                  Visit ID : {v.v_id}
+                                </span>
                               </Typography>
-                            }
-                          </AccordionDetails>
-                        </Accordion>
-                      </div>
-                    );
-                  })}
-                </Accordion>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              {
+                                <Typography>
+                                  <label className="tableHeading">
+                                    Medical Data:
+                                  </label>
+                                  <br />
+                                  <span>BP: {v.medicalData.bp}</span>
+                                  <br />
+                                  <span>
+                                    Sugar : {v.medicalData.sugar_level}
+                                  </span>
+                                  <br />
+                                </Typography>
+                              }
+                            </AccordionDetails>
+                          </Accordion>
+                        </div>
+                      );
+                    })}
+                  </Accordion>
+                )}
               </Accordion>
             </div>
           );
