@@ -170,7 +170,7 @@ textarea {
 }
 
 table {
-  width: 50%;
+  width: 100%;
   border-collapse: collapse;
   height: max-content;
 }
@@ -231,7 +231,7 @@ h1 {
 
 .search {
   width: 30%;
-  padding: 10px;
+  padding-bottom: 10px;
 }
 
 ul li {

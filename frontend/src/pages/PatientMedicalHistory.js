@@ -27,6 +27,9 @@ function PatientMedicalHistory() {
   return (
     <div>
       <div style={{ padding: "10px" }}>
+        <div style={{ textAlign: "center" }}>
+          <label className="tableHeading">View Patient Medical History</label>
+        </div>
         <div>
           <label className="tableHeading">Patient Details:</label>
         </div>
@@ -160,14 +163,11 @@ function PatientMedicalHistory() {
                                       Medical Data:
                                     </label>
                                     <br />
-                                    <span>
-                                      BP: {v.medicalData && v.medicalData.bp}
-                                    </span>
+                                    <span>BP: {v.medicalData.bp}</span>
                                     <br />
                                     <span>
                                       Sugar:
-                                      {v.medicalData &&
-                                        v.medicalData.sugar_level}
+                                      {v.medicalData.sugar_level}
                                     </span>
                                     <br />
                                     <span>

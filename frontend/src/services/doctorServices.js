@@ -17,6 +17,12 @@ const patientMedicalHistoryAPI = (doctorID, patientID) =>
 const deactivateFollowUpAPI = (appointmentID) =>
   `http://localhost:9080/api/doctor/deactivate-followup/${appointmentID}`;
 
+const newVisitListAPI = (doctorID) =>
+  `http://localhost:9080/api/doctor/get-unseen-list/${doctorID}`;
+
+const markSeenByDoctorAPI = (visitID) =>
+  `http://localhost:9080/api/doctor/set-visit-as-seen/${visitID}`;
+
 async function getAllPatients(doctorID) {
   const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID));
   return responseData;
@@ -56,6 +62,16 @@ async function deactivateFollowUp(appointmentID) {
   const responseData = await axios.post(deactivateFollowUpAPI(appointmentID));
   return responseData;
 }
+
+async function getNewVisitRecords(doctorID) {
+  const responseData = await axios.get(newVisitListAPI(doctorID));
+  return responseData;
+}
+
+async function markSeenByDoctor(visitID) {
+  const responseData = await axios.get(markSeenByDoctorAPI(visitID));
+  return responseData;
+}
 export {
   getAllPatients,
   writeDiagnosis,
@@ -63,4 +79,6 @@ export {
   getPatientList,
   getPatientHistory,
   deactivateFollowUp,
+  getNewVisitRecords,
+  markSeenByDoctor,
 };

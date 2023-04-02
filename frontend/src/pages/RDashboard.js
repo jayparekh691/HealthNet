@@ -92,114 +92,55 @@ function RDashboard() {
 
   return (
     <div className="paddingPage ">
-      <button onClick={addPatient}>Add Patient</button>
-      <div>
-        <div>
-          <label className="tableHeading">
-            Upcoming Patients: {patientList.length}
-          </label>
-        </div>
-        <table>
-          <tbody>
-            <tr>
-              <th>Appointment No.</th>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Gender</th>
-              <th>Doctor</th>
-            </tr>
-          </tbody>
-          <tbody>
-            {patientList.map((e, i) => {
-              return (
-                <tr key={i}>
-                  <th>{e.a_id}</th>
-                  <th>{e.patient.name}</th>
-                  <th>{e.patient.age}</th>
-                  <th>{e.patient.gender}</th>
-                  <th>{e.doctor.name}</th>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div style={{}}>
+        <label className="tableHeading">Receptionist Dashboard</label>
       </div>
-      <div>
-        <div>
-          <div className="search">
-            <TextField
-              name="Patient Search"
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
-              label="Search"
-              onChange={searchBarOnChange}
-              value={searchValue}
-            />
-          </div>
+      <div style={{ textAlign: "right" }}>
+        <button onClick={addPatient}>Add Patient</button>
+      </div>
+      <div
+        // className="paddingPage"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <div
+          className="table-wrapper"
+          style={{
+            flex: 1,
+            margin: "10px",
+          }}
+        >
           <div>
-            <table>
+            <label className="tableHeading">
+              Upcoming Patients: {patientList.length}
+            </label>
+          </div>
+          <div className="table-wrapper">
+            <table
+              style={{
+                width: "100%",
+              }}
+            >
               <tbody>
                 <tr>
+                  <th>Appointment No.</th>
                   <th>Name</th>
                   <th>Age</th>
                   <th>Gender</th>
+                  <th>Doctor</th>
                 </tr>
               </tbody>
-              <tbody>
-                {searchedPatientList.map((e, i) => {
+              <tbody tbody style={{ flex: "1", overflowY: "auto" }}>
+                {patientList.map((e, i) => {
                   return (
                     <tr key={i}>
-                      <th>{e.name}</th>
-                      <th>{e.age}</th>
-                      <th>{e.gender}</th>
-                      <td>
-                        <div>
-                          <Popup
-                            contentStyle={{ width: "20%", height: "30%" }}
-                            trigger={<button> Add Appointment</button>}
-                            position="right center"
-                          >
-                            <div style={{ padding: 10 }}>
-                              <label className="popup-heading">
-                                Select Doctor
-                              </label>
-                              <div className="popup-select-box">
-                                <select
-                                  name="doctor"
-                                  onChange={handleChangeInDoctor}
-                                >
-                                  {doctorList.map((e) => {
-                                    return (
-                                      <option value={e.e_id} key={e.e_id}>
-                                        {e.name}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                              </div>
-                              <div>
-                                <button
-                                  className="button"
-                                  value={i}
-                                  onClick={() => addAppointment(e.pid)}
-                                >
-                                  CONFIRM
-                                </button>
-                              </div>
-                            </div>
-                          </Popup>
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          className="button"
-                          value={i}
-                          onClick={() => onUpdatePatientData(e)}
-                        >
-                          UpdatePatientData
-                        </button>
-                      </td>
+                      <th>{e.a_id}</th>
+                      <th>{e.patient.name}</th>
+                      <th>{e.patient.age}</th>
+                      <th>{e.patient.gender}</th>
+                      <th>{e.doctor.name}</th>
                     </tr>
                   );
                 })}
@@ -207,29 +148,135 @@ function RDashboard() {
             </table>
           </div>
         </div>
-      </div>
-      <div>
-        <div>
-          <label className="tableHeading">Doctors Available</label>
+        <div
+          className="table-wrapper"
+          style={{
+            flex: 1,
+            margin: "10px",
+          }}
+        >
+          <div
+            // className="paddingPage"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div className="search">
+              <TextField
+                name="Patient Search"
+                id="outlined-basic"
+                variant="outlined"
+                fullWidth
+                label="Search"
+                onChange={searchBarOnChange}
+                value={searchValue}
+              />
+            </div>
+            <div className="table-wrapper">
+              <table
+                style={{
+                  width: "100%",
+                }}
+              >
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                  </tr>
+                </tbody>
+                <tbody style={{ flex: "1", overflowY: "auto" }}>
+                  {searchedPatientList.map((e, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{e.name}</th>
+                        <th>{e.age}</th>
+                        <th>{e.gender}</th>
+                        <td>
+                          <div>
+                            <Popup
+                              contentStyle={{ width: "20%", height: "30%" }}
+                              trigger={<button> Add Appointment</button>}
+                              position="right center"
+                            >
+                              <div style={{ padding: 10 }}>
+                                <label className="popup-heading">
+                                  Select Doctor
+                                </label>
+                                <div className="popup-select-box">
+                                  <select
+                                    name="doctor"
+                                    onChange={handleChangeInDoctor}
+                                  >
+                                    {doctorList.map((e) => {
+                                      return (
+                                        <option value={e.e_id} key={e.e_id}>
+                                          {e.name}
+                                        </option>
+                                      );
+                                    })}
+                                  </select>
+                                </div>
+                                <div>
+                                  <button
+                                    className="button"
+                                    value={i}
+                                    onClick={() => addAppointment(e.pid)}
+                                  >
+                                    CONFIRM
+                                  </button>
+                                </div>
+                              </div>
+                            </Popup>
+                          </div>
+                        </td>
+                        <td>
+                          <button
+                            className="button"
+                            value={i}
+                            onClick={() => onUpdatePatientData(e)}
+                          >
+                            UpdatePatientData
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div>
+              <label className="tableHeading">Doctors Available</label>
+            </div>
+            <div className="table-wrapper">
+              <table
+                style={{
+                  width: "100%",
+                }}
+              >
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                  </tr>
+                </tbody>
+                <tbody style={{ flex: "1", overflowY: "auto" }}>
+                  {doctorList.map((e, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{e.name}</th>
+                        <th>{e.specialization}</th>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <table>
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th>Specialization</th>
-            </tr>
-          </tbody>
-          <tbody>
-            {doctorList.map((e, i) => {
-              return (
-                <tr key={i}>
-                  <th>{e.name}</th>
-                  <th>{e.specialization}</th>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
     </div>
   );

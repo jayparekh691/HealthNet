@@ -54,8 +54,31 @@ function DDashboard() {
     });
   }
 
+  function viewNewVisitRecords() {
+    navigate("/view-new-visit-records", {
+      state: {
+        doctorID: doctorID,
+      },
+    });
+  }
+
   return (
     <div className="paddingPage">
+      <div style={{ textAlign: "center" }}>
+        <label className="tableHeading">Doctor Dashboard</label>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <span style={{ margin: "10px" }}>
+          <button className="button" onClick={viewAnyPatientHistory}>
+            View Patient History
+          </button>
+        </span>
+        <span style={{ margin: "10px" }}>
+          <button className="button" onClick={viewNewVisitRecords}>
+            View New Visit Records
+          </button>
+        </span>
+      </div>
       <div>
         <div>
           <label className="tableHeading">
@@ -65,7 +88,7 @@ function DDashboard() {
         <table>
           <tbody>
             <tr>
-              <th>Appointment No.</th>
+              <th>A_No.</th>
               <th>Name</th>
               <th>Age</th>
               <th>Gender</th>
@@ -93,11 +116,6 @@ function DDashboard() {
             })}
           </tbody>
         </table>
-      </div>
-      <div style={{ margin: "10px" }}>
-        <button className="button" onClick={viewAnyPatientHistory}>
-          View Patient History
-        </button>
       </div>
     </div>
   );

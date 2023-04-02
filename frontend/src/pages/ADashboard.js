@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getEmployeeList, deleteEmployee } from "../services/adminServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { textAlign } from "@mui/system";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -66,11 +67,14 @@ function ADashboard() {
 
   return (
     <div className="paddingPage">
-      <div>
-        <span>
+      <div style={{ textAlign: "center" }}>
+        <label className="tableHeading">Admin Dashboard</label>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <span style={{ margin: "10px" }}>
           <button onClick={addEmployee}>Add Employee</button>
         </span>
-        <span>
+        <span style={{ margin: "10px" }}>
           <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
         </span>
       </div>
@@ -88,25 +92,20 @@ function ADashboard() {
       {/* TODO: Change gender to display full form */}
       <div
         style={{
-          width: "50%",
+          width: "100%",
           height: "80%",
           maxHeight: "400px",
           overflowY: "scroll",
-          borderStyle: "solid",
-          borderWidth: "2px",
-          borderRadius: "10px",
         }}
       >
         <table>
           <tbody>
             <tr>
-              <th>Id</th>
+              <th>E_Id</th>
               <th>Name</th>
               <th>Gender</th>
               <th>Role</th>
               <th>Email</th>
-              <th>Update</th>
-              <th>Remove</th>
             </tr>
           </tbody>
           <tbody style={{}}>
