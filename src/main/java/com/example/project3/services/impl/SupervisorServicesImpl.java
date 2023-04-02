@@ -103,11 +103,24 @@ public class SupervisorServicesImpl implements SupervisorServices {
             if(visit.isVisited()==true)
                 visits.remove(visit);
         }
-        List<Pair> list = new ArrayList<>();
+        List<Pair> list = new ArrayList<Pair>();
+        Map<Patient,List<Visit>> mp=new HashMap<>();
         for(Visit visit:visits){
             Followup followup = this.followupRepo.findAllByVisitListContaining(visit);
             Appointment appointment = this.appointmentRepo.findByFollowup(followup);
-            Pair pair = new Pair(appointment.getPatient(),visit);
+            List<Visit> v=new ArrayList<Visit>();
+            v=mp.getOrDefault(appointment.getPatient(),null);
+            if(v==null)
+                v=new ArrayList<>();
+            v.add(visit);
+            mp.put(appointment.getPatient(),v);
+        }
+        for(Patient p:mp.keySet())
+        {
+            List<Visit> v=new ArrayList<Visit>();
+            v=mp.getOrDefault(p,null);
+            if(v==null) continue;
+            Pair pair = new Pair(p, v);
             list.add(pair);
         }
         return list;
