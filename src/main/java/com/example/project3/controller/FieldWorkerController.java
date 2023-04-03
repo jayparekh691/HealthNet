@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,7 @@ public class FieldWorkerController {
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
     @PostMapping("/save-visit")
-    public ResponseEntity<Visit> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) {
+    public ResponseEntity<Visit> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) throws IOException {
         Visit visit=this.fieldWorkerServices.saveVisit(receiveVistDataModel);
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
