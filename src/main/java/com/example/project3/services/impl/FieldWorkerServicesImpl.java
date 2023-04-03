@@ -5,8 +5,10 @@ import com.example.project3.repo.*;
 import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -15,8 +17,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private PatientRepo patientRepo;
     @Autowired
     private EmployeeRepo employeeRepo;
-    @Autowired
-    private FollowupRepo followupRepo;
     @Autowired
     private AppointmentRepo appointmentRepo;
     @Autowired
@@ -71,7 +71,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    public  Visit saveVisit(ReceiveVistDataModel receiveVistDataModel) {
+    public  Visit saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
 
         Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
         if(visit.isVisited()==true)
@@ -82,7 +82,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         medicalData.setSugar_level(receiveVistDataModel.getSugar_level());
         medicalData.setTemperature(receiveVistDataModel.getTemperature());
         medicalData.setPhoto(receiveVistDataModel.getPhoto());
-        medicalData.setVideo(receiveVistDataModel.getVideo());
         visit.setVisited(receiveVistDataModel.getIsVisited());
         Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
         visit.setFieldWorker(employee);
