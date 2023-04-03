@@ -67,16 +67,33 @@ function ADashboard() {
 
   return (
     <div className="paddingPage">
-      <div style={{ textAlign: "center" }}>
-        <label className="tableHeading">Admin Dashboard</label>
-      </div>
-      <div style={{ textAlign: "right" }}>
-        <span style={{ margin: "10px" }}>
-          <button onClick={addEmployee}>Add Employee</button>
-        </span>
-        <span style={{ margin: "10px" }}>
-          <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
-        </span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingBottom: "12px",
+          alignItems: "flex-end",
+        }}
+      >
+        <div
+          style={{
+            justifyItems: "center",
+            // alignItems: "flex-end",
+          }}
+        >
+          <span className="tableHeading" style={{}}>
+            Dashboard
+          </span>
+        </div>
+        <div>
+          <span style={{ margin: "12px" }}>
+            <button onClick={addEmployee}>Add Employee</button>
+          </span>
+          <span style={{ margin: "12px" }}>
+            <button onClick={assignFieldWorkers}>Assign FieldWorkers</button>
+          </span>
+        </div>
       </div>
       <div className="search">
         <TextField

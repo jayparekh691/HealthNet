@@ -91,94 +91,97 @@ function RDashboard() {
   }
 
   return (
-    <div className="paddingPage ">
-      <div style={{}}>
+    <div style={{ padding: "8px", height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+        }}
+      >
         <label className="tableHeading">Receptionist Dashboard</label>
-      </div>
-      <div style={{ textAlign: "right" }}>
         <button onClick={addPatient}>Add Patient</button>
       </div>
+
       <div
-        // className="paddingPage"
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          marginTop: "24px",
+        }}
+      >
+        <label className="tableHeading">
+          Upcoming Patients: {patientList.length}
+        </label>
+        <div className="search">
+          <TextField
+            name="Patient Search"
+            id="outlined-basic"
+            variant="outlined"
+            fullWidth
+            label="Search"
+            onChange={searchBarOnChange}
+            value={searchValue}
+          />
+        </div>
+      </div>
+
+      <div
         style={{
           display: "flex",
           flexDirection: "row",
+          marginTop: "4px",
+          height: "80vh",
         }}
       >
-        <div
-          className="table-wrapper"
-          style={{
-            flex: 1,
-            margin: "10px",
-          }}
-        >
-          <div>
-            <label className="tableHeading">
-              Upcoming Patients: {patientList.length}
-            </label>
-          </div>
-          <div className="table-wrapper">
-            <table
-              style={{
-                width: "100%",
-              }}
-            >
-              <tbody>
-                <tr>
-                  <th>Appointment No.</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                  <th>Doctor</th>
-                </tr>
-              </tbody>
-              <tbody tbody style={{ flex: "1", overflowY: "auto" }}>
-                {patientList.map((e, i) => {
-                  return (
-                    <tr key={i}>
-                      <th>{e.a_id}</th>
-                      <th>{e.patient.name}</th>
-                      <th>{e.patient.age}</th>
-                      <th>{e.patient.gender}</th>
-                      <th>{e.doctor.name}</th>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+        <div className="table-wrapper" style={{ flex: 1, marginRight: "4px" }}>
+          <table
+            style={{
+              width: "100%",
+            }}
+          >
+            <tbody>
+              <tr>
+                <th>Appointment No.</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Doctor</th>
+              </tr>
+            </tbody>
+            <tbody tbody style={{ flex: "1", overflowY: "auto" }}>
+              {patientList.map((e, i) => {
+                return (
+                  <tr key={i}>
+                    <th>{e.a_id}</th>
+                    <th>{e.patient.name}</th>
+                    <th>{e.patient.age}</th>
+                    <th>{e.patient.gender}</th>
+                    <th>{e.doctor.name}</th>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
         <div
-          className="table-wrapper"
           style={{
             flex: 1,
-            margin: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
           <div
-            // className="paddingPage"
             style={{
               display: "flex",
               flexDirection: "column",
+              marginLeft: "4px",
             }}
           >
-            <div className="search">
-              <TextField
-                name="Patient Search"
-                id="outlined-basic"
-                variant="outlined"
-                fullWidth
-                label="Search"
-                onChange={searchBarOnChange}
-                value={searchValue}
-              />
-            </div>
             <div className="table-wrapper">
-              <table
-                style={{
-                  width: "100%",
-                }}
-              >
+              <table>
                 <tbody>
                   <tr>
                     <th>Name</th>
@@ -248,7 +251,7 @@ function RDashboard() {
             </div>
           </div>
           <div>
-            <div>
+            <div style={{ alignSelf: "flex-end" }}>
               <label className="tableHeading">Doctors Available</label>
             </div>
             <div className="table-wrapper">
