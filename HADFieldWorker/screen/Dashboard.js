@@ -4,7 +4,6 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
@@ -13,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AppointmentCard from "../components/AppointmentCard";
 import data from "../data/fieldWorkerData";
 import AppointmentModal from "../components/AppointmentModal";
+import { checkVisited } from "../services/dashboardServices";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -44,8 +44,12 @@ function Dashboard({ navigation }) {
   const onFilterChange = () => {};
 
   const onAppointmentCardPressed = (data) => {
-    setIsAppointmentModalActive(true);
-    setAppointmentModalData(data);
+    if (checkVisited(data)) {
+      navigation.navigate("medicalData", data);
+    } else {
+      setIsAppointmentModalActive(true);
+      setAppointmentModalData(data);
+    }
   };
 
   const onAppointmentModalClose = () => {
@@ -200,10 +204,6 @@ function Dashboard({ navigation }) {
           visible={isAppointmentModalActive}
           data={appointmentModalData}
           onModalClose={onAppointmentModalClose}
-          showOTP={() => {
-            console.log("continue");
-            onShowOTP();
-          }}
         />
       </View>
     </View>

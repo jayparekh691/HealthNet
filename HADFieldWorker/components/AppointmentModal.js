@@ -1,46 +1,81 @@
-import React from "react";
-import {
-  Dimensions,
-  Modal,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import React, { useState } from "react";
+import { Modal, Text, TouchableWithoutFeedback, View } from "react-native";
 import { COLOR } from "../utils/Color";
 import CustomButton from "./CustomButton";
 import DetailField from "./DetailField";
 import ContactCard from "./ContactCard";
-import { makeCall } from "../services/dashboardServices";
+import { makeCall, markVisited } from "../services/dashboardServices";
+import PinTextBox from "./PinTextBox";
+import { log } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 
-function AppointmentModal({ visible, onModalClose, data, showOTP }) {
-  return (
-    <Modal
-      transparent={true}
-      animationType="slide"
-      visible={visible}
-      onRequestClose={onModalClose}
-      style={{}}
-    >
-      <TouchableWithoutFeedback onPress={onModalClose}>
-        <View
-          style={{
-            flex: 1,
-          }}
-        ></View>
-      </TouchableWithoutFeedback>
-      <View
-        style={{
-          justifyContent: "flex-end",
-          backgroundColor: COLOR.white,
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          padding: 12,
-          overflow: "hidden",
-          elevation: 10,
-          shadowColor: "#000000",
-          shadowOffset: { width: -4, height: -4 },
-        }}
-      >
+function AppointmentModal({ visible, onModalClose, data }) {
+  const navigation = useNavigation();
+  const [isOTPScreenActive, setIsOTPScreenActive] = useState(false);
+
+  const [pin, setPin] = useState({
+    pinOne: "",
+    pinTwo: "",
+    pinThree: "",
+    pinFour: "",
+  });
+
+  const clearPin = () => {
+    setPin({
+      pinOne: "",
+      pinTwo: "",
+      pinThree: "",
+      pinFour: "",
+    });
+  };
+
+  const onPinChange = (name, text) => {
+    if (name === "pinOne") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinTwo") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinThree") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinFour") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    }
+  };
+
+  const onShowOTP = () => {
+    setIsOTPScreenActive(true);
+  };
+
+  const onClose = () => {
+    setIsOTPScreenActive(false);
+    onModalClose();
+    clearPin();
+  };
+
+  const authenticateOTP = () => {
+    let otp = Object.values(pin).reduce((v, ans) => {
+      return v + ans;
+    }, "");
+    // otp === data.otp
+    if (true) {
+      console.log("equal");
+      // mark visited in local database
+      if (markVisited(data)) {
+        navigation.navigate("medicalData", data);
+      }
+    }
+  };
+
+  const PatientDetailsModalScreen = () => {
+    return (
+      <View>
         <View
           style={{
             paddingHorizontal: 12,
@@ -166,10 +201,184 @@ function AppointmentModal({ visible, onModalClose, data, showOTP }) {
             backgroundColor={COLOR.primaryColor}
             textColor={COLOR.backgroundColor}
             title="Continue"
-            onPress={showOTP}
+            onPress={onShowOTP}
           />
         </View>
       </View>
+    );
+  };
+
+  const OTPModalScreen = () => {
+    return (
+      <View>
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "stretch",
+            }}
+          >
+            <View
+              style={{
+                marginBottom: 16,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "600",
+                }}
+              >
+                Enter OTP
+              </Text>
+            </View>
+            <View
+              style={{
+                marginBottom: 8,
+              }}
+            >
+              <Text style={{ fontSize: 16, letterSpacing: 0.5 }}>
+                An{" "}
+                <Text
+                  style={{
+                    fontSize: 24,
+                    fontWeight: "400",
+                  }}
+                >
+                  4 digit PIN code{" "}
+                </Text>
+                has been sent to
+              </Text>
+            </View>
+            <View
+              style={{
+                marginBottom: 16,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                }}
+              >
+                {data.mobilenumber}
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "50%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <PinTextBox
+                name="pinOne"
+                value={pin.pinOne}
+                onChangeText={onPinChange}
+              />
+              <PinTextBox
+                name="pinTwo"
+                value={pin.pinTwo}
+                onChangeText={onPinChange}
+              />
+              <PinTextBox
+                name="pinThree"
+                value={pin.pinThree}
+                onChangeText={onPinChange}
+              />
+              <PinTextBox
+                name="pinFour"
+                value={pin.pinFour}
+                onChangeText={onPinChange}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <CustomButton
+              backgroundColor={COLOR.secondaryColor}
+              textColor={COLOR.backgroundColor}
+              title="Cancel"
+              onPress={() => {
+                onClose();
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <CustomButton
+              backgroundColor={COLOR.primaryColor}
+              textColor={COLOR.backgroundColor}
+              title="Submit"
+              onPress={() => {
+                onClose();
+                authenticateOTP();
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <Modal
+      transparent={true}
+      animationType="slide"
+      visible={visible}
+      onRequestClose={() => {
+        onClose();
+      }}
+    >
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setIsOTPScreenActive(false);
+          onModalClose();
+          clearPin();
+        }}
+      >
+        <View style={{ flex: 1 }}></View>
+      </TouchableWithoutFeedback>
+      <View
+        style={{
+          justifyContent: "center",
+          backgroundColor: COLOR.white,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          padding: 12,
+          overflow: "hidden",
+          elevation: 10,
+          shadowColor: "#000000",
+          shadowOffset: { width: -4, height: -4 },
+        }}
+      >
+        {isOTPScreenActive ? <OTPModalScreen /> : <PatientDetailsModalScreen />}
+      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setIsOTPScreenActive(false);
+          onModalClose();
+          clearPin();
+        }}
+      >
+        <View style={{ flex: 0 }}></View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }

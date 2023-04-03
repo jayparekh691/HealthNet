@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DrawerNavigation from "./DrawerNavigation";
 import LockScreen from "../screen/LockScreen";
+import MedicalDataScreen from "../screen/MedicalDataScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,13 @@ function StackNavigator() {
         }}
         name="drawerNavigator"
         component={DrawerNavigation}
+      />
+      <Stack.Screen
+        options={{
+          title: "Health Metrics",
+        }}
+        name="medicalData"
+        component={MedicalDataScreen}
       />
     </Stack.Navigator>
   );
