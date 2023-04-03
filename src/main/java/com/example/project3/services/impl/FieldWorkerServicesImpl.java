@@ -24,7 +24,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     @Autowired
     private MedicalRepo medicalRepo;
     @Override
-    public List<Appointment> getAppointmentListFW(Integer fid) {
+    public List<VisitModel> getAppointmentListFW(Integer fid) {
         Employee employee = this.employeeRepo.findById(fid).orElseThrow();
         List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
         List<Appointment> finalAppointments=new ArrayList<Appointment>();
@@ -41,7 +41,29 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
             for(Appointment appointment:appointments)
                 finalAppointments.add(appointment);
         }
-        return finalAppointments;
+        List<VisitModel> visitModelList=new ArrayList<>();
+        for(Appointment appointment : finalAppointments){
+            for(Visit visit : appointment.getFollowup().getVisitList()){
+                VisitModel visitModel = new VisitModel();
+                visitModel.setV_id(visit.getV_id());
+                visitModel.setInstruction(appointment.getFollowup().getInstructions());
+                visitModel.setName(appointment.getPatient().getName());
+                visitModel.setAge(appointment.getPatient().getAge());
+                visitModel.setAddress(appointment.getPatient().getAddress());
+                visitModel.setCity(appointment.getPatient().getCity());
+                visitModel.setGender(appointment.getPatient().getGender());
+                visitModel.setState(appointment.getPatient().getState());
+                visitModel.setPincode(appointment.getPatient().getPincode());
+                visitModel.setMobilenumber(appointment.getPatient().getMobilenumber());
+                visitModel.setTown(appointment.getPatient().getTown());
+                visitModel.setIsvisited(visit.isVisited());
+                visitModel.setDate(visit.getDate());
+                visitModel.setOtp(visit.getOtp());
+                visitModel.setF_id(appointment.getFollowup().getF_id());
+                visitModelList.add(visitModel);
+            }
+        }
+        return visitModelList;
     }
 
     @Override
@@ -49,12 +71,24 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    @Override
-    public  Visit saveVisit(MedicalData v,Integer id) {
-        Visit visit=this.visitRepo.findById(id).orElseThrow();
-        this.medicalRepo.save(v);
-        visit.setMedicalData(v);
-        visit.setVisited(true);
+    public  Visit saveVisit(ReceiveVistDataModel receiveVistDataModel) {
+
+        Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
+        if(visit.isVisited()==true)
+            return null;
+        visit.setV_id(receiveVistDataModel.getV_id());
+        MedicalData medicalData = new MedicalData();
+        medicalData.setBp(receiveVistDataModel.getBp());
+        medicalData.setSugar_level(receiveVistDataModel.getSugar_level());
+        medicalData.setTemperature(receiveVistDataModel.getTemperature());
+        medicalData.setPhoto(receiveVistDataModel.getPhoto());
+        medicalData.setVideo(receiveVistDataModel.getVideo());
+        visit.setVisited(receiveVistDataModel.getIsVisited());
+        Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
+        visit.setFieldWorker(employee);
+        this.medicalRepo.save(medicalData);
+        visit.setMedicalData(medicalData);
+        visit.setDate(receiveVistDataModel.getDate());
         this.visitRepo.save(visit);
         return visit;
     }
