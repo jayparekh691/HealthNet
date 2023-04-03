@@ -17,18 +17,18 @@ public class FieldWorkerController {
     private FieldWorkerServices fieldWorkerServices;
 
     @GetMapping("/get-appointmentList-fieldWorker/{f_id}")
-    public ResponseEntity<List<Appointment>> getAppointmentListFW(@PathVariable("f_id") Integer fid){
-        List<Appointment> followupList = this.fieldWorkerServices.getAppointmentListFW(fid);
-        return new ResponseEntity<>(followupList,HttpStatus.ACCEPTED);
+    public ResponseEntity<List<VisitModel>> getAppointmentListFW(@PathVariable("f_id") Integer fid){
+        List<VisitModel> visitModelList = this.fieldWorkerServices.getAppointmentListFW(fid);
+        return new ResponseEntity<>(visitModelList,HttpStatus.ACCEPTED);
     }
     @GetMapping("/get-visit-details/{p_id}")
     public ResponseEntity<Appointment> getVisitDetails(@PathVariable("p_id") Integer id) {
         Appointment appointment=this.fieldWorkerServices.getVisitDetails(id);
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
-    @PostMapping("/save-visit/{visit_id}")
-    public ResponseEntity<Visit> saveVisit(@RequestBody MedicalData medicalData, @PathVariable("visit_id") Integer vid) {
-        Visit visit=this.fieldWorkerServices.saveVisit(medicalData,vid);
+    @PostMapping("/save-visit")
+    public ResponseEntity<Visit> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) {
+        Visit visit=this.fieldWorkerServices.saveVisit(receiveVistDataModel);
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 }

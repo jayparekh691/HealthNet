@@ -6,9 +6,11 @@ import com.example.project3.repo.VisitRepo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class Pair {
     private Patient patient;
-    private Visit visit;
+    private List<Visit> visit;
 }
