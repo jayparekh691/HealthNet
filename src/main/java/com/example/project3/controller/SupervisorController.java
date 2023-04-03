@@ -51,6 +51,11 @@ public class SupervisorController {
         Patient patient1 = this.supervisorServices.assignFieldWorker(pid,fid);
         return new ResponseEntity<>(patient1, HttpStatus.CREATED);
     }
+    @GetMapping("/reassign-field-worker-pid/{p_id}/{f_id}")
+    public ResponseEntity<Patient> reassignFieldWorkerPid(@PathVariable("p_id") Integer pid,@PathVariable("f_id") Integer fid){
+        Patient patient1 = this.supervisorServices.assignFieldWorkerWithDate(pid,fid);
+        return new ResponseEntity<>(patient1, HttpStatus.CREATED);
+    }
 
     @GetMapping("/reassign-fieldworker/{old}/{new}")
     public ResponseEntity<List<Patient>> reassignFieldWorker(@PathVariable("old") Integer oid,@PathVariable("new") Integer nid){
