@@ -20,7 +20,6 @@ public class MedicalData {
     private String sugar_level;
     private String temperature;
     private String photo;
-    private String video;
 
     @OneToOne
     private Visit visit;
