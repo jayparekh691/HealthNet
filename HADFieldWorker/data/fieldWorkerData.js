@@ -56,7 +56,7 @@ const data = [
         {
           v_id: 52,
           date: "2023-04-02T17:24:52.518+00:00",
-          otp: "131459",
+          otp: "1234",
           seenByDoctor: false,
           followup: null,
           fieldWorker: {
@@ -76,7 +76,7 @@ const data = [
         {
           v_id: 53,
           date: "2023-04-06T17:24:52.518+00:00",
-          otp: "166244",
+          otp: "1234",
           seenByDoctor: false,
           followup: null,
           fieldWorker: {
@@ -155,7 +155,7 @@ const data = [
         {
           v_id: 54,
           date: "2023-04-12T17:24:52.518+00:00",
-          otp: "131459",
+          otp: "1234",
           seenByDoctor: false,
           followup: null,
           fieldWorker: {
@@ -175,7 +175,7 @@ const data = [
         {
           v_id: 55,
           date: "2023-04-20T17:24:52.518+00:00",
-          otp: "166244",
+          otp: "1234",
           seenByDoctor: false,
           followup: null,
           fieldWorker: {
@@ -195,7 +195,7 @@ const data = [
         {
           v_id: 56,
           date: "2023-04-26T17:24:52.518+00:00",
-          otp: "166244",
+          otp: "1234",
           seenByDoctor: false,
           followup: null,
           fieldWorker: {

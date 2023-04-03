@@ -16,4 +16,16 @@ function makeCall(number) {
     .catch((err) => console.log(err));
 }
 
-export { makeCall };
+function checkVisited(data) {
+  // check in local database
+  // is visited is true return true
+  // else return false
+  return true;
+}
+
+function markVisited(navigation, data) {
+  // mark visited in local database
+  return checkVisited(data);
+}
+
+export { makeCall, markVisited, checkVisited };
