@@ -8,6 +8,7 @@ import java.util.Date;
 public class VisitModel {
     private int v_id;
     private String instruction;
+    private String prescription;
     private String name;
     private int age;
     private String address;
