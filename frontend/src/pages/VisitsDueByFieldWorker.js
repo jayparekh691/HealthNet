@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { dueVisits } from "../services/supervisorServices";
+import {
+  dueVisits,
+  getFieldworkerList,
+  assignFieldworker,
+} from "../services/supervisorServices";
+import Modal from "../components/Modal";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function VisitsDueByFieldWorker() {
   const [dueVisitList, setDueVisitList] = useState([]);
+  const [fieldWorkerList, setFieldWorkerList] = useState([]);
+  const [modalIndex, setModalIndex] = useState(-1);
+  const [assigned, setAssigned] = useState(false);
+  const [reassignedFieldWorkerID, setReassignedFieldWorkerID] = useState(null);
   useEffect(() => {
     (async function getDueVisitList() {
       const responseData = await dueVisits();
@@ -11,7 +22,143 @@ function VisitsDueByFieldWorker() {
         setDueVisitList(data);
       }
     })();
-  }, []);
-  return <div></div>;
+
+    (async function getFieldWorkerList() {
+      const responseData = await getFieldworkerList();
+      const data = responseData.data;
+      if (data) {
+        setFieldWorkerList(data);
+      }
+    })();
+  }, [assigned]);
+
+  async function reassign(e_id, patientID) {
+    if (reassignedFieldWorkerID === null) {
+      alert("Field worker not selected");
+    } else {
+      const responseData = await assignFieldworker(
+        patientID,
+        reassignedFieldWorkerID
+      );
+      const data = responseData.data;
+      if (data) {
+        toast.success(`Reassigned Field Worker`);
+      } else {
+        toast.error(`Unable to Reassign Field Worker`);
+      }
+    }
+    setAssigned((pv) => !assigned);
+    closeModal();
+  }
+  function openModal(index) {
+    setModalIndex(index);
+  }
+  function closeModal() {
+    setModalIndex(-1);
+  }
+
+  function handleChangeInReAssignFieldWorker(event) {
+    event.preventDefault();
+    const value = event.target.value;
+    setReassignedFieldWorkerID(value);
+  }
+
+  return (
+    <div>
+      <div className="paddingPage">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingBottom: "12px",
+            alignItems: "flex-end",
+          }}
+        >
+          <div
+            style={{
+              justifyItems: "center",
+              // alignItems: "flex-end",
+            }}
+          >
+            <span className="tableHeading" style={{}}>
+              Visits Due:
+            </span>
+          </div>
+        </div>
+        {/* TODO: Change gender to display full form */}
+        <div
+          style={{
+            width: "100%",
+            height: "80%",
+            maxHeight: "400px",
+            overflowY: "scroll",
+          }}
+        >
+          <table>
+            <tbody>
+              <tr>
+                <th>Patient Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Field Worker Name</th>
+                <th>Visit IDs</th>
+              </tr>
+            </tbody>
+            <tbody style={{}}>
+              {dueVisitList.map((v, i) => {
+                return (
+                  <tr key={i}>
+                    <th>{v.patient.name}</th>
+                    <th>{v.patient.gender}</th>
+                    <th>{v.patient.age}</th>
+                    <th>{v.patient.fieldworker.name}</th>
+                    <th>
+                      <div className="select-box" style={{ marginTop: "12px" }}>
+                        <select name="role">
+                          <option hidden>View</option>
+                          {v.visit.map((e, i) => {
+                            return (
+                              <option disabled key={e.v_id}>
+                                {e.v_id}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    </th>
+                    <td>
+                      <div style={{ marginLeft: "24px" }}>
+                        <button
+                          onClick={() => {
+                            openModal(i);
+                          }}
+                        >
+                          Reassign Field Worker
+                        </button>
+                        {modalIndex === i && (
+                          <Modal
+                            key={i}
+                            fieldWorkerList={fieldWorkerList}
+                            data={v.patient.fieldworker}
+                            patientID={v.patient.pid}
+                            reassign={reassign}
+                            closeModal={closeModal}
+                            handleOptionChange={
+                              handleChangeInReAssignFieldWorker
+                            }
+                          />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
 export default VisitsDueByFieldWorker;
