@@ -113,7 +113,7 @@ public class SupervisorServicesImpl implements SupervisorServices {
     @Override
     public List<Employee> getFieldWorkerList() {
         String role="FieldWorker";
-        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        List<Employee> employees = this.employeeRepo.findEmployeeByRoles(role);
         return employees;
     }
     @Override
@@ -159,7 +159,7 @@ public class SupervisorServicesImpl implements SupervisorServices {
         List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
         for(Employee e:employees)
         {
-            if(e.getRole()!="FieldWorker")
+            if(e.getRoles()!="FieldWorker")
                 employees.remove(e);
         }
         return employees;

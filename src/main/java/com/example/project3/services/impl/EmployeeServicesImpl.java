@@ -4,6 +4,7 @@ import com.example.project3.entities.Employee;
 import com.example.project3.repo.EmployeeRepo;
 import com.example.project3.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,28 +14,35 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Autowired
     private EmployeeRepo employeeRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public Employee login(Employee employee) {
-        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
+        String pass=passwordEncoder.encode(employee.getPassword());
+        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), pass);
         return employee1;
     }
     @Override
     public Employee createEmployee(Employee employee) {
+        String pass=employee.getPassword();
+        employee.setPassword(passwordEncoder.encode(pass));
         this.employeeRepo.save(employee);
+        employee.setPassword(pass);
         return employee;
     }
-
     @Override
     public Employee updateEmployee(Employee employee, Integer id) {
+        String pass=employee.getPassword();
         Employee employee1 =this.employeeRepo.findById(id).orElseThrow();
         employee1.setEmail(employee.getEmail());
         employee1.setName(employee.getName());
         employee1.setSpecialization(employee.getSpecialization());
         employee1.setName(employee.getName());
         employee1.setGender(employee.getGender());
-        employee1.setPassword(employee.getPassword());
-        employee1.setRole(employee.getRole());
+        employee1.setPassword(passwordEncoder.encode(pass));
+        employee1.setRoles(employee.getRoles());
         this.employeeRepo.save(employee1);
+        employee1.setPassword(pass);
         return employee1;
     }
 
@@ -53,7 +61,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Override
     public  List<Employee> getAllDoctors(){
         String role="doctor";
-        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        List<Employee> employees = this.employeeRepo.findEmployeeByRoles(role);
         return employees;
     }
 

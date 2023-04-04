@@ -18,6 +18,11 @@ public class EmployeeController {
     @Autowired
     private EmployeeServices employeeServices;
 
+    @GetMapping("/welcome")
+    public ResponseEntity<?> welcome(){
+        return new ResponseEntity<>("Hello",HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<Employee> login(@RequestBody Employee employee){
         Employee employee1 = this.employeeServices.login(employee);
