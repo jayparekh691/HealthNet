@@ -11,9 +11,7 @@ import java.util.List;
 public interface PatientRepo extends JpaRepository<Patient,Integer> {
 
     List<Patient> findPatientByFieldworker(Employee employee);
-
     List<Patient> findAllByNameContaining(String name);
-
     List<Patient> findPatientsByMobilenumberContaining(String mobilenumber);
 
 

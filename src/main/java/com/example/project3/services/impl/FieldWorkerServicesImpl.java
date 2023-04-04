@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -49,6 +48,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setInstruction(appointment.getFollowup().getInstructions());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
+                visitModel.setPrescription(appointment.getDiagnostics().getPrescription());
                 visitModel.setAddress(appointment.getPatient().getAddress());
                 visitModel.setCity(appointment.getPatient().getCity());
                 visitModel.setGender(appointment.getPatient().getGender());
