@@ -6,14 +6,9 @@ import com.example.project3.dto.OtpStatus;
 import com.example.project3.entities.*;
 import com.example.project3.repo.*;
 import com.example.project3.services.DoctorServices;
-import com.example.project3.services.TwilioOTPService;
-import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
