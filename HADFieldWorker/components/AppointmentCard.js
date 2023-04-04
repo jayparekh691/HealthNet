@@ -25,6 +25,7 @@ function AppointmentCard({ data, onPress }) {
         // shadowOffset: { width: 4, height: 4 },
         marginBottom: 20,
         overflow: "hidden",
+        padding: 12,
       }}
     >
       <TouchableWithoutFeedback
@@ -37,7 +38,6 @@ function AppointmentCard({ data, onPress }) {
           style={{
             flex: 1,
             flexDirection: "row",
-            padding: 12,
           }}
         >
           <View
@@ -56,7 +56,8 @@ function AppointmentCard({ data, onPress }) {
                       ? COLOR.secondaryColor
                       : COLOR.primaryColorLight,
                   fontWeight: "600",
-                  fontSize: 24,
+                  fontSize: width / 16,
+                  // fontSize: 24,
                 }}
               >
                 {data.name}
@@ -68,7 +69,7 @@ function AppointmentCard({ data, onPress }) {
                         ? COLOR.secondaryColor
                         : COLOR.primaryColorLight,
                     fontWeight: "300",
-                    fontSize: 16,
+                    fontSize: width / 26,
                   }}
                 >
                   {data.town}
@@ -81,7 +82,7 @@ function AppointmentCard({ data, onPress }) {
                       ? COLOR.secondaryColor
                       : COLOR.primaryColorLight,
                   fontWeight: "300",
-                  fontSize: 16,
+                  fontSize: width / 26,
                 }}
               >
                 {data.city}
@@ -125,7 +126,7 @@ function AppointmentCard({ data, onPress }) {
                 style={{
                   color: COLOR.primaryColorDark,
                   fontWeight: "400",
-                  fontSize: 16,
+                  fontSize: width / 26,
                   padding: 2,
                 }}
               >
@@ -135,7 +136,7 @@ function AppointmentCard({ data, onPress }) {
                 style={{
                   color: COLOR.primaryColorDark,
                   fontWeight: "600",
-                  fontSize: 32,
+                  fontSize: width / 14,
                   padding: 2,
                 }}
               >

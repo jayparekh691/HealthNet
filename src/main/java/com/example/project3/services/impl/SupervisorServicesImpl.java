@@ -47,6 +47,34 @@ public class SupervisorServicesImpl implements SupervisorServices {
         }
         return patient;
     }
+    @Override
+    public Patient assignFieldWorkerWithDate(Integer pid, Integer fid) {
+        Patient patient = this.patientRepo.findById(pid).orElseThrow();
+        Employee employee = this.employeeRepo.findById(fid).orElseThrow();
+        patient.setFieldworker(employee);
+        this.patientRepo.save(patient);
+        List<Appointment> appointments=this.appointmentRepo.findByPatient(patient);
+        for(Appointment appointment:appointments)
+        {
+            List<Visit> visits=appointment.getFollowup().getVisitList();
+            for(Visit v:visits)
+            {
+                if(v.isVisited()==false)
+                {
+                    Date d=v.getDate();
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(d);
+                    c.add(Calendar.DATE, 1);
+                    Date date = c.getTime();
+                    v.setFieldWorker(employee);
+                    v.setDate(date);
+                    System.out.println(date);
+                    this.visitRepo.save(v);
+                }
+            }
+        }
+        return patient;
+    }
 
     @Override
     public List<Patient> reassignFieldWorker(Integer oid, Integer nid) {

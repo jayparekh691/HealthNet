@@ -17,7 +17,25 @@ function LockScreen() {
     pinThree: "",
     pinFour: "",
   });
-  const onPinChange = () => {};
+  const onPinChange = (name, text) => {
+    if (name === "pinOne") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinTwo") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinThree") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    } else if (name === "pinFour") {
+      setPin((pv) => {
+        return { ...pv, [name]: text };
+      });
+    }
+  };
   const onSubmit = () => {
     navigation.navigate("drawerNavigator");
   };

@@ -21,4 +21,6 @@ public interface SupervisorServices {
     List<Pair> getDueVisitList();
 
     List<Employee> searchFieldWorkerByName(String name);
+
+    Patient assignFieldWorkerWithDate(Integer pid, Integer fid);
 }
