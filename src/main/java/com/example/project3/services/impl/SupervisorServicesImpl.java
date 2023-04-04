@@ -157,6 +157,11 @@ public class SupervisorServicesImpl implements SupervisorServices {
     @Override
     public List<Employee> searchFieldWorkerByName(String name) {
         List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
+        for(Employee e:employees)
+        {
+            if(e.getRole()!="FieldWorker")
+                employees.remove(e);
+        }
         return employees;
     }
 }
