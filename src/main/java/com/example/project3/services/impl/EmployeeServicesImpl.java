@@ -3,16 +3,26 @@ package com.example.project3.services.impl;
 import com.example.project3.entities.Employee;
 import com.example.project3.repo.EmployeeRepo;
 import com.example.project3.services.EmployeeServices;
+import com.example.project3.utils.EmailUtils;
+import io.jsonwebtoken.lang.Strings;
+//import org.apache.logging.log4j.util.Strings;
+import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 
 @Service
 public class EmployeeServicesImpl implements EmployeeServices {
 
     @Autowired
     private EmployeeRepo employeeRepo;
+    @Autowired
+    private EmailUtils emailUtils;
     @Override
     public Employee login(Employee employee) {
         Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
@@ -56,6 +66,42 @@ public class EmployeeServicesImpl implements EmployeeServices {
         List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
         return employees;
     }
+
+    @Override
+    public String forgotPassword(String request) {
+        try{
+            System.out.println(request);
+            Employee employee = this.employeeRepo.findEmployeeByEmail(request);
+            String newPassword = new DecimalFormat("000000")
+                    .format(new Random().nextInt(999999));
+            employee.setPassword(newPassword);
+            this.emailUtils.forgotMail(employee.getEmail(),"New Credentials",newPassword);
+            System.out.println(employee.getEmail());
+            System.out.println(employee.getPassword());
+            this.employeeRepo.save(employee);
+            return "Check Your mail for credentials";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return request;
+    }
+
+    @Override
+    public String updatePassword(Integer request, String old_pass, String new_pass) {
+        Employee employee = this.employeeRepo.findById(request).orElseThrow();
+        if(employee!=null){
+            if(employee.getPassword().equals(old_pass)) {
+                employee.setPassword(new_pass);
+                this.employeeRepo.save(employee);
+                return "Success";
+            }
+            else
+                return "Old Password not match";
+        }
+        return "Employee Doesn't Exist";
+    }
+
 
     @Override
     public List<Employee> findEmployeeByName(String name){

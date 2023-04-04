@@ -44,10 +44,10 @@ public class TwilioOTPService {
     }
 
 
-    //6 digit otp
+    //4 digit otp
     private String generateOTP() {
-        return new DecimalFormat("000000")
-                .format(new Random().nextInt(999999));
+        return new DecimalFormat("0000")
+                .format(new Random().nextInt(9999));
     }
 
 }
