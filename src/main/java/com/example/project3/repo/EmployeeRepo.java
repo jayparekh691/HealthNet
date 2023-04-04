@@ -15,4 +15,5 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     List<Employee> findEmployeeByRole(String role);
     List<Employee> findEmployeeByNameContaining(String name);
     void deleteById(Integer id);
+    Employee findEmployeeByEmail(String s);
 }
