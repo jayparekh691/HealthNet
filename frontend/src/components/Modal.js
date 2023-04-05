@@ -5,6 +5,7 @@ const Modal = ({
   reassign,
   closeModal,
   data,
+  patientID,
   handleOptionChange,
 }) => {
   return (
@@ -32,7 +33,7 @@ const Modal = ({
             <button
               className="button"
               value={data.e_id}
-              onClick={() => reassign(data.e_id)}
+              onClick={() => reassign(data.e_id, patientID)}
             >
               Reassign
             </button>
