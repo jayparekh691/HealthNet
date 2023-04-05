@@ -9,6 +9,12 @@ export const COLOR = {
   lightGray: "#e1e0e0",
   darkGray: "#414141",
   white: "#ffffff",
+  shade1: "#CEC793",
+  shade2: "#CCDBF5",
+  shade3: "#6B72A9",
+  shade4: "#7c7c7c",
+  shade5: "#3c4061",
+  divider: "#8f8f8f",
 };
 
 export const RANDOM_COLOR = () => {

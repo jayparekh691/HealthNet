@@ -3,12 +3,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DrawerNavigation from "./DrawerNavigation";
 import LockScreen from "../screen/LockScreen";
 import MedicalDataScreen from "../screen/MedicalDataScreen";
+import { COLOR } from "../utils/Color";
 
 const Stack = createNativeStackNavigator();
 
 function StackNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: COLOR.primaryColor,
+      }}
+    >
       {/* <Stack.Screen
         options={{
           headerShown: false,
@@ -25,7 +30,7 @@ function StackNavigator() {
       />
       <Stack.Screen
         options={{
-          title: "Health Metrics",
+          headerTitle: "Health Metrics",
         }}
         name="medicalData"
         component={MedicalDataScreen}

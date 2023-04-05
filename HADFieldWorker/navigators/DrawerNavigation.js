@@ -25,8 +25,9 @@ function DrawerNavigation(props) {
             />
           );
         },
-        headerTitleStyle: {
-          marginLeft: Platform.OS === "android" ? 0 : 0,
+        headerTintColor: COLOR.primaryColor,
+        drawerStyle: {
+          marginTop: 8,
         },
         drawerActiveTintColor: COLOR.primaryColor,
         drawerActiveBackgroundColor: COLOR.backgroundColor,
@@ -34,7 +35,7 @@ function DrawerNavigation(props) {
     >
       <Drawer.Screen
         options={{
-          headerTitle: "Patient Follow-Up",
+          headerTitle: "Appointments",
           title: "Dashboard",
           headerRight: ({}) => {
             return (
@@ -52,7 +53,7 @@ function DrawerNavigation(props) {
       />
       <Drawer.Screen
         options={{
-          headerTitle: "Follow-Up Records",
+          headerTitle: "Appoinment Records",
           title: "Records",
         }}
         name="recordScreen"

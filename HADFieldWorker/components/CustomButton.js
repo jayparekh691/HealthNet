@@ -19,7 +19,7 @@ function CustomButton({
 
   const styles = StyleSheet.create({
     text: {
-      fontSize: width / 24,
+      fontSize: width / 20,
       color: textColor,
       textAlign: "center",
       paddingHorizontal: width / 20,
