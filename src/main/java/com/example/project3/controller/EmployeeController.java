@@ -37,9 +37,9 @@ public class EmployeeController {
     @PostMapping("/login")
     public String login(@RequestBody AuthRequest authRequest){
 //        Employee employee1 = this.employeeServices.login(employee);
-      Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+      Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
       if(authentication.isAuthenticated())
-        return jwtService.generateToken(authRequest.getUsername());
+        return jwtService.generateToken(authRequest.getEmail());
       else throw new UsernameNotFoundException("Invalid Username or password");
     }
     @GetMapping("/get-all-doctors")
