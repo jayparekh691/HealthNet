@@ -12,6 +12,9 @@ const reassignFieldworkerAPI = (oldFieldWorkerID, reassignedFieldWorkerID) =>
 
 const dueVisitsByFieldWorkerAPI = `http://localhost:9080/api/supervisor/due-visits`;
 
+const reassignFieldworkerChangeDueDateAPI = (patientID, newFieldWorkerID) =>
+  `http://localhost:9080/api/supervisor/reassign-field-worker-pid/${patientID}/${newFieldWorkerID}`;
+
 async function getPatientList() {
   const responseData = await axios.get(unassignedPatientListAPI);
   return responseData;
@@ -41,10 +44,18 @@ async function dueVisits() {
   return responseData;
 }
 
+async function reassignFieldworkerAndDueDate(patientID, newFieldWorkerID) {
+  const responseData = await axios.get(
+    reassignFieldworkerChangeDueDateAPI(patientID, newFieldWorkerID)
+  );
+  return responseData;
+}
+
 export {
   getPatientList,
   getFieldworkerList,
   assignFieldworker,
   reassignFieldWorker,
   dueVisits,
+  reassignFieldworkerAndDueDate,
 };

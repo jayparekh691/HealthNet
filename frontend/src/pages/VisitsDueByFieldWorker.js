@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   dueVisits,
   getFieldworkerList,
-  assignFieldworker,
+  reassignFieldworkerAndDueDate,
 } from "../services/supervisorServices";
 import Modal from "../components/Modal";
 import { toast } from "react-toastify";
@@ -36,7 +36,7 @@ function VisitsDueByFieldWorker() {
     if (reassignedFieldWorkerID === null) {
       alert("Field worker not selected");
     } else {
-      const responseData = await assignFieldworker(
+      const responseData = await reassignFieldworkerAndDueDate(
         patientID,
         reassignedFieldWorkerID
       );
