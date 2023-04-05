@@ -3,6 +3,8 @@ package com.example.project3.controller;
 import com.example.project3.Security.services.JwtService;
 import com.example.project3.dto.AuthRequest;
 import com.example.project3.entities.Employee;
+import com.example.project3.entities.LoginResponse;
+import com.example.project3.repo.EmployeeRepo;
 import com.example.project3.services.EmployeeServices;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class EmployeeController {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private EmployeeRepo empRepo;
 
     @GetMapping("/welcome")
     public ResponseEntity<?> welcome(){
@@ -35,11 +39,18 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest authRequest){
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
 //        Employee employee1 = this.employeeServices.login(employee);
       Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-      if(authentication.isAuthenticated())
-        return jwtService.generateToken(authRequest.getEmail());
+      if(authentication.isAuthenticated()) {
+          String token=jwtService.generateToken(authRequest.getEmail());
+          Employee emp=this.empRepo.findByEmail(authRequest.getEmail()).orElseThrow();
+          String role=emp.getRoles();
+          LoginResponse loginResponse=new LoginResponse();
+          loginResponse.setToken(token);
+          loginResponse.setRole(role);
+          return new ResponseEntity<>(loginResponse,HttpStatus.ACCEPTED);
+      }
       else throw new UsernameNotFoundException("Invalid Username or password");
     }
     @GetMapping("/get-all-doctors")
