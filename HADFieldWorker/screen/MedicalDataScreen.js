@@ -20,6 +20,7 @@ const { width, height } = Dimensions.get("screen");
 function MedicalDataScreen() {
   const data = useRoute().params;
   const [image, setImage] = useState(null);
+  const [imageString, setImageString] = useState(null);
   const [imagePermission, setImagePersmission] = useState(null);
 
   useEffect(() => {
@@ -35,9 +36,11 @@ function MedicalDataScreen() {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
+      setImageString(result.assets[0].base64);
       setImage(result.assets[0].uri);
     }
   };
@@ -48,15 +51,19 @@ function MedicalDataScreen() {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
+      setImageString(result.assets[0].base64);
       setImage(result.assets[0].uri);
     }
   };
 
   const onClear = () => {
+    console.log(imageString);
     setImage(null);
+    setImageString(null);
   };
 
   return (
