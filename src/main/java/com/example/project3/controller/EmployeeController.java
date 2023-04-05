@@ -1,5 +1,7 @@
 package com.example.project3.controller;
 
+import com.example.project3.Security.services.JwtService;
+import com.example.project3.dto.AuthRequest;
 import com.example.project3.entities.Employee;
 import com.example.project3.services.EmployeeServices;
 import jakarta.websocket.server.PathParam;
@@ -8,6 +10,10 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +24,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeServices employeeServices;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping("/welcome")
     public ResponseEntity<?> welcome(){
@@ -25,9 +35,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Employee> login(@RequestBody Employee employee){
-        Employee employee1 = this.employeeServices.login(employee);
-        return new ResponseEntity<Employee>(employee1,HttpStatus.ACCEPTED);
+    public String login(@RequestBody AuthRequest authRequest){
+//        Employee employee1 = this.employeeServices.login(employee);
+      Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+      if(authentication.isAuthenticated())
+        return jwtService.generateToken(authRequest.getUsername());
+      else throw new UsernameNotFoundException("Invalid Username or password");
     }
     @GetMapping("/get-all-doctors")
     @PreAuthorize("hasAuthority('Receptionist')")

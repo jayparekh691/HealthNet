@@ -16,12 +16,12 @@ public class EmployeeServicesImpl implements EmployeeServices {
     private EmployeeRepo employeeRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Override
-    public Employee login(Employee employee) {
-        String pass=passwordEncoder.encode(employee.getPassword());
-        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), pass);
-        return employee1;
-    }
+//    @Override
+//    public Employee login(Employee employee) {
+//        String pass=passwordEncoder.encode(employee.getPassword());
+//        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), pass);
+//        return employee1;
+//    }
     @Override
     public Employee createEmployee(Employee employee) {
         String pass=employee.getPassword();
