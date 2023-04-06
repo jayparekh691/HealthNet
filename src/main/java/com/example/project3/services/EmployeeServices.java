@@ -16,6 +16,6 @@ public interface EmployeeServices {
     List<Employee> getAllEmployees();
     List<Employee> findEmployeeByName(String name);
     List<Employee> getAllDoctors();
-    String forgotPassword(String request);
+    Employee forgotPassword(String request);
     String updatePassword(Integer request, String old_mail, String new_mail);
 }
