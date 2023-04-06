@@ -14,7 +14,7 @@
   justify-content: center;
   align-items: center;
   padding: 10px;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #f5f5f5, #fafafb);
 }
 .container {
   max-width: 700px;
@@ -37,7 +37,7 @@
   height: 3px;
   width: 30px;
   border-radius: 5px;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #516395, #516395);
 }
 .content form .user-details {
   display: flex;
@@ -139,11 +139,11 @@ form .button input {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #516395, #516395);
 }
 form .button input:hover {
   /* transform: scale(0.99); */
-  background: linear-gradient(-135deg, #614385, #516395);
+  background: linear-gradient(-135deg, #516395, #516395);
 }
 @media (max-width: 584px) {
   .container {
@@ -181,9 +181,12 @@ table {
 
 tr {
   border: 1px solid #516395;
+  height: 60px;
 }
 
 th {
+  margin: 4px 4px;
+  padding: 4px 4px;
   font-size: 20px;
   font-weight: 300;
 }
@@ -201,13 +204,30 @@ button {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #866aa8, #798cbe);
+  background: linear-gradient(135deg, #516395, #798cbe);
+}
+
+.button2 {
+  border-radius: 8px;
+  background: transparent;
+  margin: 8px;
+  align-self: stretch;
+  text-align: start;
+}
+
+.button2:hover {
+  border-radius: 8px;
+  background: white;
+  color: #516395;
+  margin: 8px;
+  align-self: stretch;
+  text-align: start;
 }
 
 .tableHeading {
   font-size: 24px;
   font-weight: 600;
-  color: #614385;
+  color: #516395;
 }
 
 .table {
@@ -249,7 +269,7 @@ ul li {
 .popup-heading {
   font-size: 24px;
   font-weight: 600;
-  color: #614385;
+  color: #516395;
 }
 
 .popup-select-box {
@@ -300,7 +320,7 @@ ul li {
   transform: translate(-50%, -50%);
   padding: 2rem 3rem;
   border-radius: 0.5rem;
-  background: lavender;
+  background: rgb(106, 106, 155);
 }
 
 .display-block {

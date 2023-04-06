@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import loginService from "../services/loginService";
+import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -21,9 +21,13 @@ function Login() {
     });
   }
 
+  function forgotPassword() {
+    navigate("/forgot-password");
+  }
+
   async function onSubmit(event) {
     event.preventDefault();
-    const responseData = await loginService(loginData);
+    const responseData = await login(loginData);
     console.log(responseData);
     console.log(loginData);
     const data = responseData.data;
@@ -31,7 +35,11 @@ function Login() {
     if (loginData.email === data.email) {
       if (data.role === "Receptionist") {
         // show receptionist dashboard
-        navigate("/receptionist-dashboard");
+        navigate("/receptionist-dashboard", {
+          state: {
+            r_id: data.e_id,
+          },
+        });
       } else if (data.role === "Doctor") {
         // show doctor dashboard
         navigate("/doctor-dashboard", {
@@ -40,7 +48,11 @@ function Login() {
           },
         });
       } else if (data.role === "Admin") {
-        navigate("/admin-dashboard");
+        navigate("/admin-dashboard", {
+          state: {
+            a_id: data.e_id,
+          },
+        });
       } else {
         // when role is not corretly selected
         toast.error("Incorrect role selected");
@@ -76,6 +88,13 @@ function Login() {
                   onChange={handleChange}
                 />
               </div>
+            </div>
+            <div className="button">
+              <input
+                type="button"
+                value="Forgot Password?"
+                onClick={forgotPassword}
+              />
             </div>
             <div className="button">
               <input type="submit" value="LOGIN" />
