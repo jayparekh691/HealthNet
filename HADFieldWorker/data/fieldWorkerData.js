@@ -7,11 +7,13 @@ const data = [
     patient: {
       pid: 2,
       name: "jack",
-      age: 25,
+      age: 24,
       mobilenumber: "+91 9637355303",
       gender: "M",
       town: "EC phase 1",
-      address: "IIITB",
+      address:
+        "26/C, Opposite of Infosys gate 1, Electronics City Phase 1, Hosur Road, Bengaluru - 560100",
+
       city: "Bangalore",
       state: "karnataka",
       pincode: 393002,
@@ -48,7 +50,7 @@ const data = [
     },
     followup: {
       f_id: 52,
-      instructions: "Dressing",
+      instructions: "1. Dressing\n2. BP reading\n3. Glucose reading",
       gap: 4,
       visitCount: 2,
       appointment: null,

@@ -31,7 +31,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         {
             List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
             for (Appointment appointment : appointments) {
-                appointment.setDiagnostics(null);
+//                appointment.setDiagnostics(null);
                 appointment.setDoctor(null);
                 if (appointment.getFollowupRemaining() == false) {
                     appointments.remove(appointment);
