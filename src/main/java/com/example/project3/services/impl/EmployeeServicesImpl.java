@@ -68,7 +68,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
     }
 
     @Override
-    public String forgotPassword(String request) {
+    public Employee forgotPassword(String request) {
         try{
             System.out.println(request);
             Employee employee = this.employeeRepo.findEmployeeByEmail(request);
@@ -79,12 +79,12 @@ public class EmployeeServicesImpl implements EmployeeServices {
             System.out.println(employee.getEmail());
             System.out.println(employee.getPassword());
             this.employeeRepo.save(employee);
-            return "Check Your mail for credentials";
+            return employee;
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        return request;
+        return null;
     }
 
     @Override

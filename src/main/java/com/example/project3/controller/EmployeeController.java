@@ -36,9 +36,9 @@ public class EmployeeController {
         return new ResponseEntity<>(employees,HttpStatus.ACCEPTED);
     }
     @PostMapping("/forgot-password/{email}")
-    public  ResponseEntity<String> forgotPassword(@PathVariable("email") String request){
-        String check = this.employeeServices.forgotPassword(request);
-        return new ResponseEntity<>(check,HttpStatus.ACCEPTED);
+    public  ResponseEntity<?> forgotPassword(@PathVariable("email") String request){
+        Employee emp = this.employeeServices.forgotPassword(request);
+        return new ResponseEntity<>(emp,HttpStatus.ACCEPTED);
     }
     @PostMapping("/update-password/{e_id}")
     public  ResponseEntity<String> updatePassword(@PathVariable("e_id") Integer request, @RequestBody UpdatePassword password){
