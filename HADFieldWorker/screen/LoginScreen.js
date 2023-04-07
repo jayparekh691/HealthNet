@@ -22,7 +22,7 @@ function LoginScreen() {
 
   const handleSignIn = () => {
     // login api call
-    navigation.navigate("setuppin");
+    // navigation.navigate("setuppin");
   };
   return (
     <View style={styles.screen}>
