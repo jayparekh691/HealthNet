@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Dimensions, StyleSheet, View } from "react-native";
 import { Text } from "react-native";
 import CustomButton from "../components/CustomButton";
 import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
+import { log, set } from "react-native-reanimated";
+import Util, { getValueFor, save, stringFromObject } from "../utils/util";
+import { SecureStoreContext } from "../contexts/SecureStoreContext";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -29,8 +26,10 @@ function SetupPin() {
     pinFour: "",
   });
 
+  const [pin, setPin] = useContext(SecureStoreContext);
+
   useEffect(() => {
-    console.log(firstPin, secondPin);
+    // console.log(firstPin, secondPin);
   }, [firstPin, secondPin]);
 
   const onFirstPinCodeChange = (name, text) => {
@@ -73,7 +72,25 @@ function SetupPin() {
     }
   };
 
-  const onSubmit = () => {};
+  const setup = async (pin) => {
+    // store pin
+    await save("pin", pin);
+    // update pin state in SecureStoreContext
+    setPin(pin);
+
+    // check internet connectivity and create 2 tables in database
+    // store data in apppointment tables
+  };
+
+  const onContinue = async () => {
+    const first = stringFromObject(firstPin).toString().trim();
+    const second = stringFromObject(secondPin).toString().trim();
+    if (first.length === 4 && second.length === 4 && first === second) {
+      await setup(first);
+    } else {
+      Alert.alert("Pins not matching!");
+    }
+  };
 
   return (
     <View
@@ -230,19 +247,23 @@ function SetupPin() {
           marginBottom: height / 40,
         }}
       >
-        <View>
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
           <CustomButton
             backgroundColor={COLOR.primaryColor}
             textColor="white"
             title="CONTINUE"
             style={{
-              elevation: 10,
-              width: width / 3,
+              elevation: 0,
               shadowColor: "#000000",
               shadowOffset: { width: 4, height: 4 },
+              margin: 0,
               paddingVertical: 4,
             }}
-            onPress={onSubmit}
+            onPress={onContinue}
           />
         </View>
       </View>

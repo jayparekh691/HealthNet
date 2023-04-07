@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, Text, TouchableWithoutFeedback, View } from "react-native";
 import { COLOR, RANDOM_COLOR } from "../utils/Color";
-import Util from "../utils/util";
+import { getMonth } from "../utils/util";
 import { makeCall } from "../services/dashboardServices";
 import ContactCard from "./ContactCard";
 
@@ -130,7 +130,7 @@ function AppointmentCard({ data, onPress }) {
                   padding: 2,
                 }}
               >
-                {Util.getMonth(date.getMonth())}
+                {getMonth(date.getMonth())}
               </Text>
               <Text
                 style={{

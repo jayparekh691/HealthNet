@@ -14,13 +14,13 @@ function StackNavigator() {
         headerTintColor: COLOR.primaryColor,
       }}
     >
-      {/* <Stack.Screen
+      <Stack.Screen
         options={{
           headerShown: false,
         }}
         name="lockScreen"
         component={LockScreen}
-      /> */}
+      />
       <Stack.Screen
         options={{
           headerShown: false,
