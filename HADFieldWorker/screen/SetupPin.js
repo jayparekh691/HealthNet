@@ -72,16 +72,21 @@ function SetupPin() {
     }
   };
 
-  const setup = async () => {
-    await save("pin", first);
-    setPin(first);
+  const setup = async (pin) => {
+    // store pin
+    await save("pin", pin);
+    // update pin state in SecureStoreContext
+    setPin(pin);
+
+    // check internet connectivity and create 2 tables in database
+    // store data in apppointment tables
   };
 
   const onContinue = async () => {
     const first = stringFromObject(firstPin).toString().trim();
     const second = stringFromObject(secondPin).toString().trim();
     if (first.length === 4 && second.length === 4 && first === second) {
-      await setup();
+      await setup(first);
     } else {
       Alert.alert("Pins not matching!");
     }

@@ -1,6 +1,5 @@
 import { MONTHS } from "./Constants";
 import * as SecureStore from "expo-secure-store";
-
 export const getMonth = (i) => MONTHS[i];
 
 export const stringFromObject = (pin) => {
