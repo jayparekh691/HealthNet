@@ -90,14 +90,16 @@ function Login() {
               </div>
             </div>
             <div className="button">
-              <input
-                type="button"
-                value="Forgot Password?"
-                onClick={forgotPassword}
-              />
-            </div>
-            <div className="button">
               <input type="submit" value="LOGIN" />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <button
+                className="button2"
+                style={{ color: "black", fontWeight: "300", fontSize: "16px" }}
+                onClick={forgotPassword}
+              >
+                Forgot Password?
+              </button>
             </div>
           </form>
         </div>

@@ -22,9 +22,13 @@ function ForgotPassword() {
       toast.success(
         "New Password has been sent to your email, Please use it to reset your password"
       );
-      navigate(-1);
+      navigate("/update-password", {
+        state: {
+          employeeId: data.e_id,
+        },
+      });
     } else {
-      toast.error("Incorrect email");
+      toast.error("Incorrect email entered");
     }
   }
 
@@ -32,10 +36,13 @@ function ForgotPassword() {
     <div className="formPage">
       <div className="container">
         <div className="title">Forgot Password</div>
-        <div className="content">
+        <div
+          className="content"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <form>
-            <div className="user-details">
-              <div className="input-box">
+            <div className="user-details" style={{ display: "block" }}>
+              <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Email"}
                   name={"email"}
