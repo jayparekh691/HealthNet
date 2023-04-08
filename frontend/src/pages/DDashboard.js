@@ -9,8 +9,8 @@ function DDashboard() {
   const [patientList, setPatientList] = useState([]);
 
   useEffect(() => {
+    setDoctorID(state.d_id);
     (async function () {
-      setDoctorID(state.d_id);
       const responseData = await getAllPatients(state.d_id);
       const data = responseData.data;
       console.log(data);
@@ -25,6 +25,15 @@ function DDashboard() {
       }
     })();
   }, [state.d_id]);
+
+  function updatePassword(event) {
+    event.preventDefault();
+    navigate("/update-password", {
+      state: {
+        employeeId: doctorID,
+      },
+    });
+  }
 
   function onCheckUPButtonClicked(p, event) {
     console.log(p.a_id);
@@ -64,16 +73,19 @@ function DDashboard() {
 
   return (
     <div className="paddingPage">
-      <div style={{ textAlign: "center" }}>
-        <label className="tableHeading">Doctor Dashboard</label>
+      <div>
+        <label className="tableHeading">Dashboard</label>
       </div>
       <div style={{ textAlign: "right" }}>
-        <span style={{ margin: "10px" }}>
+        <span style={{ margin: "12px" }}>
+          <button onClick={updatePassword}>Update Password</button>
+        </span>
+        <span style={{ margin: "12px" }}>
           <button className="button" onClick={viewAnyPatientHistory}>
             View Patient History
           </button>
         </span>
-        <span style={{ margin: "10px" }}>
+        <span style={{ margin: "12px" }}>
           <button className="button" onClick={viewNewVisitRecords}>
             View New Visit Records
           </button>

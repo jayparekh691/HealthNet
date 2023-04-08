@@ -1,28 +1,54 @@
-import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import CustomButton from "../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
+import { login } from "../services/loginServices";
+import { save } from "../utils/util";
+import { log } from "react-native-reanimated";
+import { ConnectivityContext } from "../contexts/ConnectivityContext";
 
 const { width, height } = Dimensions.get("screen");
 
 function LoginScreen() {
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [isConnected] = useContext(ConnectivityContext);
   const navigation = useNavigation();
 
   const onInputChange = (name, text) => {
-    if (name === "login") {
-      setLoginId(text);
-    } else if (name === "password") {
-      setPassword(text);
-    }
+    setLoginData((pv) => {
+      return {
+        ...pv,
+        [name]: text,
+      };
+    });
   };
 
-  const handleSignIn = () => {
-    // login api call
-    navigation.navigate("setuppin");
+  const handleSignIn = async () => {
+    // check internet connectivity
+    if (isConnected) {
+      const response = await login(loginData);
+      if (response.data) {
+        await save("user", JSON.stringify(response.data));
+        navigation.replace("setuppin");
+      } else {
+        Alert.alert("Invalid Email or password");
+      }
+    } else {
+      Alert.alert("Please check internet connection!");
+    }
   };
   return (
     <View style={styles.screen}>
@@ -37,18 +63,18 @@ function LoginScreen() {
           }}
         >
           <TextInput
-            value={loginId}
+            value={loginData.email}
             selectionColor={COLOR.secondaryColor}
             style={styles.textinput}
             keyboardType="default"
             placeholder="USERNAME"
             placeholderTextColor={COLOR.secondaryColor}
-            onChangeText={(text) => onInputChange("login", text)}
+            onChangeText={(text) => onInputChange("email", text)}
           />
         </View>
         <View>
           <TextInput
-            value={password}
+            value={loginData.password}
             style={styles.textinput}
             secureTextEntry={true}
             keyboardType="default"

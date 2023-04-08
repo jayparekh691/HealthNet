@@ -12,6 +12,8 @@ function EmployeeRegistration() {
     email: "",
     password: "",
     gender: "M",
+    address: "",
+    mobilenumber: "",
     specialization: "",
     role: "Receptionist",
   });
@@ -66,7 +68,7 @@ function EmployeeRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Entername"
+                  placeholder="Enter name"
                   value={employeeData.name}
                   onChange={handleChange}
                   required
@@ -133,6 +135,29 @@ function EmployeeRegistration() {
                   type="password"
                   placeholder="Enter password"
                   value={employeeData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Address</span>
+                <textarea
+                  name="address"
+                  type="textarea"
+                  rows={3}
+                  cols={38}
+                  value={employeeData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Mobile Number</span>
+                <input
+                  name="mobilenumber"
+                  type="text"
+                  placeholder="Enter your mobile_number"
+                  value={employeeData.mobilenumber}
                   onChange={handleChange}
                   required
                 />

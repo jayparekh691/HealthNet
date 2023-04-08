@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
+  BackHandler,
   Dimensions,
   FlatList,
   Image,
@@ -15,6 +17,8 @@ import AppointmentModal from "../components/AppointmentModal";
 import { checkVisited } from "../services/dashboardServices";
 
 const { width, height } = Dimensions.get("screen");
+
+// TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
 function Dashboard({ navigation }) {
   const [appointmentData, setAppointmentData] = useState(

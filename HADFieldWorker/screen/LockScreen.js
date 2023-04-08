@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Alert, Dimensions, Text, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
+import { getValueFor, removeItem, stringFromObject } from "../utils/util";
+import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -36,8 +38,17 @@ function LockScreen() {
       });
     }
   };
-  const onSubmit = () => {
-    navigation.navigate("drawerNavigator");
+
+  const onContinue = async () => {
+    // get the value for key 'pin' from secure store
+
+    const lockPin = await getValueFor("pin");
+    console.log("lockscreen", lockPin);
+    if (stringFromObject(pin) === lockPin) {
+      navigation.navigate("drawerNavigator");
+    } else {
+      Alert.alert("Incorrect Pin!");
+    }
   };
   return (
     <View
@@ -127,7 +138,15 @@ function LockScreen() {
             </View>
           </View>
         </View>
-        <View>
+        <TouchableOpacity
+          activeOpacity={0}
+          onPress={() => {
+            console.log("Clearing all keys");
+            (async () => {
+              await removeItem("pin");
+            })();
+          }}
+        >
           <Text
             style={{
               fontSize: width / 30,
@@ -137,7 +156,7 @@ function LockScreen() {
           >
             forgot passcode?
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View
@@ -153,13 +172,12 @@ function LockScreen() {
             textColor="white"
             title="CONTINUE"
             style={{
-              elevation: 10,
-              width: width / 3,
+              elevation: 8,
               shadowColor: "#000000",
               shadowOffset: { width: 4, height: 4 },
               paddingVertical: 4,
             }}
-            onPress={onSubmit}
+            onPress={onContinue}
           />
         </View>
       </View>
