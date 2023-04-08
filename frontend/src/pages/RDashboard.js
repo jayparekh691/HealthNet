@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatientList } from "../services/receptionistServices";
 import { searchPatient, getDoctorList } from "../services/receptionistServices";
 import { addPatientAppointment } from "../services/receptionistServices";
@@ -10,18 +10,30 @@ import Popup from "reactjs-popup";
 import TextField from "@mui/material/TextField";
 
 function RDashboard() {
+  const state = useLocation().state;
   const navigate = useNavigate();
   const [patientList, setPatientList] = useState([]);
   const [searchedPatientList, setSearchedPatientList] = useState([]);
   const [doctorList, setDoctorList] = useState([]);
   const [doctorID, setDoctorID] = useState(null);
   const [searchValue, setSearchValue] = useState("");
+  const [receptionistId, setReceptionistId] = useState(null);
 
   function addPatient() {
     navigate("/patient-registration");
   }
 
+  function updatePassword(event) {
+    event.preventDefault();
+    navigate("/update-password", {
+      state: {
+        employeeId: receptionistId,
+      },
+    });
+  }
+
   useEffect(() => {
+    setReceptionistId(state.r_id);
     (async function () {
       const responseData = await getAllPatientList();
       const data = responseData.data;
@@ -101,6 +113,9 @@ function RDashboard() {
       >
         <label className="tableHeading">Receptionist Dashboard</label>
         <button onClick={addPatient}>Add Patient</button>
+        <span style={{ margin: "12px" }}>
+          <button onClick={updatePassword}>Update Password</button>
+        </span>
       </div>
 
       <div

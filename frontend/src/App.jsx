@@ -16,6 +16,8 @@ import PatientMedicalHistory from "./pages/PatientMedicalHistory";
 import SDashboard from "./pages/SDashboard";
 import VisitsDueByFieldWorker from "./pages/VisitsDueByFieldWorker";
 import ViewNewVisitRecords from "./pages/ViewNewVisitRecords";
+import ForgotPassword from "./pages/ForgotPassword";
+import UpdatePassword from "./pages/UpdatePassword";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
       />
       <Route path="/view-new-visit-records" element={<ViewNewVisitRecords />} />
       <Route path="/write-follow-up" element={<WriteFollowUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/update-password" element={<UpdatePassword />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
