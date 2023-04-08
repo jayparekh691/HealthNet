@@ -5,10 +5,12 @@ import com.example.project3.entities.Visit;
 import com.example.project3.repo.VisitRepo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Pair {
     private Patient patient;

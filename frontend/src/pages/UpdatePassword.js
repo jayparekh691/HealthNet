@@ -36,14 +36,14 @@ function UpdatePassword() {
   async function onUpdatePassword(event) {
     event.preventDefault();
     if (confirmNewPassword !== passwordObj.new_pass) {
-      toast.error("New password and Confirm New Password dont match");
+      toast.error("New password and Confirm New Password don't match");
     } else {
       const responseData = await updatePassword(employeeId, passwordObj);
       const data = responseData.data;
       console.log(data);
-      if (data) {
+      if (data === "Success") {
         toast.success("Password Successfully changed");
-        navigate(-1);
+        navigate(-2);
       } else {
         toast.error(
           "Could not change password, check if you have given the correct old password"

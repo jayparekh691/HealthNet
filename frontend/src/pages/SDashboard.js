@@ -75,7 +75,7 @@ function SDashboard() {
       );
       const data = responseData.data;
       if (data) {
-        toast.success(`Reassigned Field Worker`);
+        toast.success(`Field Worker has been reassigned`);
       } else {
         toast.error(`Unable to Reassign Field Worker`);
       }
@@ -96,31 +96,50 @@ function SDashboard() {
   }
 
   return (
-    <div className="paddinPage">
-      <div className="paddingPage" style={{ textAlign: "right" }}>
-        <button onClick={dueVisit}>Visits Due BY FieldWorker</button>
-      </div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignContent: "space-between",
+      }}
+    >
       <div
-        className="paddingPage"
         style={{
+          flex: 2,
+          height: "100vh",
+          width: "300px",
+          backgroundColor: "#516395",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
         }}
       >
+        <button className="button2" onClick={dueVisit}>
+          Due Visits
+        </button>
+      </div>
+
+      <div className="paddinPage" style={{ flex: 10 }}>
         <div
-          className="table-wrapper"
+          className="paddingPage"
           style={{
-            flex: 1,
-            margin: "10px",
+            display: "flex",
+            flexDirection: "row",
           }}
         >
-          <div>
-            <label className="tableHeading">
-              Unassigned Patients: {patientList.length}
-            </label>
-          </div>
-          <div>
-            {/* <div style={{ width: "40%", padding: "10px" }}>
+          <div
+            className="table-wrapper"
+            style={{
+              flex: 1,
+              margin: "10px",
+            }}
+          >
+            <div>
+              <label className="tableHeading">
+                Unassigned Patients: {patientList.length}
+              </label>
+            </div>
+            <div>
+              {/* <div style={{ width: "40%", padding: "10px" }}>
             <TextField
               name="Search Patient"
               id="outlined-basic"
@@ -131,129 +150,130 @@ function SDashboard() {
               // value={searchValue}
             />
           </div> */}
-          </div>
-          <div>
-            <table
-              style={{
-                width: "100%",
-              }}
-            >
-              <tbody>
-                <tr>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                </tr>
-              </tbody>
-              <tbody style={{ flex: "1", overflowY: "auto" }}>
-                {patientList.map((e, i) => {
-                  return (
-                    <tr key={i}>
-                      <th>{e.name}</th>
-                      <th>{e.age}</th>
-                      <th>{e.gender}</th>
-                      <td>
-                        <div>
-                          <Popup
-                            contentStyle={{ width: "20%", height: "35%" }}
-                            trigger={<button> Assign Field Worker</button>}
-                            position="right center"
-                          >
-                            <div style={{ padding: 10 }}>
-                              <label className="popup-heading">
-                                Select Field Worker
-                              </label>
-                              <div className="popup-select-box">
-                                <select
-                                  name="name"
-                                  onChange={handleChangeInFieldWorker}
-                                >
-                                  <option hidden>Select</option>
-                                  {fieldWorkerList.map((e) => {
-                                    return (
-                                      <option value={e.e_id} key={e.e_id}>
-                                        {e.name}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
+            </div>
+            <div>
+              <table
+                style={{
+                  width: "100%",
+                }}
+              >
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                  </tr>
+                </tbody>
+                <tbody style={{ flex: "1", overflowY: "auto" }}>
+                  {patientList.map((e, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{e.name}</th>
+                        <th>{e.age}</th>
+                        <th>{e.gender}</th>
+                        <td>
+                          <div>
+                            <Popup
+                              contentStyle={{ width: "20%", height: "35%" }}
+                              trigger={<button> Assign</button>}
+                              position="right center"
+                            >
+                              <div style={{ padding: 10 }}>
+                                <label className="popup-heading">
+                                  Select Field Worker
+                                </label>
+                                <div className="popup-select-box">
+                                  <select
+                                    name="name"
+                                    onChange={handleChangeInFieldWorker}
+                                  >
+                                    <option hidden>Select</option>
+                                    {fieldWorkerList.map((e) => {
+                                      return (
+                                        <option value={e.e_id} key={e.e_id}>
+                                          {e.name}
+                                        </option>
+                                      );
+                                    })}
+                                  </select>
+                                </div>
+                                <div>
+                                  <button
+                                    className="button"
+                                    value={i}
+                                    onClick={() => assign(e.pid)}
+                                  >
+                                    ASSIGN
+                                  </button>
+                                </div>
                               </div>
-                              <div>
-                                <button
-                                  className="button"
-                                  value={i}
-                                  onClick={() => assign(e.pid)}
-                                >
-                                  ASSIGN
-                                </button>
-                              </div>
-                            </div>
-                          </Popup>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                            </Popup>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-        <div
-          className="table-wrapper"
-          style={{
-            flex: 1,
-            margin: "10px",
-          }}
-        >
-          <div>
-            <label className="tableHeading">Reassign Field Worker</label>
-          </div>
-          <div className="table-wrapper">
-            <table
-              style={{
-                width: "100%",
-              }}
-            >
-              <tbody>
-                <tr>
-                  <th>Field Worker Name</th>
-                  <th>Gender</th>
-                </tr>
-              </tbody>
-              <tbody style={{ flex: "1", overflowY: "auto" }}>
-                {fieldWorkerList.map((e, i) => {
-                  return (
-                    <tr key={i}>
-                      <th>{e.name}</th>
-                      <th>{e.gender}</th>
-                      <td>
-                        <div>
-                          <button
-                            onClick={() => {
-                              openModal(i);
-                            }}
-                          >
-                            Reassign Field Worker
-                          </button>
-                          {modalIndex === i && (
-                            <Modal
-                              key={i}
-                              fieldWorkerList={fieldWorkerList}
-                              data={e}
-                              reassign={reassign}
-                              closeModal={closeModal}
-                              handleOptionChange={
-                                handleChangeInReAssignFieldWorker
-                              }
-                            />
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div
+            className="table-wrapper"
+            style={{
+              flex: 1,
+              margin: "10px",
+            }}
+          >
+            <div>
+              <label className="tableHeading">Reassign Field Worker</label>
+            </div>
+            <div className="table-wrapper">
+              <table
+                style={{
+                  width: "100%",
+                }}
+              >
+                <tbody>
+                  <tr>
+                    <th>Field Worker Name</th>
+                    <th>Gender</th>
+                  </tr>
+                </tbody>
+                <tbody style={{ flex: "1", overflowY: "auto" }}>
+                  {fieldWorkerList.map((e, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{e.name}</th>
+                        <th>{e.gender}</th>
+                        <td>
+                          <div>
+                            <button
+                              onClick={() => {
+                                openModal(i);
+                              }}
+                            >
+                              Reassign
+                            </button>
+                            {modalIndex === i && (
+                              <Modal
+                                key={i}
+                                fieldWorkerList={fieldWorkerList}
+                                data={e}
+                                reassign={reassign}
+                                closeModal={closeModal}
+                                handleOptionChange={
+                                  handleChangeInReAssignFieldWorker
+                                }
+                              />
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
