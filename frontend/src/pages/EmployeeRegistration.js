@@ -50,7 +50,6 @@ function EmployeeRegistration() {
     const responseData = await registerEmployee(employeeData);
     if (responseData.data) {
       toast.success(`Employee Added`);
-      navigate(-1);
     } else {
       toast.error("Unable to Add Employee");
     }
@@ -146,6 +145,7 @@ function EmployeeRegistration() {
                   type="textarea"
                   rows={3}
                   cols={38}
+                  placeholder="Enter address"
                   value={employeeData.address}
                   onChange={handleChange}
                   required
@@ -156,13 +156,15 @@ function EmployeeRegistration() {
                 <input
                   name="mobilenumber"
                   type="text"
-                  placeholder="Enter your mobile_number"
+                  placeholder="Enter mobilenumber"
                   value={employeeData.mobilenumber}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="select-box">
+                <span className="details">Role</span>
+
                 <select
                   value={employeeData.role}
                   name="role"
@@ -170,7 +172,6 @@ function EmployeeRegistration() {
                 >
                   <option value="Receptionist">Receptionist</option>
                   <option value="Doctor">Doctor</option>
-                  <option value="Supervisor">Supervisor</option>
                   <option value="FieldWorker">Field Worker</option>
                 </select>
               </div>

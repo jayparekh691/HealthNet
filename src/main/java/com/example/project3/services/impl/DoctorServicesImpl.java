@@ -55,7 +55,7 @@ public class DoctorServicesImpl implements DoctorServices {
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
         int gap=followup.getGap();
-        Date date = new Date(123,02,16);
+        Date date = new Date(123,03,7);
         this.followupRepo.save(followup);
         List<Visit> visits=new ArrayList<Visit>();
         int counter=1;
@@ -146,6 +146,8 @@ public class DoctorServicesImpl implements DoctorServices {
         List<Appointment> finalAppointments=new ArrayList<>();
         for(Appointment a:appointments)
         {
+            if(a.getFollowup()==null)
+                continue;
             List<Visit> visits=a.getFollowup().getVisitList();
             for(Visit v:visits)
             {

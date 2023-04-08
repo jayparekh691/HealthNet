@@ -102,7 +102,7 @@ function VisitsDueByFieldWorker() {
                 <th>Gender</th>
                 <th>Age</th>
                 <th>Field Worker Name</th>
-                <th>Visit IDs</th>
+                <th>Due Date</th>
               </tr>
             </tbody>
             <tbody style={{}}>
@@ -113,20 +113,7 @@ function VisitsDueByFieldWorker() {
                     <th>{v.patient.gender}</th>
                     <th>{v.patient.age}</th>
                     <th>{v.patient.fieldworker.name}</th>
-                    <th>
-                      <div className="select-box" style={{ marginTop: "12px" }}>
-                        <select name="role">
-                          <option hidden>View</option>
-                          {v.visit.map((e, i) => {
-                            return (
-                              <option disabled key={e.v_id}>
-                                {e.v_id}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </th>
+                    <th>{v.visit[0].date.split("T")[0]}</th>
                     <td>
                       <div style={{ marginLeft: "24px" }}>
                         <button

@@ -67,7 +67,7 @@ form .input-box span.details {
 
 .select-box {
   height: 50px;
-  width: 100%;
+  width: 47%;
   margin-bottom: 5px;
 }
 
@@ -320,7 +320,7 @@ ul li {
   transform: translate(-50%, -50%);
   padding: 2rem 3rem;
   border-radius: 0.5rem;
-  background: rgb(106, 106, 155);
+  background: rgb(255, 255, 255);
 }
 
 .display-block {

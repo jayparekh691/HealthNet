@@ -115,18 +115,7 @@ function ADashboard() {
             paddingBottom: "12px",
             alignItems: "flex-end",
           }}
-        >
-          <div
-            style={{
-              justifyItems: "center",
-              // alignItems: "flex-end",
-            }}
-          >
-            <span className="tableHeading" style={{}}>
-              Dashboard
-            </span>
-          </div>
-        </div>
+        ></div>
         <div className="search">
           <TextField
             name="Employee Search"

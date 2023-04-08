@@ -10,13 +10,15 @@ function UpdateEmployeeDetails() {
   const navigate = useNavigate();
   const [employeeObj, setEmplyeeObj] = useState({});
   const [disabled, setDisabled] = useState(true);
-  const [updatedEmployeeDate, setUpdatedEmployeeData] = useState({
+  const [updatedEmployeeData, setUpdatedEmployeeData] = useState({
     e_id: state.employeeObj.e_id,
     name: state.employeeObj.name,
     email: state.employeeObj.email,
     password: state.employeeObj.password,
     gender: state.employeeObj.gender,
     specialization: state.employeeObj.specialization,
+    mobilenumber: state.employeeObj.mobilenumber,
+    address: state.employeeObj.address,
     role: state.employeeObj.role,
   });
   const [genderDefault, setGenderDefault] = useState(state.employeeObj.gender);
@@ -49,11 +51,11 @@ function UpdateEmployeeDetails() {
 
   async function onUpdate(event) {
     event.preventDefault();
-    console.log(updatedEmployeeDate);
+    console.log(updatedEmployeeData);
     // add employee data
     const responseData = await updateEmployee(
-      updatedEmployeeDate.e_id,
-      updatedEmployeeDate
+      updatedEmployeeData.e_id,
+      updatedEmployeeData
     );
     if (responseData.data) {
       toast.success(`Updated Employee Data`);
@@ -76,7 +78,7 @@ function UpdateEmployeeDetails() {
                   name="name"
                   type="text"
                   placeholder={employeeObj.name}
-                  value={updatedEmployeeDate.name}
+                  value={updatedEmployeeData.name}
                   onChange={handleChange}
                   required
                 />
@@ -130,20 +132,45 @@ function UpdateEmployeeDetails() {
                   name="email"
                   type="email"
                   placeholder={employeeObj.email}
-                  value={updatedEmployeeDate.email}
+                  value={updatedEmployeeData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Mobile Number</span>
+                <input
+                  name="mobilenumber"
+                  type="text"
+                  placeholder={employeeObj.mobilenumber}
+                  value={updatedEmployeeData.mobilenumber}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Address</span>
+                <textarea
+                  name="address"
+                  type="textarea"
+                  rows={3}
+                  cols={38}
+                  placeholder={employeeObj.address}
+                  value={updatedEmployeeData.address}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="select-box">
+                <span className="details">Role</span>
                 <select
-                  value={updatedEmployeeDate.role}
+                  value={updatedEmployeeData.role}
                   name="role"
                   onChange={handleChange}
                   disabled={true}
                 >
-                  <option value={updatedEmployeeDate.role}>
-                    {updatedEmployeeDate.role}
+                  <option value={updatedEmployeeData.role}>
+                    {updatedEmployeeData.role}
                   </option>
                 </select>
               </div>
@@ -153,8 +180,12 @@ function UpdateEmployeeDetails() {
                   disabled={disabled}
                   name="specialization"
                   type="text"
-                  placeholder={updatedEmployeeDate.specialization}
-                  value={updatedEmployeeDate.specialization}
+                  placeholder={updatedEmployeeData.specialization}
+                  value={
+                    updatedEmployeeData.specialization === null
+                      ? "No specialization"
+                      : updatedEmployeeData.specialization
+                  }
                   onChange={handleChange}
                   required
                 />
