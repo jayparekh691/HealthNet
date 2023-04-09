@@ -7,7 +7,7 @@ import { COLOR } from "../utils/Color";
 
 const Stack = createNativeStackNavigator();
 
-function StackNavigator() {
+function AppNavigation() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -39,4 +39,4 @@ function StackNavigator() {
   );
 }
 
-export default StackNavigator;
+export default AppNavigation;

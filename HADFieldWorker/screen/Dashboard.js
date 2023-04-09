@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   BackHandler,
   Dimensions,
@@ -23,6 +24,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { sendMedicalData } from "../services/syncServices";
 import { log } from "react-native-reanimated";
+import { LoadingContext } from "../contexts/LoadingContext";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -37,6 +39,9 @@ function Dashboard({ navigation }) {
     useState(false);
   const [appointmentModalData, setAppointmentModalData] = useState(null);
   const [filter, setFilter] = useState("");
+
+  const { isDashboardLoadingState } = useContext(LoadingContext);
+  const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -80,6 +85,7 @@ function Dashboard({ navigation }) {
   };
 
   const syncDB = () => {
+    setIsDashboardLoading(true);
     // send all medicalData rows and delete after send
     getMedicalTableFromTable(loadMedicalData)
       .then((success) => {
@@ -91,10 +97,14 @@ function Dashboard({ navigation }) {
     //
     // TODO:  get new appoinment data
     //
+    setTimeout(() => {
+      setIsDashboardLoading(false);
+    }, 1000);
   };
 
   const loadAppointmentFromDatabase = (appointmentList) => {
     setAppointmentData(appointmentList);
+    setIsDashboardLoading(false);
   };
 
   useEffect(() => {
@@ -198,23 +208,35 @@ function Dashboard({ navigation }) {
           flex: 1,
         }}
       >
-        <FlatList
-          style={{
-            paddingHorizontal: 20,
-          }}
-          keyExtractor={(itemData, i) => itemData.v_id}
-          data={appointmentData.filter((v) => {
-            return new Date(v.date) >= today;
-          })}
-          renderItem={(itemData) => {
-            return (
-              <AppointmentCard
-                data={itemData.item}
-                onPress={onAppointmentCardPressed}
-              />
-            );
-          }}
-        />
+        {isDashboardLoading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={COLOR.primaryColor} />
+          </View>
+        ) : (
+          <FlatList
+            style={{
+              paddingHorizontal: 20,
+            }}
+            keyExtractor={(itemData, i) => itemData.v_id}
+            data={appointmentData.filter((v) => {
+              return new Date(v.date) >= today;
+            })}
+            renderItem={(itemData) => {
+              return (
+                <AppointmentCard
+                  data={itemData.item}
+                  onPress={onAppointmentCardPressed}
+                />
+              );
+            }}
+          />
+        )}
 
         <AppointmentModal
           visible={isAppointmentModalActive}

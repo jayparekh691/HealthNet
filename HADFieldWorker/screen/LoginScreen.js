@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   StyleSheet,
@@ -22,7 +23,8 @@ import {
   insertAppointments,
 } from "../services/databaseServices";
 import { getAppointmentList } from "../services/syncServices";
-import CustomText from "../components/CustomText";
+import CustomTextInput from "../components/CustomTextInput";
+import { LoadingContext } from "../contexts/LoadingContext";
 // import * as SQLite from "expo-sqlite";
 
 const { width, height } = Dimensions.get("screen");
@@ -33,7 +35,11 @@ function LoginScreen() {
     password: "",
   });
 
-  const [isConnected] = useContext(ConnectivityContext);
+  const { isConnectedState } = useContext(ConnectivityContext);
+  const { isLoginLoadingState } = useContext(LoadingContext);
+
+  const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
+  const [isConnected] = isConnectedState;
   const navigation = useNavigation();
 
   const onInputChange = (name, text) => {
@@ -89,35 +95,44 @@ function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    if (false) {
-      (async () => {
-        await removeItem("pin");
-        await removeItem("user");
-        await cleanDatabase();
-        console.log("cleaned!");
-      })();
-    } else {
-      // check internet connectivity
-      if (isConnected) {
-        const response = await login(loginData);
-        if (response.data && response.data.role === "FieldWorker") {
-          await save("user", JSON.stringify(response.data));
-          setupDatabase()
-            .then((success) => {
-              console.log(success);
-              navigation.navigate("setuppin");
-            })
-            .catch((error) => {
-              Alert.alert(error);
-            });
-        } else {
-          Alert.alert("Invalid Email or password");
-        }
+    // check internet connectivity
+    setIsLoginLoading(true);
+    if (isConnected) {
+      const response = await login(loginData);
+      if (response.data && response.data.role === "FieldWorker") {
+        await save("user", JSON.stringify(response.data));
+        setupDatabase()
+          .then((success) => {
+            navigation.navigate("setuppin");
+          })
+          .catch((error) => {
+            setIsLoginLoading(false);
+            Alert.alert(error);
+          });
       } else {
-        Alert.alert("Please check internet connection!");
+        setIsLoginLoading(false);
+        Alert.alert("Invalid Email or password");
       }
+    } else {
+      setIsLoginLoading(false);
+      Alert.alert("Please check internet connection!");
     }
   };
+
+  if (isLoginLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size={"large"} color={COLOR.primaryColor} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
       <View
@@ -130,14 +145,14 @@ function LoginScreen() {
             justifyContent: "flex-start",
           }}
         >
-          <CustomText
+          <CustomTextInput
             value={loginData.email}
             placeholder={"USERNAME"}
             onChangeText={(text) => onInputChange("email", text)}
           />
         </View>
         <View>
-          <CustomText
+          <CustomTextInput
             value={loginData.password}
             placeholder={"PASSWORD"}
             hasSecureEye={true}

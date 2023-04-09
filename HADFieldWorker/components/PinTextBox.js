@@ -4,7 +4,16 @@ import { COLOR } from "../utils/Color";
 
 const { width } = Dimensions.get("screen");
 
-function PinTextBox({ name, value, onChangeText, elevation = false }) {
+function PinTextBox({
+  name,
+  value,
+  onChangeText,
+  elevation = false,
+  isSecure,
+  autoFocus = false,
+  onKeyPress,
+  inputRef,
+}) {
   const pinChange = (name, text) => {
     onChangeText(name, text);
   };
@@ -19,7 +28,6 @@ function PinTextBox({ name, value, onChangeText, elevation = false }) {
       shadowColor: "#0f0c0c",
       shadowOffset: { width: 10, height: 10 },
       borderRadius: 8,
-      marginBottom: 20,
       backgroundColor: COLOR.lightGray,
     },
   });
@@ -28,14 +36,21 @@ function PinTextBox({ name, value, onChangeText, elevation = false }) {
     <View
       style={{
         width: width / 10,
+        marginRight: 8,
       }}
     >
       <TextInput
         style={styles.textinput}
+        ref={(r) => {
+          inputRef && inputRef(r);
+        }}
         value={value}
+        onKeyPress={onKeyPress}
         textAlign="center"
         keyboardType="numeric"
         returnKeyType="done"
+        autoFocus={autoFocus}
+        secureTextEntry={isSecure}
         maxLength={1}
         selectionColor={COLOR.secondaryColor}
         placeholderTextColor={COLOR.secondaryColor}

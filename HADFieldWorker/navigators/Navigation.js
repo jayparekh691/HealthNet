@@ -4,19 +4,21 @@ import DashboardNavigation from "./StackNavigator";
 import SecureStoreProvider, {
   SecureStoreContext,
 } from "../contexts/SecureStoreContext";
-import StackNavigator from "./StackNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { getValueFor } from "../utils/Util";
 import { ActivityIndicator, View } from "react-native";
 import { COLOR } from "../utils/Color";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import NetInfo from "@react-native-community/netinfo";
+import AppNavigation from "./StackNavigator";
+import LoadingProvider from "../contexts/LoadingContext";
 
 function Navigation() {
   const { pinState } = useContext(SecureStoreContext);
   const [pin, setPin] = pinState;
 
-  const [isConnected, setIsConnected] = useContext(ConnectivityContext);
+  const { isConnectedState } = useContext(ConnectivityContext);
+  const [isConnected, setIsConnected] = isConnectedState;
 
   useEffect(() => {
     getValueFor("pin")
@@ -39,9 +41,11 @@ function Navigation() {
   }, [isConnected]);
 
   return (
-    <NavigationContainer>
-      {pin ? <StackNavigator /> : <AuthNavigation />}
-    </NavigationContainer>
+    <LoadingProvider>
+      <NavigationContainer>
+        {pin ? <AppNavigation /> : <AuthNavigation />}
+      </NavigationContainer>
+    </LoadingProvider>
   );
 }
 
