@@ -8,6 +8,7 @@ import { makeCall, markVisited } from "../services/dashboardServices";
 import PinTextBox from "./PinTextBox";
 import { log } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import PinInputField from "./PinInputField";
 
 function AppointmentModal({ visible, onModalClose, data }) {
   const navigation = useNavigation();
@@ -268,28 +269,10 @@ function AppointmentModal({ visible, onModalClose, data }) {
                 width: "50%",
                 flexDirection: "row",
                 justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <PinTextBox
-                name="pinOne"
-                value={pin.pinOne}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinTwo"
-                value={pin.pinTwo}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinThree"
-                value={pin.pinThree}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinFour"
-                value={pin.pinFour}
-                onChangeText={onPinChange}
-              />
+              <PinInputField pin={pin} onPinChange={onPinChange} />
             </View>
           </View>
         </View>
@@ -364,7 +347,7 @@ function AppointmentModal({ visible, onModalClose, data }) {
           shadowOffset: { width: -4, height: -4 },
         }}
       >
-        {isOTPScreenActive ? <OTPModalScreen /> : <PatientDetailsModalScreen />}
+        <OTPModalScreen />
       </View>
       <TouchableWithoutFeedback
         onPress={() => {
@@ -373,7 +356,7 @@ function AppointmentModal({ visible, onModalClose, data }) {
           clearPin();
         }}
       >
-        <View style={{ flex: 0 }}></View>
+        <View style={{ flex: 1 }}></View>
       </TouchableWithoutFeedback>
     </Modal>
   );

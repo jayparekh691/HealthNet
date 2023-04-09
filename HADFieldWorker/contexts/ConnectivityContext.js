@@ -5,7 +5,9 @@ function ConnectivityContextProvider({ children }) {
   const [isConnected, setIsConnected] = useState(false);
 
   return (
-    <ConnectivityContext.Provider value={[isConnected, setIsConnected]}>
+    <ConnectivityContext.Provider
+      value={{ isConnectedState: [isConnected, setIsConnected] }}
+    >
       {children}
     </ConnectivityContext.Provider>
   );

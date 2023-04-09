@@ -1,17 +1,29 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
-import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import CustomButton from "../components/CustomButton";
 import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { getValueFor, removeItem, stringFromObject } from "../utils/Util";
 import { TouchableOpacity } from "react-native";
+import PinInputField from "../components/PinInputField";
+import { LoadingContext } from "../contexts/LoadingContext";
 
 const { width, height } = Dimensions.get("screen");
 
 function LockScreen() {
   const navigation = useNavigation();
+
+  const { isDashboardLoadingState } = useContext(LoadingContext);
+  const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
 
   const [pin, setPin] = useState({
     pinOne: "",
@@ -40,8 +52,7 @@ function LockScreen() {
   };
 
   const onContinue = async () => {
-    // get the value for key 'pin' from secure store
-
+    setIsDashboardLoading(true);
     const lockPin = await getValueFor("pin");
     console.log("lockscreen", lockPin);
     if (stringFromObject(pin) === lockPin) {
@@ -50,6 +61,21 @@ function LockScreen() {
       Alert.alert("Incorrect Pin!");
     }
   };
+
+  if (isDashboardLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size={"large"} color={COLOR.primaryColor} />
+      </View>
+    );
+  }
+
   return (
     <View
       style={[
@@ -113,28 +139,10 @@ function LockScreen() {
                 width: width / 2,
                 flexDirection: "row",
                 justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <PinTextBox
-                name="pinOne"
-                value={pin.pinOne}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinTwo"
-                value={pin.pinTwo}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinThree"
-                value={pin.pinThree}
-                onChangeText={onPinChange}
-              />
-              <PinTextBox
-                name="pinFour"
-                value={pin.pinFour}
-                onChangeText={onPinChange}
-              />
+              <PinInputField pin={pin} onPinChange={onPinChange} />
             </View>
           </View>
         </View>
