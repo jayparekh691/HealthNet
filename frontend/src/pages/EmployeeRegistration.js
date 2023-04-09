@@ -12,6 +12,8 @@ function EmployeeRegistration() {
     email: "",
     password: "",
     gender: "M",
+    address: "",
+    mobilenumber: "",
     specialization: "",
     role: "Receptionist",
   });
@@ -48,7 +50,6 @@ function EmployeeRegistration() {
     const responseData = await registerEmployee(employeeData);
     if (responseData.data) {
       toast.success(`Employee Added`);
-      navigate(-1);
     } else {
       toast.error("Unable to Add Employee");
     }
@@ -66,7 +67,7 @@ function EmployeeRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Entername"
+                  placeholder="Enter name"
                   value={employeeData.name}
                   onChange={handleChange}
                   required
@@ -137,7 +138,33 @@ function EmployeeRegistration() {
                   required
                 />
               </div>
+              <div className="input-box">
+                <span className="details">Address</span>
+                <textarea
+                  name="address"
+                  type="textarea"
+                  rows={3}
+                  cols={38}
+                  placeholder="Enter address"
+                  value={employeeData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Mobile Number</span>
+                <input
+                  name="mobilenumber"
+                  type="text"
+                  placeholder="Enter mobilenumber"
+                  value={employeeData.mobilenumber}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="select-box">
+                <span className="details">Role</span>
+
                 <select
                   value={employeeData.role}
                   name="role"
@@ -145,7 +172,6 @@ function EmployeeRegistration() {
                 >
                   <option value="Receptionist">Receptionist</option>
                   <option value="Doctor">Doctor</option>
-                  <option value="Supervisor">Supervisor</option>
                   <option value="FieldWorker">Field Worker</option>
                 </select>
               </div>

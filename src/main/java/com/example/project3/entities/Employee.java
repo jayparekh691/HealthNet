@@ -25,6 +25,8 @@ public class Employee {
     @Column(unique = true)
     private String email;
     private String password;
+    private String address;
+    private String mobilenumber;
     private char gender;
     private String role;
     private String specialization;

@@ -30,14 +30,15 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         for(Patient p:patients)
         {
             List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
+            List<Appointment> appointments1 = new ArrayList<>();
             for (Appointment appointment : appointments) {
 //                appointment.setDiagnostics(null);
                 appointment.setDoctor(null);
-                if (appointment.getFollowupRemaining() == false) {
-                    appointments.remove(appointment);
+                if (appointment.getFollowupRemaining() == true) {
+                    appointments1.add(appointment);
                 }
             }
-            for(Appointment appointment:appointments)
+            for(Appointment appointment:appointments1)
                 finalAppointments.add(appointment);
         }
         List<VisitModel> visitModelList=new ArrayList<>();

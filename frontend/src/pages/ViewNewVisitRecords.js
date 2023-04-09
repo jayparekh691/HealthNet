@@ -40,17 +40,17 @@ function ViewNewVisitRecords() {
 
   return (
     <div>
-      <div>
-        {/* {newVisitList.length !== 0 && ( */}
-        <label className="tableHeading" style={{ textAlign: "center" }}>
-          New Visit Records
-        </label>
-        {/*)*/}
-        {/* {newVisitList.length === 0 && (
+      <div style={{ margin: "16px" }}>
+        {newVisitList.length !== 0 && (
+          <label className="tableHeading" style={{ textAlign: "center" }}>
+            New Visit Records
+          </label>
+        )}
+        {newVisitList.length === 0 && (
           <label className="tableHeading" style={{ textAlign: "center" }}>
             No New Visit Records
           </label>
-        )} */}
+        )}
       </div>
       <div>
         {newVisitList.map((e, i) => {
@@ -88,7 +88,7 @@ function ViewNewVisitRecords() {
                       Date : {e.curr_date.split("T")[0]}
                     </span>
                     <span className="spaceBetweenLabels">
-                      Field Worker :{" "}
+                      Current Field Worker :{" "}
                       {e.patient.fieldworker === null
                         ? "Not Assigned"
                         : e.patient.fieldworker.name}
@@ -151,6 +151,9 @@ function ViewNewVisitRecords() {
                                 </span>
                                 <span className="spaceBetweenLabels">
                                   Visit Date : {v.date.split("T")[0]}
+                                </span>
+                                <span className="spaceBetweenLabels">
+                                  Field Worker : {v.fieldWorker.name}
                                 </span>
                               </Typography>
                             </AccordionSummary>

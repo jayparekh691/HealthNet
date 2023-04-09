@@ -67,7 +67,6 @@ function PatientRegistration() {
       const appointmentData = responseData.data;
       console.log(appointmentData);
       toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-      navigate(-1);
     }
   }
   function handleChangeInDoctor(event) {
@@ -88,7 +87,7 @@ function PatientRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder="Enter name"
                   value={patientData.name}
                   onChange={handleChange}
                   required
@@ -101,7 +100,7 @@ function PatientRegistration() {
                   type="number"
                   min={0}
                   max={120}
-                  placeholder="Enter your age"
+                  placeholder="Enter age"
                   value={patientData.age}
                   onChange={handleChange}
                   required
@@ -155,8 +154,9 @@ function PatientRegistration() {
                 <textarea
                   name="address"
                   type="textarea"
-                  rows={5}
-                  cols={40}
+                  rows={3}
+                  cols={37}
+                  placeholder="Enter address"
                   value={patientData.address}
                   onChange={handleChange}
                   required
@@ -167,7 +167,7 @@ function PatientRegistration() {
                 <input
                   name="mobilenumber"
                   type="text"
-                  placeholder="Enter your mobile_number"
+                  placeholder="Enter mobilenumber"
                   value={patientData.mobilenumber}
                   onChange={handleChange}
                   required
@@ -180,7 +180,7 @@ function PatientRegistration() {
                 <input
                   name="town"
                   type="text"
-                  placeholder="Enter your town"
+                  placeholder="Enter town"
                   value={patientData.town}
                   onChange={handleChange}
                   required
@@ -191,7 +191,7 @@ function PatientRegistration() {
                 <input
                   name="city"
                   type="text"
-                  placeholder="Enter your city"
+                  placeholder="Enter city"
                   value={patientData.city}
                   onChange={handleChange}
                   required
@@ -202,7 +202,7 @@ function PatientRegistration() {
                 <input
                   name="state"
                   type="text"
-                  placeholder="Enter your state"
+                  placeholder="Enter state"
                   value={patientData.state}
                   onChange={handleChange}
                   required
