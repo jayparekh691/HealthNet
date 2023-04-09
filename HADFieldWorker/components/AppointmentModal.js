@@ -54,22 +54,18 @@ function AppointmentModal({ visible, onModalClose, data }) {
   };
 
   const onClose = () => {
+    clearPin();
     setIsOTPScreenActive(false);
     onModalClose();
-    clearPin();
   };
 
   const authenticateOTP = () => {
     let otp = Object.values(pin).reduce((v, ans) => {
       return v + ans;
     }, "");
-    // otp === data.otp
-    if (true) {
-      console.log("equal");
-      // mark visited in local database
-      if (markVisited(data)) {
-        navigation.navigate("medicalData", data);
-      }
+    console.log(otp, data.otp);
+    if (otp === data.otp) {
+      navigation.navigate("medicalData", data);
     }
   };
 

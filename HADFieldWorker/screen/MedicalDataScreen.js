@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
   StyleSheet,
@@ -9,18 +10,42 @@ import {
 } from "react-native";
 import { Styles } from "../utils/Styles";
 import { COLOR } from "../utils/Color";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Divider from "../components/Divider";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
+import { getValueFor } from "../utils/Util";
+import {
+  insertMedicalData,
+  removeRecordFromAppointmentTable,
+} from "../services/databaseServices";
 const { width, height } = Dimensions.get("screen");
 
 function MedicalDataScreen() {
+  const navigation = useNavigation();
+
   const data = useRoute().params;
+  const today = new Date().toISOString();
+
+  const [bpData, setBPData] = useState({
+    sys: "",
+    dia: "",
+  });
+
+  const [medicalData, setMedicalData] = useState({
+    bp: "",
+    date: today.split("T")[0],
+    f_id: null,
+    isVisited: false,
+    photo: "",
+    sugar_level: "",
+    temperature: "",
+    v_id: data.v_id,
+  });
+
   const [image, setImage] = useState(null);
-  const [imageString, setImageString] = useState(null);
   const [imagePermission, setImagePersmission] = useState(null);
 
   useEffect(() => {
@@ -29,6 +54,65 @@ function MedicalDataScreen() {
       setImagePersmission(status.status === "granted");
     })();
   }, []);
+
+  const onInputChange = (name, text) => {
+    setMedicalData((pv) => {
+      return {
+        ...pv,
+        [name]: text,
+      };
+    });
+  };
+
+  const onBPDataChange = (name, text) => {
+    setBPData((pv) => {
+      return {
+        ...pv,
+        [name]: text,
+      };
+    });
+  };
+
+  const isAllValueFilled = (medicalData) => {
+    return (
+      medicalData.f_id !== null &&
+      bpData.sys !== "" &&
+      bpData.dia !== "" &&
+      medicalData.sugar_level !== "" &&
+      medicalData.temperature !== ""
+      // medicalData.photo !== ""
+    );
+  };
+
+  const onSubmitData = async () => {
+    const f_id = JSON.parse(await getValueFor("user")).e_id;
+    medicalData.bp = bpData.sys + "/" + bpData.dia;
+    medicalData.f_id = f_id;
+    if (!isAllValueFilled(medicalData)) {
+      Alert.alert("Please fill all data!");
+    } else {
+      medicalData.isVisited = 1;
+      storeRecord(medicalData);
+    }
+  };
+
+  const storeRecord = async () => {
+    console.log(medicalData);
+    console.log("sent");
+    insertMedicalData(medicalData)
+      .then((success) => {
+        removeRecordFromAppointmentTable(data.v_id)
+          .then((success) => {
+            navigation.goBack();
+          })
+          .catch((error) => {
+            Alert.alert("Error, please submit again.");
+          });
+      })
+      .catch((error) => {
+        Alert.alert("Error, please submit again.");
+      });
+  };
 
   const openCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -40,7 +124,7 @@ function MedicalDataScreen() {
     });
 
     if (!result.canceled) {
-      setImageString(result.assets[0].base64);
+      onInputChange("photo", result.assets[0].base64);
       setImage(result.assets[0].uri);
     }
   };
@@ -55,15 +139,14 @@ function MedicalDataScreen() {
     });
 
     if (!result.canceled) {
-      setImageString(result.assets[0].base64);
+      onInputChange("photo", result.assets[0].base64);
       setImage(result.assets[0].uri);
     }
   };
 
   const onClear = () => {
-    console.log(imageString);
     setImage(null);
-    setImageString(null);
+    onInputChange("photo", "");
   };
 
   return (
@@ -257,7 +340,9 @@ function MedicalDataScreen() {
                   selectionColor={COLOR.white}
                   placeholder="SYS"
                   placeholderTextColor={COLOR.gray}
-                  // onChangeText={onFilterChange}
+                  onChangeText={(text) => {
+                    onBPDataChange("sys", text);
+                  }}
                 />
                 <Text
                   style={{
@@ -273,7 +358,9 @@ function MedicalDataScreen() {
                   selectionColor={COLOR.white}
                   placeholder="DIA"
                   placeholderTextColor={COLOR.gray}
-                  // onChangeText={onFilterChange}
+                  onChangeText={(text) => {
+                    onBPDataChange("dia", text);
+                  }}
                 />
               </View>
             </View>
@@ -313,7 +400,9 @@ function MedicalDataScreen() {
                 keyboardType="numeric"
                 selectionColor={COLOR.black}
                 placeholderTextColor={COLOR.black}
-                // onChangeText={onFilterChange}
+                onChangeText={(text) => {
+                  onInputChange("temperature", text);
+                }}
               />
             </View>
           </View>
@@ -354,13 +443,15 @@ function MedicalDataScreen() {
                 </Text>
               </Text>
 
-              <TextInput
+              {/* <TextInput
                 style={styles.textinputBlack}
                 keyboardType="numeric"
                 selectionColor={COLOR.black}
                 placeholderTextColor={COLOR.black}
-                // onChangeText={onFilterChange}
-              />
+                onChangeText={(text) => {
+                  onInputChange("weight", text);
+                }}
+              /> */}
             </View>
             <View
               style={{
@@ -402,7 +493,9 @@ function MedicalDataScreen() {
                   keyboardType="numeric"
                   selectionColor={COLOR.white}
                   placeholderTextColor={COLOR.white}
-                  // onChangeText={onFilterChange}
+                  onChangeText={(text) => {
+                    onInputChange("sugar_level", text);
+                  }}
                 />
               </View>
             </View>
@@ -494,6 +587,8 @@ function MedicalDataScreen() {
               padding: 8,
               borderRadius: 12,
             }}
+            // TODO: on submitting remove the v_id from appointment table
+            onPress={onSubmitData}
             title="submit"
             textColor={COLOR.white}
             backgroundColor={COLOR.primaryColorDark}

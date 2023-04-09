@@ -1,5 +1,5 @@
 export const IP_ADDRESS =
-  "https://92be-2a09-bac5-3b4b-7eb-00-ca-3e.in.ngrok.io";
+  "https://a819-2a09-bac1-36a0-58-00-1d6-102.ngrok-free.app";
 
 export const MONTHS = [
   "Jan",

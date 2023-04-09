@@ -37,16 +37,19 @@ function DrawerNavigation(props) {
         options={{
           headerTitle: "Appointments",
           title: "Dashboard",
-          headerRight: ({}) => {
-            return (
-              <MaterialCommunityIcons
-                style={{ paddingRight: 14 }}
-                name="sync"
-                color={COLOR.primaryColor}
-                size={28}
-              />
-            );
-          },
+          // headerRight: ({}) => {
+          //   return (
+          //     <MaterialCommunityIcons
+          //       style={{ paddingRight: 14 }}
+          //       name="sync"
+          //       color={COLOR.primaryColor}
+          //       size={28}
+          //       onPress={() => {
+
+          //       }}
+          //     />
+          //   );
+          // },
         }}
         name="dashboard"
         component={Dashboard}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, Text, TouchableWithoutFeedback, View } from "react-native";
 import { COLOR, RANDOM_COLOR } from "../utils/Color";
-import { getMonth } from "../utils/util";
+import { getMonth } from "../utils/Util";
 import { makeCall } from "../services/dashboardServices";
 import ContactCard from "./ContactCard";
 
@@ -57,10 +57,11 @@ function AppointmentCard({ data, onPress }) {
                       : COLOR.primaryColorLight,
                   fontWeight: "600",
                   fontSize: width / 16,
+
                   // fontSize: 24,
                 }}
               >
-                {data.name}
+                {data.name.substring(0, 8).trim()}
                 {",  "}
                 <Text
                   style={{
@@ -72,7 +73,7 @@ function AppointmentCard({ data, onPress }) {
                     fontSize: width / 26,
                   }}
                 >
-                  {data.town}
+                  {data.town.substring(0, 18).trim()}
                 </Text>
               </Text>
               <Text

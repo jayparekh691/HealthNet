@@ -6,7 +6,7 @@ import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { log, set } from "react-native-reanimated";
-import Util, { getValueFor, save, stringFromObject } from "../utils/util";
+import Util, { getValueFor, save, stringFromObject } from "../utils/Util";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 
 const { width, height } = Dimensions.get("screen");
@@ -26,8 +26,8 @@ function SetupPin() {
     pinFour: "",
   });
 
-  const [pin, setPin] = useContext(SecureStoreContext);
-
+  const { pinState } = useContext(SecureStoreContext);
+  const [pin, setPin] = pinState;
   useEffect(() => {
     // console.log(firstPin, secondPin);
   }, [firstPin, secondPin]);
@@ -77,9 +77,6 @@ function SetupPin() {
     await save("pin", pin);
     // update pin state in SecureStoreContext
     setPin(pin);
-
-    // check internet connectivity and create 2 tables in database
-    // store data in apppointment tables
   };
 
   const onContinue = async () => {
