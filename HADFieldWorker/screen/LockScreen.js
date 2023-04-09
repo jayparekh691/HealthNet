@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Alert, Dimensions, Text, View } from "react-native";
+import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
-import { getValueFor, removeItem, stringFromObject } from "../utils/util";
+import { getValueFor, removeItem, stringFromObject } from "../utils/Util";
 import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
@@ -144,6 +144,7 @@ function LockScreen() {
             console.log("Clearing all keys");
             (async () => {
               await removeItem("pin");
+              await removeItem("user");
             })();
           }}
         >

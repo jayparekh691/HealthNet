@@ -72,11 +72,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    public  Visit saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
+    public  Integer saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
 
         Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
-        if(visit.isVisited()==true)
-            return null;
+//        if(visit.isVisited()==true)
+//            return null;
         visit.setV_id(receiveVistDataModel.getV_id());
         MedicalData medicalData = new MedicalData();
         medicalData.setBp(receiveVistDataModel.getBp());
@@ -90,6 +90,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         visit.setMedicalData(medicalData);
         visit.setDate(receiveVistDataModel.getDate());
         this.visitRepo.save(visit);
-        return visit;
+        return visit.getV_id();
     }
 }

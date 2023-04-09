@@ -18,11 +18,5 @@ export const removeItem = async (key) => {
 };
 
 export const getValueFor = async (key) => {
-  let result = await SecureStore.getItemAsync(key);
-  if (result) {
-    return result;
-  } else {
-    console.log(`value for the key ${key} doesn't exist!`);
-    return null;
-  }
+  return SecureStore.getItemAsync(key);
 };
