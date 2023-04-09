@@ -28,8 +28,8 @@ public class FieldWorkerController {
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
     @PostMapping("/save-visit")
-    public ResponseEntity<Visit> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) throws IOException {
-        Visit visit=this.fieldWorkerServices.saveVisit(receiveVistDataModel);
+    public ResponseEntity<Integer> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) throws IOException {
+        Integer visit=this.fieldWorkerServices.saveVisit(receiveVistDataModel);
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 }
