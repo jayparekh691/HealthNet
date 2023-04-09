@@ -60,6 +60,9 @@ function SDashboard() {
     const data = responseData.data;
     if (data) {
       console.log(data);
+      toast.success(`Field Worker has been assigned`);
+    } else {
+      toast.error(`Unable to assign Field Worker`);
     }
     setAssigned((pv) => !assigned);
   }

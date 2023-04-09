@@ -33,8 +33,10 @@ function Login() {
     const data = responseData.data;
     console.log(data);
     if (loginData.email === data.email) {
+      toast.success("Welcome!");
       if (data.role === "Receptionist") {
         // show receptionist dashboard
+
         navigate("/receptionist-dashboard", {
           state: {
             r_id: data.e_id,

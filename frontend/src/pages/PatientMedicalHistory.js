@@ -155,7 +155,7 @@ function PatientMedicalHistory() {
                                     Visit Date : {v.date.split("T")[0]}
                                   </span>
                                   <span className="spaceBetweenLabels">
-                                    Field Worker : {v.fieldworker}
+                                    Field Worker : {v.fieldWorker.name}
                                   </span>
                                 </Typography>
                               </AccordionSummary>
