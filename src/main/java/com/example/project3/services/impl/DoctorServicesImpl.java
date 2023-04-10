@@ -9,6 +9,7 @@ import com.example.project3.services.DoctorServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,7 +72,9 @@ public class DoctorServicesImpl implements DoctorServices {
             String mobilenumber = appointment1.getPatient().getMobilenumber();
             FollowupOTPDto followupOTPDto = new FollowupOTPDto();
             followupOTPDto.setPhonenumber(mobilenumber);
-            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String strDate = formatter.format(date);
+            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id,strDate);
             counter++;
             if(followupOTPResponseDto.getStatus()!= OtpStatus.DELIVERED){
                 System.out.println(followupOTPResponseDto.getMessage());
