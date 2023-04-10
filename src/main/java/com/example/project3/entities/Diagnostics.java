@@ -21,7 +21,5 @@ public class Diagnostics {
     private String remarks;
     private String prescription;
 
-    @OneToOne
-    private Appointment appointment;
 
 }
