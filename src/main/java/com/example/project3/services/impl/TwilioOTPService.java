@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Random;
 
 @Service
@@ -22,14 +23,14 @@ public class TwilioOTPService {
     @Autowired
     private VisitRepo visitRepo;
 
-    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto,Integer x,Integer id) {
+    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto, Integer x, Integer id, String date) {
 
         FollowupOTPResponseDto followupOTPResponseDto = null;
         try {
             PhoneNumber to = new PhoneNumber(followupOTPDto.getPhonenumber());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
             String otp = generateOTP();
-            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. ";
+            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. For follow up on date "+date+".";
             Message message = Message
                     .creator(to, from,
                             otpMessage)
