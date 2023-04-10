@@ -17,8 +17,7 @@ public class Visit {
     private String otp;
     private boolean isVisited;
     private boolean seenByDoctor=Boolean.FALSE;
-    @OneToOne
-    private Followup followup;
+
 
     @OneToOne
     private Employee fieldWorker;

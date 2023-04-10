@@ -23,7 +23,6 @@ public class SupervisorServicesImpl implements SupervisorServices {
     private AppointmentRepo appointmentRepo;
     @Autowired
     private VisitRepo visitRepo;
-
     @Autowired
     private FollowupRepo followupRepo;
     @Override
