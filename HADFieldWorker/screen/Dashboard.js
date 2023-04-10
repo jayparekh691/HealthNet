@@ -25,7 +25,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { sendMedicalData } from "../services/syncServices";
 import { log } from "react-native-reanimated";
 import { LoadingContext } from "../contexts/LoadingContext";
-
+import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width, height } = Dimensions.get("screen");
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
@@ -42,6 +42,9 @@ function Dashboard({ navigation }) {
 
   const { isDashboardLoadingState } = useContext(LoadingContext);
   const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
+
+  const { isConnectedState } = useContext(ConnectivityContext);
+  const [isConnected, setIsConnected] = isConnectedState;
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -86,20 +89,22 @@ function Dashboard({ navigation }) {
 
   const syncDB = () => {
     setIsDashboardLoading(true);
-    // send all medicalData rows and delete after send
-    getMedicalTableFromTable(loadMedicalData)
-      .then((success) => {
-        console.log(success);
-      })
-      .catch((error) => {
-        Alert.alert("Sync error!");
-      });
-    //
-    // TODO:  get new appoinment data
-    //
-    setTimeout(() => {
+    if (isConnected) {
+      // send all medicalData rows and delete after send
+      getMedicalTableFromTable(loadMedicalData)
+        .then((success) => {
+          console.log(success);
+        })
+        .catch((error) => {
+          Alert.alert("Sync error!");
+        });
+      //
+      // TODO:  get new appoinment data
+      //
+    } else {
       setIsDashboardLoading(false);
-    }, 1000);
+      Alert.alert("Sync failed, please connect to internet!");
+    }
   };
 
   const loadAppointmentFromDatabase = (appointmentList) => {

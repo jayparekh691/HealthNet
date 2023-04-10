@@ -59,6 +59,7 @@ function LockScreen() {
       navigation.navigate("drawerNavigator");
     } else {
       Alert.alert("Incorrect Pin!");
+      setIsDashboardLoading(false);
     }
   };
 
