@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/employee/login","/api/supervisor/create-employee/").permitAll()
+                .requestMatchers("/api/employee/login").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest()
                 .authenticated().and()

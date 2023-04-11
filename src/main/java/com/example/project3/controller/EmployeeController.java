@@ -45,10 +45,12 @@ public class EmployeeController {
       if(authentication.isAuthenticated()) {
           String token=jwtService.generateToken(authRequest.getEmail());
           Employee emp=this.empRepo.findByEmail(authRequest.getEmail()).orElseThrow();
-          String role=emp.getRoles();
           LoginResponse loginResponse=new LoginResponse();
           loginResponse.setToken(token);
-          loginResponse.setRole(role);
+          loginResponse.setRole(emp.getRoles());
+          loginResponse.setName(emp.getName());
+          loginResponse.setEmail(emp.getEmail());
+          loginResponse.setE_id(emp.getE_id());
           return new ResponseEntity<>(loginResponse,HttpStatus.ACCEPTED);
       }
       else throw new UsernameNotFoundException("Invalid Username or password");
