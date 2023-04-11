@@ -16,6 +16,7 @@ import {
   resetFollowupData,
   WriteFollowUpContext,
 } from "../contexts/WriteFollowUpContext";
+import { LoadingIndicator } from "../components/LoadingIndicator";
 
 function DiagnosePatient() {
   const state = useLocation().state;
@@ -27,6 +28,7 @@ function DiagnosePatient() {
   const [writtenData, setWrittenData] = useContext(DiagnoseContext);
   const [followUpDetails, setFollowUpDetails] =
     useContext(WriteFollowUpContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setAppointmentID(state.a_id);
@@ -73,13 +75,15 @@ function DiagnosePatient() {
     const Ddata = responseData.data;
     if (Ddata) {
       setWrittenData(resetDiagnoseData);
-      // TODO: find out the best condition for below, visitCOunt != "" is a temporary solution
+      // TODO: find out the best condition for below, visitCount != "" is a temporary solution
       if (followUpDetails.visitCount !== "") {
         console.log(followUpDetails);
+        setLoading(true);
         const responseData = await submitFollowUp(
           appointmentID,
           followUpDetails
         );
+        setLoading(false);
         const wData = responseData.data;
         if (wData) {
           setFollowUpDetails(resetFollowupData);
@@ -164,6 +168,7 @@ function DiagnosePatient() {
               <input type="submit" value="SUBMIT" />
             </div>
           </form>
+          {loading && <LoadingIndicator />}
         </div>
       </div>
     </div>

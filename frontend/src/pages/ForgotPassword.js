@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../services/loginService";
 import { toast } from "react-toastify";
 import InputField from "../components/InputField";
+import { LoadingIndicator } from "../components/LoadingIndicator";
+
 function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function handleChange(event) {
     const { value } = event.target;
@@ -14,7 +17,9 @@ function ForgotPassword() {
 
   async function onSubmit(event) {
     event.preventDefault();
+    setLoading(true);
     const responseData = await forgotPassword(email);
+    setLoading(false);
     console.log(responseData);
     const data = responseData.data;
     console.log(data);
@@ -40,7 +45,7 @@ function ForgotPassword() {
           className="content"
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <form>
+          <form onSubmit={onSubmit}>
             <div className="user-details" style={{ display: "block" }}>
               <div className="input-box" style={{ width: "100%" }}>
                 <InputField
@@ -49,14 +54,16 @@ function ForgotPassword() {
                   type={"email"}
                   value={email}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
             <div className="button">
-              <input type="button" value="Reset Password" onClick={onSubmit} />
+              <input type="submit" value="Reset Password" />
             </div>
           </form>
         </div>
+        {loading && <LoadingIndicator />}
       </div>
     </div>
   );

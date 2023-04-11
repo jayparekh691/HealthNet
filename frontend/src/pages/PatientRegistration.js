@@ -167,7 +167,11 @@ function PatientRegistration() {
                 <input
                   name="mobilenumber"
                   type="text"
-                  placeholder="Enter mobilenumber"
+                  minLength={10}
+                  maxLength={10}
+                  pattern="[1-9]{1}[0-9]{9}"
+                  title="mobile no can only be between 0 to 9"
+                  placeholder="+91"
                   value={patientData.mobilenumber}
                   onChange={handleChange}
                   required
