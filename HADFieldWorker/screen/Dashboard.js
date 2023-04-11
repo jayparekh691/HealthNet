@@ -77,12 +77,15 @@ function Dashboard({ navigation }) {
       console.log("data: ", response.data);
       removeRecordFromMedicalDataTable(response.data)
         .then((success) => {
+          setIsDashboardLoading(false);
           console.log("data removed");
         })
         .catch((error) => {
+          setIsDashboardLoading(false);
           console.log("error in removing medical data:", response.data);
         });
     } else {
+      setIsDashboardLoading(false);
       console.log("error in sending medical data");
     }
   };
@@ -93,9 +96,11 @@ function Dashboard({ navigation }) {
       // send all medicalData rows and delete after send
       getMedicalTableFromTable(loadMedicalData)
         .then((success) => {
+          setIsDashboardLoading(false);
           console.log(success);
         })
         .catch((error) => {
+          setIsDashboardLoading(false);
           Alert.alert("Sync error!");
         });
       //

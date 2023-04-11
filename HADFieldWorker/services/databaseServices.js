@@ -36,7 +36,7 @@ export const createTables = () => {
         [],
         (_, success) => {
           tx.executeSql(
-            "create table if not exists medicaldata (bp text, date text, f_id integer, isvisited integer, photo text, sugar_level text, temperature text, v_id integer primary key not null);",
+            "create table if not exists medicaldata (bp text, date text, f_id integer, isvisited integer, photo blob, sugar_level text, temperature text, v_id integer primary key not null);",
             [],
             (_, sucess) => {
               resolve("created 2 tables");

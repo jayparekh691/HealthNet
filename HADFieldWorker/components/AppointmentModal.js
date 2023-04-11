@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Text, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { COLOR } from "../utils/Color";
 import CustomButton from "./CustomButton";
 import DetailField from "./DetailField";
@@ -67,6 +73,8 @@ function AppointmentModal({ visible, onModalClose, data }) {
     console.log(otp, data?.otp);
     if (otp === data?.otp) {
       navigation.navigate("medicalData", data);
+    } else {
+      Alert.alert("Incorrect pin entered!");
     }
   };
 
