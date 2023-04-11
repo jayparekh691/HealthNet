@@ -136,7 +136,12 @@ function RDashboard() {
         </button>
       </div>
       <div
-        style={{ padding: "8px", maxHeight: "100vh", height: "100%", flex: 10 }}
+        style={{
+          display: "flex",
+          padding: "8px",
+          flex: 10,
+          flexDirection: "column",
+        }}
       >
         <div
           style={{
@@ -166,6 +171,7 @@ function RDashboard() {
           style={{
             display: "flex",
             flexDirection: "row",
+            flex: 1,
           }}
         >
           <div
@@ -193,7 +199,7 @@ function RDashboard() {
                   <th>Doctor</th>
                 </tr>
               </tbody>
-              <tbody tbody style={{ flex: "1" }}>
+              <tbody style={{ flex: "1" }}>
                 {patientList.map((e, i) => {
                   return (
                     <tr key={i}>
@@ -296,7 +302,7 @@ function RDashboard() {
               <div
                 className="table-wrapper"
                 style={{
-                  height: "100%",
+                  // height: "100%",
                   maxHeight: "300px",
                   overflowY: "scroll",
                 }}
