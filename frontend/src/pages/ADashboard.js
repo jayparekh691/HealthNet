@@ -122,7 +122,8 @@ function ADashboard() {
             id="outlined-basic"
             variant="outlined"
             fullWidth
-            label="Search"
+            label="Search employees"
+            placeholder="Search for registered employees by name"
             onChange={searchBarOnChange}
             value={searchName}
           />
@@ -132,7 +133,7 @@ function ADashboard() {
           style={{
             width: "100%",
             height: "100%",
-            maxHeight: "600px",
+            maxHeight: "700px",
             overflowY: "scroll",
           }}
         >
