@@ -4,12 +4,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updatePatientDetails } from "../services/receptionistServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function UpdatePatientDetails() {
   const state = useLocation().state;
   const navigate = useNavigate();
   const [patientObj, setPatientObj] = useState({});
-  const [updatedPatientDate, setUpdatedPatientData] = useState({
+  const [updatedPatientData, setUpdatedPatientData] = useState({
     name: state.patientObj.name,
     address: state.patientObj.address,
     city: state.patientObj.city,
@@ -42,16 +43,20 @@ function UpdatePatientDetails() {
 
   async function onUpdatePatientDetails(event) {
     event.preventDefault();
-    console.log(updatedPatientDate);
-    const responseData = await updatePatientDetails(
-      state.patientObj.pid,
-      updatedPatientDate
-    );
-    if (responseData.data) {
-      toast.success(`Updated Patient Data`);
-      navigate(-1);
-    } else {
-      toast.error("Unable to Update Patient data");
+    console.log(updatedPatientData);
+    try {
+      const responseData = await updatePatientDetails(
+        state.patientObj.pid,
+        updatedPatientData
+      );
+      if (responseData.data) {
+        toast.success(`Updated Patient Data`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to Update Patient data");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -68,7 +73,7 @@ function UpdatePatientDetails() {
                   name="name"
                   type="text"
                   placeholder={patientObj.name}
-                  value={updatedPatientDate.name}
+                  value={updatedPatientData.name}
                   onChange={handleChange}
                   required
                 />
@@ -81,7 +86,7 @@ function UpdatePatientDetails() {
                   min={0}
                   max={120}
                   placeholder={patientObj.age}
-                  value={updatedPatientDate.age}
+                  value={updatedPatientData.age}
                   onChange={handleChange}
                   required
                 />
@@ -137,7 +142,7 @@ function UpdatePatientDetails() {
                   rows={5}
                   cols={40}
                   placeholder={patientObj.address}
-                  value={updatedPatientDate.address}
+                  value={updatedPatientData.address}
                   onChange={handleChange}
                   required
                 />
@@ -147,8 +152,12 @@ function UpdatePatientDetails() {
                 <input
                   name="mobilenumber"
                   type="text"
+                  minLength={10}
+                  maxLength={10}
+                  pattern="[1-9]{1}[0-9]{9}"
+                  title="mobile no can only be between 0 to 9"
                   placeholder={patientObj.mobilenumber}
-                  value={updatedPatientDate.mobilenumber}
+                  value={updatedPatientData.mobilenumber}
                   onChange={handleChange}
                   required
                 />
@@ -161,7 +170,7 @@ function UpdatePatientDetails() {
                   name="town"
                   type="text"
                   placeholder={patientObj.town}
-                  value={updatedPatientDate.town}
+                  value={updatedPatientData.town}
                   onChange={handleChange}
                   required
                 />
@@ -172,7 +181,7 @@ function UpdatePatientDetails() {
                   name="city"
                   type="text"
                   placeholder={patientObj.city}
-                  value={updatedPatientDate.city}
+                  value={updatedPatientData.city}
                   onChange={handleChange}
                   required
                 />
@@ -183,7 +192,7 @@ function UpdatePatientDetails() {
                   name="state"
                   type="text"
                   placeholder={patientObj.state}
-                  value={updatedPatientDate.state}
+                  value={updatedPatientData.state}
                   onChange={handleChange}
                   required
                 />
@@ -196,7 +205,7 @@ function UpdatePatientDetails() {
                   min={100000}
                   max={999999}
                   placeholder={patientObj.pincode}
-                  value={updatedPatientDate.pincode}
+                  value={updatedPatientData.pincode}
                   onChange={handleChange}
                   required
                 />

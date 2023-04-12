@@ -1,4 +1,4 @@
-package com.example.project3.services;
+package com.example.project3.services.impl;
 
 import com.example.project3.config.TwilioConfig;
 import com.example.project3.dto.OtpStatus;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Random;
 
 @Service
@@ -22,14 +23,14 @@ public class TwilioOTPService {
     @Autowired
     private VisitRepo visitRepo;
 
-    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto,Integer x,Integer id) {
+    public FollowupOTPResponseDto sendOTPForPasswordReset(FollowupOTPDto followupOTPDto, Integer x, Integer id, String date) {
 
         FollowupOTPResponseDto followupOTPResponseDto = null;
         try {
             PhoneNumber to = new PhoneNumber(followupOTPDto.getPhonenumber());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
             String otp = generateOTP();
-            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. ";
+            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. For follow up on date "+date+".";
             Message message = Message
                     .creator(to, from,
                             otpMessage)
@@ -44,10 +45,10 @@ public class TwilioOTPService {
     }
 
 
-    //6 digit otp
+    //4 digit otp
     private String generateOTP() {
-        return new DecimalFormat("000000")
-                .format(new Random().nextInt(999999));
+        return new DecimalFormat("0000")
+                .format(new Random().nextInt(9999));
     }
 
 }

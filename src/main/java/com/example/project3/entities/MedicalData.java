@@ -19,9 +19,11 @@ public class MedicalData {
     private String bp;
     private String sugar_level;
     private String temperature;
+    @Lob
+    @Column(columnDefinition ="LONGTEXT")
     private String photo;
 
-    @OneToOne
-    private Visit visit;
+    private String bloodoxygen;
+
 
 }

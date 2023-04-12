@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { getPatientHistory, getPatientList } from "../services/doctorServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function ViewAnyPatientHistory() {
   const navigate = useNavigate();
@@ -22,11 +23,15 @@ function ViewAnyPatientHistory() {
     // api call to get list
     if (value !== "") {
       (async function getsearchedPatientList() {
-        const responseData = await getPatientList(doctorID, value);
-        const patientList = responseData.data;
-        if (patientList) {
-          console.log(patientList);
-          setSearchedPatientList(patientList);
+        try {
+          const responseData = await getPatientList(doctorID, value);
+          const patientList = responseData.data;
+          if (patientList) {
+            console.log(patientList);
+            setSearchedPatientList(patientList);
+          }
+        } catch (error) {
+          handleAuthentication(error.response, navigate, "/login");
         }
       })();
     }
@@ -34,18 +39,22 @@ function ViewAnyPatientHistory() {
 
   function onViewHistoryButtonClicked(p) {
     (async function getPatientMedicalHistory() {
-      const responseData = await getPatientHistory(doctorID, p.pid);
-      let data = responseData.data;
-      if (data) {
-        setPatientHistory(data);
+      try {
+        const responseData = await getPatientHistory(doctorID, p.pid);
+        let data = responseData.data;
+        if (data) {
+          setPatientHistory(data);
+        }
+        console.log(data);
+        navigate("/patient-medical-history", {
+          state: {
+            patientHistory: data,
+            patientObj: p,
+          },
+        });
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
-      console.log(data);
-      navigate("/patient-medical-history", {
-        state: {
-          patientHistory: data,
-          patientObj: p,
-        },
-      });
     })();
   }
 

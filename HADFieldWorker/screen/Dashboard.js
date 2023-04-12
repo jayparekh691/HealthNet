@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
+  BackHandler,
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
@@ -13,35 +15,46 @@ import { Ionicons } from "@expo/vector-icons";
 import AppointmentCard from "../components/AppointmentCard";
 import data from "../data/fieldWorkerData";
 import AppointmentModal from "../components/AppointmentModal";
-
+import {
+  getAppointmentFromTable,
+  getMedicalTableFromTable,
+  removeRecordFromMedicalDataTable,
+} from "../services/databaseServices";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import { sendMedicalData } from "../services/syncServices";
+import { log } from "react-native-reanimated";
+import { LoadingContext } from "../contexts/LoadingContext";
+import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width, height } = Dimensions.get("screen");
 
-function Dashboard({ navigation }) {
-  const [appointmentData, setAppointmentData] = useState(
-    createAppointmentData()
-  );
+// TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
+function Dashboard({ navigation }) {
+  const isFocused = useIsFocused();
+  const today = new Date();
+
+  const [appointmentData, setAppointmentData] = useState([]);
   const [isAppointmentModalActive, setIsAppointmentModalActive] =
     useState(false);
-  const [appointmentModalData, setAppointmentModalData] = useState({
-    v_id: "",
-    instruction: "",
-    name: "",
-    age: "",
-    address: "",
-    city: "",
-    gender: "",
-    state: "",
-    pincode: "",
-    mobilenumber: "",
-    town: "",
-    visited: "",
-    date: "",
-    otp: "",
-    f_id: "",
-  });
+  const [appointmentModalData, setAppointmentModalData] = useState(null);
+  const [filter, setFilter] = useState("");
 
-  const onFilterChange = () => {};
+  const { isDashboardLoadingState } = useContext(LoadingContext);
+  const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
+
+  const { isConnectedState } = useContext(ConnectivityContext);
+  const [isConnected, setIsConnected] = isConnectedState;
+
+  const onFilterChange = (text) => {
+    setFilter(text);
+    if (text === "") {
+      console.log("0");
+    }
+    if (text === null) {
+      console.log("null");
+    }
+  };
 
   const onAppointmentCardPressed = (data) => {
     setIsAppointmentModalActive(true);
@@ -56,39 +69,56 @@ function Dashboard({ navigation }) {
     setIsAppointmentModalActive(false);
   };
 
-  function createAppointmentData() {
-    const newData = [];
-    data.forEach((a) => {
-      const v = a.followup.visitList;
-      for (let i = 0; i < v.length; i++) {
-        if (v[i].visited === false) {
-          newData.push({
-            v_id: v[i].v_id,
-            instruction: a.followup.instructions,
-            name: a.patient.name,
-            age: a.patient.age,
-            address: a.patient.address,
-            city: a.patient.city,
-            gender: a.patient.gender,
-            state: a.patient.state,
-            pincode: a.patient.pincode,
-            mobilenumber: a.patient.mobilenumber,
-            town: a.patient.town,
-            visited: v[i].visited,
-            date: v[i].date,
-            otp: v[i].otp,
-            f_id: v[i].fieldWorker.e_id,
-          });
-          break;
-        }
-      }
-    });
-    return newData;
-  }
+  const loadMedicalData = async (medicalData) => {
+    if (medicalData.length === 0) return;
+    console.log(medicalData[0]);
+    const response = await sendMedicalData(medicalData[0]);
+    if (response.data) {
+      console.log("data: ", response.data);
+      removeRecordFromMedicalDataTable(response.data)
+        .then((success) => {
+          console.log("data removed");
+        })
+        .catch((error) => {
+          console.log("error in removing medical data:", response.data);
+        });
+    } else {
+      console.log("error in sending medical data");
+    }
+  };
 
-  // useEffect(() => {
-  //   setAppointmentData(createAppointmentData());
-  // }, [appointmentData]);
+  const syncDB = () => {
+    setIsDashboardLoading(true);
+    if (isConnected) {
+      // send all medicalData rows and delete after send
+      getMedicalTableFromTable(loadMedicalData)
+        .then((success) => {
+          console.log(success);
+        })
+        .catch((error) => {
+          Alert.alert("Sync error!");
+        });
+      //
+      // TODO:  get new appoinment data
+      //
+    } else {
+      setIsDashboardLoading(false);
+      Alert.alert("Sync failed, please connect to internet!");
+    }
+  };
+
+  const loadAppointmentFromDatabase = (appointmentList) => {
+    setAppointmentData(appointmentList);
+    setIsDashboardLoading(false);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      (async () => {
+        await getAppointmentFromTable(loadAppointmentFromDatabase);
+      })();
+    }
+  }, [isFocused]);
 
   // change the opacity of the dashboard header on modal active
   useEffect(() => {
@@ -141,9 +171,13 @@ function Dashboard({ navigation }) {
               source={require("../assets/search.png")}
             />
           </View>
-          <View>
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
             <TextInput
-              // value={password}
+              value={filter}
               style={styles.textinput}
               keyboardType="default"
               selectionColor={COLOR.primaryColor}
@@ -166,10 +200,11 @@ function Dashboard({ navigation }) {
             marginLeft: 20,
           }}
         >
-          <Ionicons
-            name="filter"
+          <MaterialCommunityIcons
+            name="sync"
             color={COLOR.primaryColor}
-            size={width / 16}
+            size={28}
+            onPress={syncDB}
           />
         </View>
       </View>
@@ -178,32 +213,40 @@ function Dashboard({ navigation }) {
           flex: 1,
         }}
       >
-        <FlatList
-          style={{
-            paddingHorizontal: 20,
-          }}
-          keyExtractor={(itemData, i) => itemData.v_id}
-          data={appointmentData.filter((v) => {
-            return !v.visited;
-          })}
-          renderItem={(itemData) => {
-            return (
-              <AppointmentCard
-                data={itemData.item}
-                onPress={onAppointmentCardPressed}
-              />
-            );
-          }}
-        />
+        {isDashboardLoading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={COLOR.primaryColor} />
+          </View>
+        ) : (
+          <FlatList
+            style={{
+              paddingHorizontal: 20,
+            }}
+            keyExtractor={(itemData, i) => itemData.v_id}
+            data={appointmentData.filter((v) => {
+              return new Date(v.date) >= today;
+            })}
+            renderItem={(itemData) => {
+              return (
+                <AppointmentCard
+                  data={itemData.item}
+                  onPress={onAppointmentCardPressed}
+                />
+              );
+            }}
+          />
+        )}
 
         <AppointmentModal
           visible={isAppointmentModalActive}
           data={appointmentModalData}
           onModalClose={onAppointmentModalClose}
-          showOTP={() => {
-            console.log("continue");
-            onShowOTP();
-          }}
         />
       </View>
     </View>

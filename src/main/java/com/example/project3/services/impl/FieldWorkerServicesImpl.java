@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -31,14 +30,15 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         for(Patient p:patients)
         {
             List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
+            List<Appointment> appointments1 = new ArrayList<>();
             for (Appointment appointment : appointments) {
-                appointment.setDiagnostics(null);
+//                appointment.setDiagnostics(null);
                 appointment.setDoctor(null);
-                if (appointment.getFollowupRemaining() == false) {
-                    appointments.remove(appointment);
+                if (appointment.getFollowupRemaining() == true) {
+                    appointments1.add(appointment);
                 }
             }
-            for(Appointment appointment:appointments)
+            for(Appointment appointment:appointments1)
                 finalAppointments.add(appointment);
         }
         List<VisitModel> visitModelList=new ArrayList<>();
@@ -49,6 +49,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setInstruction(appointment.getFollowup().getInstructions());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
+                visitModel.setPrescription(appointment.getDiagnostics().getPrescription());
                 visitModel.setAddress(appointment.getPatient().getAddress());
                 visitModel.setCity(appointment.getPatient().getCity());
                 visitModel.setGender(appointment.getPatient().getGender());
@@ -71,11 +72,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    public  Visit saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
+    public  Integer saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
 
         Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
         if(visit.isVisited()==true)
-            return null;
+            return visit.getV_id();
         visit.setV_id(receiveVistDataModel.getV_id());
         MedicalData medicalData = new MedicalData();
         medicalData.setBp(receiveVistDataModel.getBp());
@@ -85,10 +86,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         visit.setVisited(receiveVistDataModel.getIsVisited());
         Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
         visit.setFieldWorker(employee);
+        medicalData.setBloodoxygen(receiveVistDataModel.getBloodoxygen());
         this.medicalRepo.save(medicalData);
         visit.setMedicalData(medicalData);
         visit.setDate(receiveVistDataModel.getDate());
         this.visitRepo.save(visit);
-        return visit;
+        return visit.getV_id();
     }
 }

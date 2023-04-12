@@ -16,6 +16,8 @@ import {
   resetFollowupData,
   WriteFollowUpContext,
 } from "../contexts/WriteFollowUpContext";
+import { LoadingIndicator } from "../components/LoadingIndicator";
+import { handleAuthentication } from "../utils/authentication";
 
 function DiagnosePatient() {
   const state = useLocation().state;
@@ -27,6 +29,7 @@ function DiagnosePatient() {
   const [writtenData, setWrittenData] = useContext(DiagnoseContext);
   const [followUpDetails, setFollowUpDetails] =
     useContext(WriteFollowUpContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setAppointmentID(state.a_id);
@@ -47,18 +50,22 @@ function DiagnosePatient() {
     console.log(appointmentID);
     console.log(patientObj);
     (async function getPatientMedicalHistory() {
-      const responseData = await getPatientHistory(doctorID, patientObj.pid);
-      let data = responseData.data;
-      if (data) {
-        setPatientHistory(data);
+      try {
+        const responseData = await getPatientHistory(doctorID, patientObj.pid);
+        let data = responseData.data;
+        if (data) {
+          setPatientHistory(data);
+        }
+        console.log(data);
+        navigate("/patient-medical-history", {
+          state: {
+            patientHistory: data,
+            patientObj: patientObj,
+          },
+        });
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
-      console.log(data);
-      navigate("/patient-medical-history", {
-        state: {
-          patientHistory: data,
-          patientObj: patientObj,
-        },
-      });
     })();
   }
 
@@ -69,33 +76,46 @@ function DiagnosePatient() {
   async function onSubmit(event) {
     event.preventDefault();
     console.log(writtenData);
-    const responseData = await writeDiagnosis(appointmentID, writtenData);
-    const Ddata = responseData.data;
-    if (Ddata) {
-      setWrittenData(resetDiagnoseData);
-      // TODO: find out the best condition for below, visitCOunt != "" is a temporary solution
-      if (followUpDetails.visitCount !== "") {
-        console.log(followUpDetails);
-        const responseData = await submitFollowUp(
-          appointmentID,
-          followUpDetails
-        );
-        const wData = responseData.data;
-        if (wData) {
-          setFollowUpDetails(resetFollowupData);
-          console.log(wData);
-          toast.success(
-            `Diagnosis and Prescription Written and FollowUp Added`
-          );
-          navigate(-1);
+    try {
+      const responseData = await writeDiagnosis(appointmentID, writtenData);
+      const Ddata = responseData.data;
+      if (Ddata) {
+        setWrittenData(resetDiagnoseData);
+        // TODO: find out the best condition for below, visitCount != "" is a temporary solution
+        if (followUpDetails.visitCount !== "") {
+          console.log(followUpDetails);
+          try {
+            setLoading(true);
+            const responseData = await submitFollowUp(
+              appointmentID,
+              followUpDetails
+            );
+            setLoading(false);
+            const wData = responseData.data;
+            if (wData) {
+              setFollowUpDetails(resetFollowupData);
+              console.log(wData);
+              toast.success(
+                `Diagnosis and Prescription Written and FollowUp Added`
+              );
+              navigate(-1);
+            } else {
+              toast.error(
+                "Unable to write Diagnosis and Prescription / follow up"
+              );
+            }
+          } catch (error) {
+            handleAuthentication(error.response, navigate, "/login");
+          }
         } else {
-          toast.error("Unable to write Diagnosis and Prescription / follow up");
+          toast.success(`Diagnosis and Prescription Written`);
+          navigate(-1);
         }
       } else {
-        toast.success(`Diagnosis and Prescription Written`);
+        toast.error("Unable to write Diagnosis and Prescription");
       }
-    } else {
-      toast.error("Unable to write Diagnosis and Prescription");
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -164,6 +184,7 @@ function DiagnosePatient() {
               <input type="submit" value="SUBMIT" />
             </div>
           </form>
+          {loading && <LoadingIndicator />}
         </div>
       </div>
     </div>

@@ -18,4 +18,5 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     void deleteById(Integer id);
 
     Optional<Employee> findByEmail(String email);
+    Employee findEmployeeByEmail(String s);
 }

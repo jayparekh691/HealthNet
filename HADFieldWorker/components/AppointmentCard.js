@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, Text, TouchableWithoutFeedback, View } from "react-native";
 import { COLOR, RANDOM_COLOR } from "../utils/Color";
-import Util from "../utils/util";
+import { getMonth } from "../utils/Util";
 import { makeCall } from "../services/dashboardServices";
 import ContactCard from "./ContactCard";
 
@@ -25,6 +25,7 @@ function AppointmentCard({ data, onPress }) {
         // shadowOffset: { width: 4, height: 4 },
         marginBottom: 20,
         overflow: "hidden",
+        padding: 12,
       }}
     >
       <TouchableWithoutFeedback
@@ -37,7 +38,6 @@ function AppointmentCard({ data, onPress }) {
           style={{
             flex: 1,
             flexDirection: "row",
-            padding: 12,
           }}
         >
           <View
@@ -56,10 +56,12 @@ function AppointmentCard({ data, onPress }) {
                       ? COLOR.secondaryColor
                       : COLOR.primaryColorLight,
                   fontWeight: "600",
-                  fontSize: 24,
+                  fontSize: width / 16,
+
+                  // fontSize: 24,
                 }}
               >
-                {data.name}
+                {data.name.substring(0, 8).trim()}
                 {",  "}
                 <Text
                   style={{
@@ -68,10 +70,10 @@ function AppointmentCard({ data, onPress }) {
                         ? COLOR.secondaryColor
                         : COLOR.primaryColorLight,
                     fontWeight: "300",
-                    fontSize: 16,
+                    fontSize: width / 26,
                   }}
                 >
-                  {data.town}
+                  {data.town.substring(0, 18).trim()}
                 </Text>
               </Text>
               <Text
@@ -81,7 +83,7 @@ function AppointmentCard({ data, onPress }) {
                       ? COLOR.secondaryColor
                       : COLOR.primaryColorLight,
                   fontWeight: "300",
-                  fontSize: 16,
+                  fontSize: width / 26,
                 }}
               >
                 {data.city}
@@ -125,17 +127,17 @@ function AppointmentCard({ data, onPress }) {
                 style={{
                   color: COLOR.primaryColorDark,
                   fontWeight: "400",
-                  fontSize: 16,
+                  fontSize: width / 26,
                   padding: 2,
                 }}
               >
-                {Util.getMonth(date.getMonth())}
+                {getMonth(date.getMonth())}
               </Text>
               <Text
                 style={{
                   color: COLOR.primaryColorDark,
                   fontWeight: "600",
-                  fontSize: 32,
+                  fontSize: width / 14,
                   padding: 2,
                 }}
               >

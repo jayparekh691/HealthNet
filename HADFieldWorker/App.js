@@ -1,16 +1,18 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import AuthNavigation from "./navigators/AuthNavigation";
-import DashboardNavigation from "./navigators/StackNavigator";
+import SecureStoreProvider from "./contexts/SecureStoreContext";
+import Navigation from "./navigators/Navigation";
+import ConnectivityContextProvider, {
+  ConnectivityContext,
+} from "./contexts/ConnectivityContext";
 
 export default function App() {
-  const flag = false;
-
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        {flag ? <AuthNavigation /> : <DashboardNavigation />}
-      </NavigationContainer>
+      <ConnectivityContextProvider>
+        <SecureStoreProvider>
+          <Navigation />
+        </SecureStoreProvider>
+      </ConnectivityContextProvider>
     </SafeAreaProvider>
   );
 }

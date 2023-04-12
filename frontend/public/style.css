@@ -4,13 +4,17 @@
   box-sizing: border-box;
 }
 
+#root {
+  height: 100vh;
+}
+
 .formPage {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #f5f5f5, #fafafb);
 }
 .container {
   max-width: 700px;
@@ -33,7 +37,7 @@
   height: 3px;
   width: 30px;
   border-radius: 5px;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #516395, #516395);
 }
 .content form .user-details {
   display: flex;
@@ -63,7 +67,7 @@ form .input-box span.details {
 
 .select-box {
   height: 50px;
-  width: 100%;
+  width: 47%;
   margin-bottom: 5px;
 }
 
@@ -135,11 +139,11 @@ form .button input {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #614385, #516395);
+  background: linear-gradient(135deg, #516395, #516395);
 }
 form .button input:hover {
   /* transform: scale(0.99); */
-  background: linear-gradient(-135deg, #614385, #516395);
+  background: linear-gradient(-135deg, #516395, #516395);
 }
 @media (max-width: 584px) {
   .container {
@@ -177,9 +181,12 @@ table {
 
 tr {
   border: 1px solid #516395;
+  height: 60px;
 }
 
 th {
+  margin: 4px 4px;
+  padding: 4px 4px;
   font-size: 20px;
   font-weight: 300;
 }
@@ -188,7 +195,7 @@ th {
   max-height: 100%;
 }
 button {
-  padding: 10px;
+  padding: 12px;
   border-radius: 5px;
   border: none;
   color: #fff;
@@ -197,13 +204,30 @@ button {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #866aa8, #798cbe);
+  background: linear-gradient(135deg, #516395, #798cbe);
+}
+
+.button2 {
+  border-radius: 8px;
+  background: transparent;
+  margin: 8px;
+  align-self: stretch;
+  text-align: start;
+}
+
+.button2:hover {
+  border-radius: 8px;
+  background: white;
+  color: #516395;
+  margin: 8px;
+  align-self: stretch;
+  text-align: start;
 }
 
 .tableHeading {
   font-size: 24px;
   font-weight: 600;
-  color: #614385;
+  color: #516395;
 }
 
 .table {
@@ -230,8 +254,8 @@ h1 {
 }
 
 .search {
-  width: 30%;
-  padding-bottom: 10px;
+  width: 49.6%;
+  padding-bottom: 12px;
 }
 
 ul li {
@@ -245,7 +269,7 @@ ul li {
 .popup-heading {
   font-size: 24px;
   font-weight: 600;
-  color: #614385;
+  color: #516395;
 }
 
 .popup-select-box {
@@ -268,7 +292,7 @@ ul li {
 .popup-select-box span {
   display: block;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .spaceBetweenLabels {
@@ -296,7 +320,7 @@ ul li {
   transform: translate(-50%, -50%);
   padding: 2rem 3rem;
   border-radius: 0.5rem;
-  background: lavender;
+  background: rgb(255, 255, 255);
 }
 
 .display-block {
@@ -305,4 +329,41 @@ ul li {
 
 .display-none {
   display: none;
+}
+
+.spinner {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 100%;
+}
+
+/* Styling for the dots */
+.spinner-dot {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0.25rem;
+  border-radius: 50%;
+  background-color: #516395;
+  animation: spinner 1s ease-in-out infinite;
+}
+
+/* Keyframe animation for the spinner */
+@keyframes spinner {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.5);
+  }
 }

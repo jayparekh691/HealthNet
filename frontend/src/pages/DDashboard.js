@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -9,22 +10,35 @@ function DDashboard() {
   const [patientList, setPatientList] = useState([]);
 
   useEffect(() => {
+    setDoctorID(state.d_id);
     (async function () {
-      setDoctorID(state.d_id);
-      const responseData = await getAllPatients(state.d_id);
-      const data = responseData.data;
-      console.log(data);
-      if (data) {
-        setPatientList(
-          data.filter((e) => {
-            return e.treated === false;
-          })
-        );
-      } else {
-        console.log("error! ");
+      try {
+        const responseData = await getAllPatients(state.d_id);
+        const data = responseData.data;
+        console.log(data);
+        if (data) {
+          setPatientList(
+            data.filter((e) => {
+              return e.treated === false;
+            })
+          );
+        } else {
+          console.log("error! ");
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
   }, [state.d_id]);
+
+  function updatePassword(event) {
+    event.preventDefault();
+    navigate("/update-password", {
+      state: {
+        employeeId: doctorID,
+      },
+    });
+  }
 
   function onCheckUPButtonClicked(p, event) {
     console.log(p.a_id);
@@ -63,59 +77,78 @@ function DDashboard() {
   }
 
   return (
-    <div className="paddingPage">
-      <div style={{ textAlign: "center" }}>
-        <label className="tableHeading">Doctor Dashboard</label>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignContent: "space-between",
+      }}
+    >
+      <div
+        style={{
+          flex: 2,
+          height: "100vh",
+          width: "300px",
+          backgroundColor: "#516395",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <button className="button2" onClick={updatePassword}>
+          Update Password
+        </button>
+        <button className="button2" onClick={viewAnyPatientHistory}>
+          View Patient History
+        </button>
+        <button className="button2" onClick={viewNewVisitRecords}>
+          New Visit Records
+        </button>
       </div>
-      <div style={{ textAlign: "right" }}>
-        <span style={{ margin: "10px" }}>
-          <button className="button" onClick={viewAnyPatientHistory}>
-            View Patient History
-          </button>
-        </span>
-        <span style={{ margin: "10px" }}>
-          <button className="button" onClick={viewNewVisitRecords}>
-            View New Visit Records
-          </button>
-        </span>
-      </div>
-      <div>
+
+      <div
+        className="paddingPage"
+        style={{
+          flex: 10,
+        }}
+      >
         <div>
-          <label className="tableHeading">
-            Upcoming Patients: {patientList.length}
-          </label>
+          <div style={{ margin: "8px" }}>
+            <label className="tableHeading">
+              Upcoming Patients: {patientList.length}
+            </label>
+          </div>
+          <table>
+            <tbody>
+              <tr>
+                <th>A_No.</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+              </tr>
+            </tbody>
+            <tbody>
+              {patientList.map((p, i) => {
+                return (
+                  <tr key={p.a_id}>
+                    <th>{p.a_id}</th>
+                    <th>{p.patient.name}</th>
+                    <th>{p.patient.age}</th>
+                    <th>{p.patient.gender}</th>
+                    <td>
+                      <button
+                        className="button"
+                        value={i}
+                        onClick={(event) => onCheckUPButtonClicked(p, event)}
+                      >
+                        Check-up
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-        <table>
-          <tbody>
-            <tr>
-              <th>A_No.</th>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Gender</th>
-            </tr>
-          </tbody>
-          <tbody>
-            {patientList.map((p, i) => {
-              return (
-                <tr key={p.a_id}>
-                  <th>{p.a_id}</th>
-                  <th>{p.patient.name}</th>
-                  <th>{p.patient.age}</th>
-                  <th>{p.patient.gender}</th>
-                  <td>
-                    <button
-                      className="button"
-                      value={i}
-                      onClick={(event) => onCheckUPButtonClicked(p, event)}
-                    >
-                      Check-up
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
     </div>
   );
