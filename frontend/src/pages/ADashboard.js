@@ -107,22 +107,14 @@ function ADashboard() {
       </div>
 
       <div className="paddingPage" style={{ flex: 10 }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingBottom: "12px",
-            alignItems: "flex-end",
-          }}
-        ></div>
         <div className="search">
           <TextField
             name="Employee Search"
             id="outlined-basic"
             variant="outlined"
             fullWidth
-            label="Search"
+            label="Search employees"
+            placeholder="Search for registered employees by name"
             onChange={searchBarOnChange}
             value={searchName}
           />
@@ -131,8 +123,7 @@ function ADashboard() {
         <div
           style={{
             width: "100%",
-            height: "100%",
-            maxHeight: "600px",
+            maxHeight: "700px",
             overflowY: "scroll",
           }}
         >

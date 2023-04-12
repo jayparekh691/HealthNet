@@ -69,6 +69,7 @@ function SDashboard() {
 
   async function reassign(oldFieldWorkerID) {
     console.log(oldFieldWorkerID);
+    console.log(reassignedFieldWorkerID);
     if (reassignedFieldWorkerID === null) {
       alert("Field worker not selected");
     } else {
