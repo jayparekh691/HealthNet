@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import loginService from "../services/loginService";
+import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { handleAuthentication } from "../utils/authentication";
 
 function Login() {
   const navigate = useNavigate();
@@ -21,33 +22,52 @@ function Login() {
     });
   }
 
+  function forgotPassword() {
+    navigate("/forgot-password");
+  }
+
   async function onSubmit(event) {
     event.preventDefault();
-    const responseData = await loginService(loginData);
-    console.log(responseData);
-    console.log(loginData);
-    const data = responseData.data;
-    console.log(data);
-    if (loginData.email === data.email) {
-      if (data.role === "Receptionist") {
-        // show receptionist dashboard
-        navigate("/receptionist-dashboard");
-      } else if (data.role === "Doctor") {
-        // show doctor dashboard
-        navigate("/doctor-dashboard", {
-          state: {
-            d_id: data.e_id,
-          },
-        });
-      } else if (data.role === "Admin") {
-        navigate("/admin-dashboard");
+    try {
+      const responseData = await login(loginData);
+      console.log(responseData);
+      console.log(loginData);
+      const data = responseData.data;
+      console.log(data);
+      if (loginData.email === data.email) {
+        if (data.roles === "Receptionist") {
+          // show receptionist dashboard
+          toast.success("Welcome!");
+          navigate("/receptionist-dashboard", {
+            state: {
+              r_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Doctor") {
+          toast.success("Welcome!");
+          // show doctor dashboard
+          navigate("/doctor-dashboard", {
+            state: {
+              d_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Admin") {
+          toast.success("Welcome!");
+          navigate("/admin-dashboard", {
+            state: {
+              a_id: data.e_id,
+            },
+          });
+        } else {
+          // when role is not corretly selected
+          toast.error("Incorrect role selected");
+        }
       } else {
-        // when role is not corretly selected
-        toast.error("Incorrect role selected");
+        // incorrect email or password
+        toast.error("Incorrect email or password");
       }
-    } else {
-      // incorrect email or password
-      toast.error("Incorrect email or password");
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -79,6 +99,15 @@ function Login() {
             </div>
             <div className="button">
               <input type="submit" value="LOGIN" />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <button
+                className="button2"
+                style={{ color: "black", fontWeight: "300", fontSize: "16px" }}
+                onClick={forgotPassword}
+              >
+                Forgot Password?
+              </button>
             </div>
           </form>
         </div>

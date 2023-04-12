@@ -23,7 +23,6 @@ public class SupervisorServicesImpl implements SupervisorServices {
     private AppointmentRepo appointmentRepo;
     @Autowired
     private VisitRepo visitRepo;
-
     @Autowired
     private FollowupRepo followupRepo;
     @Override
@@ -127,13 +126,14 @@ public class SupervisorServicesImpl implements SupervisorServices {
     public List<Pair> getDueVisitList() {
         Date  date = new Date();
         List<Visit> visits = this.visitRepo.findByDateBefore(date);
+        List<Visit> visits1 = new ArrayList<>();
         for(Visit visit:visits){
-            if(visit.isVisited()==true)
-                visits.remove(visit);
+            if(visit.isVisited()==false)
+                visits1.add(visit);
         }
         List<Pair> list = new ArrayList<Pair>();
         Map<Patient,List<Visit>> mp=new HashMap<>();
-        for(Visit visit:visits){
+        for(Visit visit:visits1){
             Followup followup = this.followupRepo.findAllByVisitListContaining(visit);
             Appointment appointment = this.appointmentRepo.findByFollowup(followup);
             List<Visit> v=new ArrayList<Visit>();

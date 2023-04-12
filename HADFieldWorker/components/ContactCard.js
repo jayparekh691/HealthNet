@@ -1,8 +1,10 @@
 import React from "react";
 import { COLOR } from "../utils/Color";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("screen");
 
 function ContactCard({ contactNumber }) {
   return (
@@ -29,7 +31,7 @@ function ContactCard({ contactNumber }) {
         <Text
           style={{
             textAlign: "center",
-            fontSize: 12,
+            fontSize: width / 34,
             fontWeight: "500",
           }}
         >

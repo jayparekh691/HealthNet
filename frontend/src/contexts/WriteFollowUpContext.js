@@ -18,4 +18,3 @@ export function WriteFollowUpProvider({ children }) {
     </WriteFollowUpContext.Provider>
   );
 }
-export default WriteFollowUpProvider;

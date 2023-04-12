@@ -4,53 +4,63 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getNewVisitRecords,
   markSeenByDoctor,
 } from "../services/doctorServices";
 import { toast } from "react-toastify";
+import { handleAuthentication } from "../utils/authentication";
 
 function ViewNewVisitRecords() {
+  const navigate = useNavigate();
   const state = useLocation().state;
   const [newVisitList, setNewVisitList] = useState([]);
 
   useEffect(() => {
     (async function getNewVisit() {
-      const responseData = await getNewVisitRecords(state.doctorID);
-      let data = responseData.data;
-      if (data) {
-        setNewVisitList(data);
+      try {
+        const responseData = await getNewVisitRecords(state.doctorID);
+        let data = responseData.data;
+        if (data) {
+          setNewVisitList(data);
+        }
+        console.log(data);
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
-      console.log(data);
     })();
   }, [state.doctorID]);
 
   async function markAsSeenByDoctor(visitID) {
     console.log(visitID);
-    const responseData = await markSeenByDoctor(visitID);
-    const data = responseData.data;
-    console.log(data);
-    if (data) {
-      toast.success("Marked as seen");
-    } else {
-      toast.error("Could not mark as seen");
+    try {
+      const responseData = await markSeenByDoctor(visitID);
+      const data = responseData.data;
+      console.log(data);
+      if (data) {
+        toast.success("Marked as seen");
+      } else {
+        toast.error("Could not mark as seen");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
   return (
     <div>
-      <div>
-        {/* {newVisitList.length !== 0 && ( */}
-        <label className="tableHeading" style={{ textAlign: "center" }}>
-          New Visit Records
-        </label>
-        {/*)*/}
-        {/* {newVisitList.length === 0 && (
+      <div style={{ margin: "16px" }}>
+        {newVisitList.length !== 0 && (
+          <label className="tableHeading" style={{ textAlign: "center" }}>
+            New Visit Records
+          </label>
+        )}
+        {newVisitList.length === 0 && (
           <label className="tableHeading" style={{ textAlign: "center" }}>
             No New Visit Records
           </label>
-        )} */}
+        )}
       </div>
       <div>
         {newVisitList.map((e, i) => {
@@ -88,7 +98,7 @@ function ViewNewVisitRecords() {
                       Date : {e.curr_date.split("T")[0]}
                     </span>
                     <span className="spaceBetweenLabels">
-                      Field Worker :{" "}
+                      Current Field Worker :{" "}
                       {e.patient.fieldworker === null
                         ? "Not Assigned"
                         : e.patient.fieldworker.name}
@@ -151,6 +161,9 @@ function ViewNewVisitRecords() {
                                 </span>
                                 <span className="spaceBetweenLabels">
                                   Visit Date : {v.date.split("T")[0]}
+                                </span>
+                                <span className="spaceBetweenLabels">
+                                  Field Worker : {v.fieldWorker.name}
                                 </span>
                               </Typography>
                             </AccordionSummary>

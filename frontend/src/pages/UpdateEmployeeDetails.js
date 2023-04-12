@@ -4,25 +4,28 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updateEmployee } from "../services/adminServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function UpdateEmployeeDetails() {
   const state = useLocation().state;
   const navigate = useNavigate();
   const [employeeObj, setEmplyeeObj] = useState({});
   const [disabled, setDisabled] = useState(true);
-  const [updatedEmployeeDate, setUpdatedEmployeeData] = useState({
+  const [updatedEmployeeData, setUpdatedEmployeeData] = useState({
     e_id: state.employeeObj.e_id,
     name: state.employeeObj.name,
     email: state.employeeObj.email,
     password: state.employeeObj.password,
     gender: state.employeeObj.gender,
     specialization: state.employeeObj.specialization,
-    role: state.employeeObj.role,
+    mobilenumber: state.employeeObj.mobilenumber,
+    address: state.employeeObj.address,
+    roles: state.employeeObj.roles,
   });
   const [genderDefault, setGenderDefault] = useState(state.employeeObj.gender);
   useEffect(() => {
     setEmplyeeObj(state.employeeObj);
-    if (state.employeeObj.role === "Doctor") {
+    if (state.employeeObj.roles === "Doctor") {
       setDisabled((pv) => {
         return false;
       });
@@ -31,7 +34,7 @@ function UpdateEmployeeDetails() {
         return true;
       });
     }
-  }, [state.employeeObj, state.employeeObj.role]);
+  }, [state.employeeObj, state.employeeObj.roles]);
 
   function handleChange(event) {
     // event.preventDefault();
@@ -49,17 +52,21 @@ function UpdateEmployeeDetails() {
 
   async function onUpdate(event) {
     event.preventDefault();
-    console.log(updatedEmployeeDate);
+    console.log(updatedEmployeeData);
     // add employee data
-    const responseData = await updateEmployee(
-      updatedEmployeeDate.e_id,
-      updatedEmployeeDate
-    );
-    if (responseData.data) {
-      toast.success(`Updated Employee Data`);
-      navigate(-1);
-    } else {
-      toast.error("Unable to Update Employee data");
+    try {
+      const responseData = await updateEmployee(
+        updatedEmployeeData.e_id,
+        updatedEmployeeData
+      );
+      if (responseData.data) {
+        toast.success(`Updated Employee Data`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to Update Employee data");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -76,7 +83,7 @@ function UpdateEmployeeDetails() {
                   name="name"
                   type="text"
                   placeholder={employeeObj.name}
-                  value={updatedEmployeeDate.name}
+                  value={updatedEmployeeData.name}
                   onChange={handleChange}
                   required
                 />
@@ -130,20 +137,49 @@ function UpdateEmployeeDetails() {
                   name="email"
                   type="email"
                   placeholder={employeeObj.email}
-                  value={updatedEmployeeDate.email}
+                  value={updatedEmployeeData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Mobile Number</span>
+                <input
+                  name="mobilenumber"
+                  type="text"
+                  minLength={10}
+                  maxLength={10}
+                  pattern="[1-9]{1}[0-9]{9}"
+                  title="mobile no can only be between 0 to 9"
+                  placeholder={employeeObj.mobilenumber}
+                  value={updatedEmployeeData.mobilenumber}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <span className="details">Address</span>
+                <textarea
+                  name="address"
+                  type="textarea"
+                  rows={3}
+                  cols={38}
+                  placeholder={employeeObj.address}
+                  value={updatedEmployeeData.address}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="select-box">
+                <span className="details">Role</span>
                 <select
-                  value={updatedEmployeeDate.role}
-                  name="role"
+                  value={updatedEmployeeData.roles}
+                  name="roles"
                   onChange={handleChange}
                   disabled={true}
                 >
-                  <option value={updatedEmployeeDate.role}>
-                    {updatedEmployeeDate.role}
+                  <option value={updatedEmployeeData.roles}>
+                    {updatedEmployeeData.roles}
                   </option>
                 </select>
               </div>
@@ -153,8 +189,12 @@ function UpdateEmployeeDetails() {
                   disabled={disabled}
                   name="specialization"
                   type="text"
-                  placeholder={updatedEmployeeDate.specialization}
-                  value={updatedEmployeeDate.specialization}
+                  placeholder={updatedEmployeeData.specialization}
+                  value={
+                    updatedEmployeeData.specialization === null
+                      ? "No specialization"
+                      : updatedEmployeeData.specialization
+                  }
                   onChange={handleChange}
                   required
                 />

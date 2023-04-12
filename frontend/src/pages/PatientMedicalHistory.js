@@ -1,34 +1,47 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { deactivateFollowUp } from "../services/doctorServices";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { handleAuthentication } from "../utils/authentication";
 
 function PatientMedicalHistory() {
+  const navigate = useNavigate();
   const state = useLocation().state;
   const [patientHistory, setPatientHistory] = useState([]);
   const [patientObj, setPatientObj] = useState({});
+  const [deactivate, setDeactivated] = useState(false);
 
   useEffect(() => {
     setPatientHistory(state.patientHistory);
     setPatientObj(state.patientObj);
-  }, [state.patientHistory, state.patientObj]);
+  }, [state.patientHistory, state.patientObj, deactivate]);
 
-  async function onDeactivateFollowUp(e_id) {
-    const responseData = await deactivateFollowUp(e_id);
+  async function onDeactivateFollowUp(appointmentID) {
+    // try{
+    const responseData = await deactivateFollowUp(appointmentID);
     if (responseData) {
       console.log("deactivated");
+      toast.success("Follow Up has been deactivated!");
+      setDeactivated((pv) => !deactivate);
+    } else {
+      toast.error("Sorry, Please try again");
     }
+    // } catch (error) {
+    //   handleAuthentication(error.response, navigate, "/login");
+    // }
   }
 
   return (
     <div>
       <div style={{ padding: "10px" }}>
         <div style={{ textAlign: "center" }}>
-          <label className="tableHeading">View Patient Medical History</label>
+          <label className="tableHeading">Patient Medical History</label>
         </div>
         <div>
           <label className="tableHeading">Patient Details:</label>
@@ -153,6 +166,9 @@ function PatientMedicalHistory() {
                                   </span>
                                   <span className="spaceBetweenLabels">
                                     Visit Date : {v.date.split("T")[0]}
+                                  </span>
+                                  <span className="spaceBetweenLabels">
+                                    Field Worker : {v.fieldWorker.name}
                                   </span>
                                 </Typography>
                               </AccordionSummary>

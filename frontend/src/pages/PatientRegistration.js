@@ -7,6 +7,7 @@ import {
   getDoctorList,
   registerPatient,
 } from "../services/receptionistServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function PatientRegistration() {
   const navigate = useNavigate();
@@ -29,11 +30,15 @@ function PatientRegistration() {
   // storing the doctorlist from location.state into doctorList state
   useEffect(() => {
     async function getDoctors() {
-      const responseData = await getDoctorList();
-      let doctorList = responseData.data;
-      if (doctorList) {
-        setDoctorList(doctorList);
-        setDoctorID(doctorList[0].e_id);
+      try {
+        const responseData = await getDoctorList();
+        let doctorList = responseData.data;
+        if (doctorList) {
+          setDoctorList(doctorList);
+          setDoctorID(doctorList[0].e_id);
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     }
     getDoctors();
@@ -57,19 +62,23 @@ function PatientRegistration() {
     event.preventDefault();
     console.log(patientData);
     // add patient data
-    const responseData = await registerPatient(patientData);
-    const registrationData = responseData.data;
-    if (registrationData) {
-      console.log(registrationData);
-      const pid = registrationData.pid;
-      // add appointment for patient using pid
-      const responseData = await addPatientAppointment(pid, doctorID);
-      const appointmentData = responseData.data;
-      console.log(appointmentData);
-      toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-      navigate(-1);
+    try {
+      const responseData = await registerPatient(patientData);
+      const registrationData = responseData.data;
+      if (registrationData) {
+        console.log(registrationData);
+        const pid = registrationData.pid;
+        // add appointment for patient using pid
+        const responseData = await addPatientAppointment(pid, doctorID);
+        const appointmentData = responseData.data;
+        console.log(appointmentData);
+        toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
+
   function handleChangeInDoctor(event) {
     event.preventDefault();
     const value = event.target.value;
@@ -88,7 +97,7 @@ function PatientRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder="Enter name"
                   value={patientData.name}
                   onChange={handleChange}
                   required
@@ -101,7 +110,7 @@ function PatientRegistration() {
                   type="number"
                   min={0}
                   max={120}
-                  placeholder="Enter your age"
+                  placeholder="Enter age"
                   value={patientData.age}
                   onChange={handleChange}
                   required
@@ -155,8 +164,9 @@ function PatientRegistration() {
                 <textarea
                   name="address"
                   type="textarea"
-                  rows={5}
-                  cols={40}
+                  rows={3}
+                  cols={37}
+                  placeholder="Enter address"
                   value={patientData.address}
                   onChange={handleChange}
                   required
@@ -167,7 +177,12 @@ function PatientRegistration() {
                 <input
                   name="mobilenumber"
                   type="text"
-                  placeholder="Enter your mobile_number"
+                  minLength={10}
+                  // TODO: Change it back to 10 and add back the pattern
+                  maxLength={15}
+                  // pattern="[1-9]{1}[0-9]{9}"
+                  title="mobile no can only be between 0 to 9"
+                  placeholder="+91"
                   value={patientData.mobilenumber}
                   onChange={handleChange}
                   required
@@ -180,7 +195,7 @@ function PatientRegistration() {
                 <input
                   name="town"
                   type="text"
-                  placeholder="Enter your town"
+                  placeholder="Enter town"
                   value={patientData.town}
                   onChange={handleChange}
                   required
@@ -191,7 +206,7 @@ function PatientRegistration() {
                 <input
                   name="city"
                   type="text"
-                  placeholder="Enter your city"
+                  placeholder="Enter city"
                   value={patientData.city}
                   onChange={handleChange}
                   required
@@ -202,7 +217,7 @@ function PatientRegistration() {
                 <input
                   name="state"
                   type="text"
-                  placeholder="Enter your state"
+                  placeholder="Enter state"
                   value={patientData.state}
                   onChange={handleChange}
                   required

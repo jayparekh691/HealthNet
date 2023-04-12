@@ -1,6 +1,4 @@
 package com.example.project3.services.impl;
-
-import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Patient;
 import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.repo.PatientRepo;

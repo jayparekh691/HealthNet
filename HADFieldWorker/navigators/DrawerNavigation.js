@@ -25,8 +25,9 @@ function DrawerNavigation(props) {
             />
           );
         },
-        headerTitleStyle: {
-          marginLeft: Platform.OS === "android" ? 0 : 0,
+        headerTintColor: COLOR.primaryColor,
+        drawerStyle: {
+          marginTop: 8,
         },
         drawerActiveTintColor: COLOR.primaryColor,
         drawerActiveBackgroundColor: COLOR.backgroundColor,
@@ -34,25 +35,28 @@ function DrawerNavigation(props) {
     >
       <Drawer.Screen
         options={{
-          headerTitle: "Patient Follow-Up",
+          headerTitle: "Appointments",
           title: "Dashboard",
-          headerRight: ({}) => {
-            return (
-              <MaterialCommunityIcons
-                style={{ paddingRight: 14 }}
-                name="sync"
-                color={COLOR.primaryColor}
-                size={28}
-              />
-            );
-          },
+          // headerRight: ({}) => {
+          //   return (
+          //     <MaterialCommunityIcons
+          //       style={{ paddingRight: 14 }}
+          //       name="sync"
+          //       color={COLOR.primaryColor}
+          //       size={28}
+          //       onPress={() => {
+
+          //       }}
+          //     />
+          //   );
+          // },
         }}
         name="dashboard"
         component={Dashboard}
       />
       <Drawer.Screen
         options={{
-          headerTitle: "Follow-Up Records",
+          headerTitle: "Appoinment Records",
           title: "Records",
         }}
         name="recordScreen"

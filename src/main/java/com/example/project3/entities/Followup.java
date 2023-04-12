@@ -22,8 +22,6 @@ public class Followup {
     private int gap;
     private int visitCount;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private Appointment appointment;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Visit> visitList;

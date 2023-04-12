@@ -6,14 +6,10 @@ import com.example.project3.dto.OtpStatus;
 import com.example.project3.entities.*;
 import com.example.project3.repo.*;
 import com.example.project3.services.DoctorServices;
-import com.example.project3.services.TwilioOTPService;
-import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,7 +56,7 @@ public class DoctorServicesImpl implements DoctorServices {
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
         int gap=followup.getGap();
-        Date date = new Date(123,02,16);
+        Date date = new Date(123,03,7);
         this.followupRepo.save(followup);
         List<Visit> visits=new ArrayList<Visit>();
         int counter=1;
@@ -76,7 +72,9 @@ public class DoctorServicesImpl implements DoctorServices {
             String mobilenumber = appointment1.getPatient().getMobilenumber();
             FollowupOTPDto followupOTPDto = new FollowupOTPDto();
             followupOTPDto.setPhonenumber(mobilenumber);
-            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String strDate = formatter.format(date);
+            FollowupOTPResponseDto followupOTPResponseDto = this.twilioOTPService.sendOTPForPasswordReset(followupOTPDto,counter,id,strDate);
             counter++;
             if(followupOTPResponseDto.getStatus()!= OtpStatus.DELIVERED){
                 System.out.println(followupOTPResponseDto.getMessage());
@@ -151,6 +149,8 @@ public class DoctorServicesImpl implements DoctorServices {
         List<Appointment> finalAppointments=new ArrayList<>();
         for(Appointment a:appointments)
         {
+            if(a.getFollowup()==null)
+                continue;
             List<Visit> visits=a.getFollowup().getVisitList();
             for(Visit v:visits)
             {
