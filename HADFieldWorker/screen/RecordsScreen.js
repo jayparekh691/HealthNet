@@ -15,16 +15,22 @@ import { useIsFocused } from "@react-navigation/native";
 
 const { width } = Dimensions.get("screen");
 
-function RecordsScreen() {
+function RecordsScreen({ navigation }) {
   const [medicalData, setMedicalData] = useState([]);
   const isFocused = useIsFocused();
   const loadMedicalData = (data) => {
-    // console.log(data);
     setMedicalData(data);
   };
 
   useEffect(() => {
-    console.log("entered");
+    navigation.setOptions({
+      headerTitleStyle: {
+        fontSize: width / 24,
+      },
+    });
+  }, [navigation]);
+
+  useEffect(() => {
     getMedicalDataFromTable(loadMedicalData)
       .then((success) => {
         // console.log(success);
@@ -63,6 +69,9 @@ function RecordsScreen() {
               </Text>
               <Text>
                 TEMPERATURE:{"\t"} {itemData.item.temperature}
+              </Text>
+              <Text>
+                SpO2:{"\t"} {itemData.item.bloodoxygen}
               </Text>
             </View>
           );

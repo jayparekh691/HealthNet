@@ -36,7 +36,7 @@ export const createTables = () => {
         [],
         (_, success) => {
           tx.executeSql(
-            "create table if not exists medicaldata (bp text, date text, f_id integer, isvisited integer, photo text, sugar_level text, temperature text, v_id integer primary key not null);",
+            "create table if not exists medicaldata (bloodoxygen text, bp text, date text, f_id integer, isvisited integer, photo text, sugar_level text, temperature text, v_id integer primary key not null);",
             [],
             (_, sucess) => {
               resolve("created 2 tables");
@@ -97,8 +97,9 @@ export const insertMedicalData = (data) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "insert into medicaldata values (?, ?, ?, ?, ?, ?, ?, ?)",
+          "insert into medicaldata values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
+            data.bloodoxygen,
             data.bp,
             data.date,
             data.f_id,

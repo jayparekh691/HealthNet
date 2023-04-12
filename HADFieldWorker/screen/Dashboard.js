@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  BackHandler,
   Dimensions,
   FlatList,
   Image,
@@ -11,9 +10,7 @@ import {
   View,
 } from "react-native";
 import { COLOR } from "../utils/Color";
-import { Ionicons } from "@expo/vector-icons";
 import AppointmentCard from "../components/AppointmentCard";
-import data from "../data/fieldWorkerData";
 import AppointmentModal from "../components/AppointmentModal";
 import {
   getAppointmentFromTable,
@@ -23,7 +20,6 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { sendMedicalData } from "../services/syncServices";
-import { log } from "react-native-reanimated";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width, height } = Dimensions.get("screen");
@@ -71,9 +67,29 @@ function Dashboard({ navigation }) {
     setIsAppointmentModalActive(false);
   };
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <MaterialCommunityIcons
+          style={{
+            marginRight: 12,
+          }}
+          name="sync"
+          color={COLOR.primaryColor}
+          size={28}
+          onPress={syncDB}
+        />
+      ),
+      headerTitleStyle: {
+        fontSize: width / 24,
+      },
+    });
+  }, [navigation]);
+
   const uploadImageToFirebase = (image, visitId) => {
     const date = new Date().toDateString();
     return new Promise(async (resolve, reject) => {
+      console.log("inside firebase");
       const blobImage = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -101,6 +117,7 @@ function Dashboard({ navigation }) {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
+
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
@@ -149,16 +166,18 @@ function Dashboard({ navigation }) {
       return;
     }
     const data = medicalData[0];
+    console.log("entering firebase");
     uploadImageToFirebase(data.photo, data.v_id)
       .then(async (imageUrl) => {
+        console.log("imageURL");
         data["photo"] = imageUrl;
         const response = await sendMedicalData(data);
         if (response.data) {
           console.log("data: ", response.data);
           removeRecordFromMedicalDataTable(response.data)
             .then((success) => {
-              console.log("data removed");
-              setIsDashboardLoading(false);
+              isDashboardLoading(false);
+              console.log("Data synced successfully");
               Alert.alert("Data Synced Successfully!");
             })
             .catch((error) => {
@@ -177,22 +196,21 @@ function Dashboard({ navigation }) {
   };
 
   const syncDB = () => {
+    console.log("Sync DB");
     setIsDashboardLoading(true);
+    console.log("loading true");
     if (isConnected) {
       // send all medicalData rows and delete after send
-      getMedicalDataFromTable(loadMedicalData)
-        .then((success) => {
-          console.log(success);
-          setIsDashboardLoading(false);
-        })
-        .catch((error) => {
-          Alert.alert("Sync error!");
-          setIsDashboardLoading(false);
-        });
+      getMedicalDataFromTable(loadMedicalData).catch((error) => {
+        console.log("syncdb error", error);
+        Alert.alert("Sync error!");
+        setIsDashboardLoading(false);
+      });
       // TODO:  get new appoinment data
     } else {
+      console.log("NO INTERNET");
       setIsDashboardLoading(false);
-      Alert.alert("Sync failed, please connect to internet!");
+      Alert.alert("Please connect to internet!");
     }
   };
 
@@ -204,6 +222,7 @@ function Dashboard({ navigation }) {
   useEffect(() => {
     if (isFocused) {
       (async () => {
+        setIsDashboardLoading(true);
         await getAppointmentFromTable(loadAppointmentFromDatabase);
       })();
     }
@@ -260,40 +279,15 @@ function Dashboard({ navigation }) {
               source={require("../assets/search.png")}
             />
           </View>
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
-            <TextInput
-              value={filter}
-              style={styles.textinput}
-              keyboardType="default"
-              selectionColor={COLOR.primaryColor}
-              placeholder="Search"
-              placeholderTextColor={COLOR.primaryColor}
-              onChangeText={onFilterChange}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            padding: 15,
-            elevation: isAppointmentModalActive ? 0 : 4,
-            shadowColor: "#000000",
-            shadowOffset: { width: -10, height: -10 },
-            borderRadius: 8,
-            marginBottom: 20,
-            backgroundColor: "white",
-            marginTop: 20,
-            marginLeft: 20,
-          }}
-        >
-          <MaterialCommunityIcons
-            name="sync"
-            color={COLOR.primaryColor}
-            size={28}
-            onPress={syncDB}
+
+          <TextInput
+            value={filter}
+            style={styles.textinput}
+            keyboardType="default"
+            selectionColor={COLOR.primaryColor}
+            placeholder="Search"
+            placeholderTextColor={COLOR.primaryColor}
+            onChangeText={onFilterChange}
           />
         </View>
       </View>

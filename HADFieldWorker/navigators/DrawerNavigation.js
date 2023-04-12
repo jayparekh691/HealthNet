@@ -4,10 +4,10 @@ import RecordsScreen from "../screen/RecordsScreen";
 import { Feather } from "@expo/vector-icons";
 import { COLOR } from "../utils/Color";
 import Dashboard from "../screen/Dashboard";
-import { Platform } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 const Drawer = createDrawerNavigator();
+
 function DrawerNavigation(props) {
   return (
     <Drawer.Navigator
@@ -16,7 +16,7 @@ function DrawerNavigation(props) {
           return (
             <Feather
               style={{
-                marginLeft: 14,
+                marginLeft: 12,
               }}
               name="sidebar"
               color={COLOR.primaryColor}
@@ -26,9 +26,6 @@ function DrawerNavigation(props) {
           );
         },
         headerTintColor: COLOR.primaryColor,
-        drawerStyle: {
-          marginTop: 8,
-        },
         drawerActiveTintColor: COLOR.primaryColor,
         drawerActiveBackgroundColor: COLOR.backgroundColor,
       })}
@@ -37,19 +34,6 @@ function DrawerNavigation(props) {
         options={{
           headerTitle: "Appointments",
           title: "Dashboard",
-          // headerRight: ({}) => {
-          //   return (
-          //     <MaterialCommunityIcons
-          //       style={{ paddingRight: 14 }}
-          //       name="sync"
-          //       color={COLOR.primaryColor}
-          //       size={28}
-          //       onPress={() => {
-
-          //       }}
-          //     />
-          //   );
-          // },
         }}
         name="dashboard"
         component={Dashboard}

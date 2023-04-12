@@ -35,6 +35,7 @@ function MedicalDataScreen() {
   });
 
   const [medicalData, setMedicalData] = useState({
+    bloodoxygen: "",
     bp: "",
     date: today.split("T")[0],
     f_id: null,
@@ -79,7 +80,9 @@ function MedicalDataScreen() {
       bpData.sys !== "" &&
       bpData.dia !== "" &&
       medicalData.sugar_level !== "" &&
-      medicalData.temperature !== ""
+      medicalData.temperature !== "" &&
+      medicalData.bloodoxygen !== ""
+      // NOTE: allowing photo as optional
       // medicalData.photo !== ""
     );
   };
@@ -167,7 +170,6 @@ function MedicalDataScreen() {
                 borderRadius: 12,
                 padding: 8,
                 margin: 4,
-                elevation: 8,
                 backgroundColor: COLOR.shade2,
                 justifyContent: "center",
                 overflow: "hidden",
@@ -187,7 +189,6 @@ function MedicalDataScreen() {
             <View
               style={{
                 flex: 1,
-                elevation: 8,
                 padding: 8,
                 margin: 4,
                 borderRadius: 12,
@@ -211,7 +212,6 @@ function MedicalDataScreen() {
           <View>
             <View
               style={{
-                elevation: 8,
                 height: 96,
                 width: 96,
                 borderRadius: 12,
@@ -243,7 +243,6 @@ function MedicalDataScreen() {
             </View>
             <View
               style={{
-                elevation: 8,
                 height: 96,
                 width: 96,
                 borderRadius: 12,
@@ -268,7 +267,6 @@ function MedicalDataScreen() {
           style={{
             minheight: height / 12,
             maxHeight: height / 4,
-            elevation: 8,
             borderRadius: 12,
             marginHorizontal: 4,
             marginVertical: 24,
@@ -297,21 +295,20 @@ function MedicalDataScreen() {
           >
             <View
               style={{
-                flex: 1,
+                flex: 5,
                 height: 148,
                 margin: 4,
                 borderRadius: 16,
                 backgroundColor: COLOR.shade4,
                 overflow: "hidden",
                 padding: 8,
-                elevation: 8,
               }}
             >
               <Text
                 style={{
                   paddingTop: 8,
                   paddingLeft: 8,
-                  fontSize: width / 20,
+                  fontSize: width / 24,
                   fontWeight: "500",
                   color: COLOR.white,
                 }}
@@ -364,6 +361,7 @@ function MedicalDataScreen() {
             </View>
             <View
               style={{
+                flex: 4,
                 height: 148,
                 width: 148,
                 margin: 4,
@@ -371,7 +369,6 @@ function MedicalDataScreen() {
                 backgroundColor: COLOR.shade2,
                 overflow: "hidden",
                 padding: 8,
-                elevation: 8,
               }}
             >
               <Text
@@ -411,6 +408,7 @@ function MedicalDataScreen() {
           >
             <View
               style={{
+                flex: 4,
                 height: 148,
                 width: 148,
                 margin: 4,
@@ -418,7 +416,6 @@ function MedicalDataScreen() {
                 backgroundColor: COLOR.shade2,
                 overflow: "hidden",
                 padding: 8,
-                elevation: 8,
               }}
             >
               <Text
@@ -430,43 +427,42 @@ function MedicalDataScreen() {
                   fontWeight: "500",
                 }}
               >
-                Body {"\n"}Weight{" "}
+                Oxygen {"\n"}Saturation{" "}
                 <Text
                   style={{
                     fontWeight: "300",
                     fontSize: width / 24,
                   }}
                 >
-                  (Kg)
+                  (SpO2)
                 </Text>
               </Text>
 
-              {/* <TextInput
+              <TextInput
                 style={styles.textinputBlack}
                 keyboardType="numeric"
                 selectionColor={COLOR.black}
                 placeholderTextColor={COLOR.black}
                 onChangeText={(text) => {
-                  onInputChange("weight", text);
+                  onInputChange("bloodoxygen", text);
                 }}
-              /> */}
+              />
             </View>
             <View
               style={{
-                flex: 1,
+                flex: 5,
                 height: 148,
                 margin: 4,
                 borderRadius: 16,
                 backgroundColor: COLOR.shade4,
                 padding: 8,
-                elevation: 8,
               }}
             >
               <Text
                 style={{
                   paddingTop: 8,
                   paddingLeft: 8,
-                  fontSize: width / 20,
+                  fontSize: width / 24,
                   color: COLOR.white,
                   fontWeight: "500",
                 }}
@@ -574,11 +570,7 @@ function MedicalDataScreen() {
 
         <Divider />
 
-        <View
-          style={{
-            elevation: 8,
-          }}
-        >
+        <View>
           <CustomButton
             style={{
               marginHorizontal: 4,

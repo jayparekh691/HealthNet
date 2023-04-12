@@ -12,6 +12,7 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import NetInfo from "@react-native-community/netinfo";
 import AppNavigation from "./StackNavigator";
 import LoadingProvider from "../contexts/LoadingContext";
+import { connection } from "../services/syncServices";
 
 function Navigation() {
   const { pinState } = useContext(SecureStoreContext);
@@ -32,12 +33,7 @@ function Navigation() {
   }, []);
 
   useEffect(() => {
-    NetInfo.addEventListener((state) => {
-      if (isConnected != state.isInternetReachable) {
-        console.log("internet connection: ", state.isInternetReachable);
-        setIsConnected(state.isInternetReachable);
-      }
-    });
+    connection(isConnected, setIsConnected);
   }, [isConnected]);
 
   return (
