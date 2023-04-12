@@ -36,7 +36,7 @@ export const createTables = () => {
         [],
         (_, success) => {
           tx.executeSql(
-            "create table if not exists medicaldata (bp text, date text, f_id integer, isvisited integer, photo blob, sugar_level text, temperature text, v_id integer primary key not null);",
+            "create table if not exists medicaldata (bp text, date text, f_id integer, isvisited integer, photo text, sugar_level text, temperature text, v_id integer primary key not null);",
             [],
             (_, sucess) => {
               resolve("created 2 tables");
@@ -129,7 +129,7 @@ export const removeRecordFromAppointmentTable = (id) => {
         "delete from appointment where v_id = ?",
         [id],
         (_, success) => {
-          console.log("record removed");
+          console.log(`record ${id} removed from appointment table.`);
           resolve(success);
         },
         (_, error) => {
@@ -180,7 +180,7 @@ export const getAppointmentFromTable = async (loadData) => {
   );
 };
 
-export const getMedicalTableFromTable = async (loadData) => {
+export const getMedicalDataFromTable = async (loadData) => {
   db.transaction(
     (tx) => {
       tx.executeSql(

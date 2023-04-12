@@ -39,7 +39,7 @@ function MedicalDataScreen() {
     date: today.split("T")[0],
     f_id: null,
     isVisited: false,
-    photo: "",
+    photo: null,
     sugar_level: "",
     temperature: "",
     v_id: data.v_id,
@@ -120,12 +120,11 @@ function MedicalDataScreen() {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-      base64: true,
     });
 
     if (!result.canceled) {
-      onInputChange("photo", result.assets[0].base64);
       setImage(result.assets[0].uri);
+      onInputChange("photo", result.assets[0].uri);
     }
   };
 
@@ -135,12 +134,11 @@ function MedicalDataScreen() {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-      base64: true,
     });
 
     if (!result.canceled) {
-      onInputChange("photo", result.assets[0].base64);
       setImage(result.assets[0].uri);
+      onInputChange("photo", result.assets[0].uri);
     }
   };
 
@@ -587,7 +585,6 @@ function MedicalDataScreen() {
               padding: 8,
               borderRadius: 12,
             }}
-            // TODO: on submitting remove the v_id from appointment table
             onPress={onSubmitData}
             title="submit"
             textColor={COLOR.white}

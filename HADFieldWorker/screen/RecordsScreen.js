@@ -10,7 +10,7 @@ import {
 import { Styles } from "../utils/Styles";
 import AppointmentCard from "../components/AppointmentCard";
 import { COLOR } from "../utils/Color";
-import { getMedicalTableFromTable } from "../services/databaseServices";
+import { getMedicalDataFromTable } from "../services/databaseServices";
 import { useIsFocused } from "@react-navigation/native";
 
 const { width } = Dimensions.get("screen");
@@ -25,7 +25,7 @@ function RecordsScreen() {
 
   useEffect(() => {
     console.log("entered");
-    getMedicalTableFromTable(loadMedicalData)
+    getMedicalDataFromTable(loadMedicalData)
       .then((success) => {
         // console.log(success);
       })
