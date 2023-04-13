@@ -15,16 +15,18 @@ import AppointmentModal from "../components/AppointmentModal";
 import {
   getAppointmentFromTable,
   getMedicalDataFromTable,
+  insertAppointments,
   removeRecordFromMedicalDataTable,
 } from "../services/databaseServices";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { sendMedicalData } from "../services/syncServices";
+import { getAppointmentList, sendMedicalData } from "../services/syncServices";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width, height } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
+import { getValueFor } from "../utils/Util";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -87,9 +89,10 @@ function Dashboard({ navigation }) {
   }, [navigation]);
 
   const uploadImageToFirebase = (image, visitId) => {
-    const date = new Date().toDateString();
+    const date = new Date().toLocaleTimeString();
     return new Promise(async (resolve, reject) => {
       console.log("inside firebase");
+      if (image === null) resolve("null");
       const blobImage = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -159,10 +162,36 @@ function Dashboard({ navigation }) {
     });
   };
 
+  const getNewAppointments = async () => {
+    const e_id = JSON.parse(await getValueFor("user")).e_id;
+    console.log(e_id);
+    // get new appointment list
+    getAppointmentList(e_id).then(async (response) => {
+      if (response.data) {
+        const appointmentList = response.data;
+        console.log("appointment list", appointmentList.length);
+        // create a promise list for each insert table query
+        const promiseList = appointmentList.map((row) => {
+          return insertAppointments(row);
+        });
+        // get reponse for each of the query promises
+        Promise.allSettled(promiseList).then((value) => {
+          console.log("value: ", value);
+        });
+        await getAppointmentFromTable(loadAppointmentFromDatabase);
+        setIsDashboardLoading(false);
+        console.log("inserted data in appointment table");
+      } else {
+        setIsDashboardLoading(false);
+        console.log("get appointment list api error");
+      }
+    });
+  };
+
   const loadMedicalData = async (medicalData) => {
     if (medicalData.length === 0) {
       console.log("no medical data");
-      setIsDashboardLoading(false);
+      getNewAppointments();
       return;
     }
 
@@ -172,18 +201,28 @@ function Dashboard({ navigation }) {
     medicalData.forEach((data) => {
       Promises.push(
         new Promise((resolve, reject) => {
-          uploadImageToFirebase(data.photo, data.v_id).then(
-            async (imageUrl) => {
-              data["photo"] = imageUrl;
-              sendMedicalData(data)
-                .then((response) => {
-                  resolve(response.data);
-                })
-                .catch((error) => {
-                  reject(error);
-                });
-            }
-          );
+          if (data.photo === null) {
+            sendMedicalData(data)
+              .then((response) => {
+                resolve(response.data);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          } else {
+            uploadImageToFirebase(data.photo, data.v_id).then(
+              async (imageUrl) => {
+                data["photo"] = imageUrl;
+                sendMedicalData(data)
+                  .then((response) => {
+                    resolve(response.data);
+                  })
+                  .catch((error) => {
+                    reject(error);
+                  });
+              }
+            );
+          }
         })
       );
     });
@@ -214,38 +253,21 @@ function Dashboard({ navigation }) {
         );
       });
       console.log(deleteIds);
-      Promise.allSettled(DeletePromises).then((value) => {
+      Promise.allSettled(DeletePromises).then(async (value) => {
         value.forEach((e) => {
           console.log(e.value, e.status);
         });
+        getNewAppointments();
         setIsDashboardLoading(false);
       });
     });
   };
 
-  const syncDB = () => {
+  const syncDB = async () => {
     // send medical data
     getMedicalDataFromTable(loadMedicalData).catch((error) => {
       console.log("get medical data from table error: ", error);
       setIsDashboardLoading(false);
-    });
-
-    // get new appointment list
-    getAppointmentList(e_id).then((response) => {
-      if (response.data) {
-        const appointmentList = response.data;
-        // create a promise list for each insert table query
-        const promiseList = appointmentList.map((row) => {
-          return insertAppointments(row);
-        });
-        // get reponse for each of the query promises
-        Promise.allSettled(promiseList).then((value) => {
-          console.log("value: ", value);
-        });
-        console.log("inserted data in appointment table");
-      } else {
-        console.log("get appointment list api error");
-      }
     });
   };
 

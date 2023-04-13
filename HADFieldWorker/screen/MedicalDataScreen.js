@@ -147,7 +147,7 @@ function MedicalDataScreen() {
 
   const onClear = () => {
     setImage(null);
-    onInputChange("photo", "");
+    onInputChange("photo", null);
   };
 
   return (
