@@ -8,6 +8,9 @@ import io.jsonwebtoken.lang.Strings;
 //import org.apache.logging.log4j.util.Strings;
 import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +27,14 @@ public class EmployeeServicesImpl implements EmployeeServices {
     private EmployeeRepo employeeRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
-//    @Override
-//    public Employee login(Employee employee) {
-//        String pass=passwordEncoder.encode(employee.getPassword());
-//        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), pass);
-//        return employee1;
-//    }
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
     private EmailUtils emailUtils;
-//    @Override
-//    public Employee login(Employee employee) {
-//        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
-//        return employee1;
-//    }
     @Override
     public Employee createEmployee(Employee employee) {
         String pass=employee.getPassword();
+        employee.setMobilenumber("+91 "+employee.getMobilenumber());
         employee.setPassword(passwordEncoder.encode(pass));
         this.employeeRepo.save(employee);
         employee.setPassword(pass);
@@ -55,7 +51,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
         employee1.setGender(employee.getGender());
         employee1.setPassword(passwordEncoder.encode(pass));
         employee1.setRoles(employee.getRoles());
-        employee1.setMobilenumber(employee.getMobilenumber());
+        employee1.setMobilenumber("+91 "+employee.getMobilenumber());
         employee1.setAddress(employee.getAddress());
         this.employeeRepo.save(employee1);
         employee1.setPassword(pass);
@@ -105,7 +101,8 @@ public class EmployeeServicesImpl implements EmployeeServices {
     public String updatePassword(Integer request, String old_pass, String new_pass) {
         Employee employee = this.employeeRepo.findById(request).orElseThrow();
         if(employee!=null){
-            if(employee.getPassword().equals(passwordEncoder.encode(old_pass))) {
+            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employee.getEmail(),old_pass));
+            if(authentication.isAuthenticated()) {
                 employee.setPassword(passwordEncoder.encode(new_pass));
                 this.employeeRepo.save(employee);
                 return "Success";
