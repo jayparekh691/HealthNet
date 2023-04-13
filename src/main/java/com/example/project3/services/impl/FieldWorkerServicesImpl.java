@@ -44,6 +44,8 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         List<VisitModel> visitModelList=new ArrayList<>();
         for(Appointment appointment : finalAppointments){
             for(Visit visit : appointment.getFollowup().getVisitList()){
+                if(visit.isVisited()==true)
+                    continue;
                 VisitModel visitModel = new VisitModel();
                 visitModel.setV_id(visit.getV_id());
                 visitModel.setInstruction(appointment.getFollowup().getInstructions());
@@ -83,7 +85,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         medicalData.setSugar_level(receiveVistDataModel.getSugar_level());
         medicalData.setTemperature(receiveVistDataModel.getTemperature());
         medicalData.setPhoto(receiveVistDataModel.getPhoto());
-        visit.setVisited(receiveVistDataModel.getIsVisited());
+        visit.setVisited(true);
         Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
         visit.setFieldWorker(employee);
         medicalData.setBloodoxygen(receiveVistDataModel.getBloodoxygen());

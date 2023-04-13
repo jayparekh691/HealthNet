@@ -23,7 +23,4 @@ public class ReceiveVistDataModel {
     private boolean isVisited;
     private int f_id;
     private Date date;
-    public boolean getIsVisited(){
-        return this.isVisited;
-    }
 }
