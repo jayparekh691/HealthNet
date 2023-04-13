@@ -161,57 +161,92 @@ function Dashboard({ navigation }) {
 
   const loadMedicalData = async (medicalData) => {
     if (medicalData.length === 0) {
-      // if there is not medical data then return
+      console.log("no medical data");
       setIsDashboardLoading(false);
       return;
     }
-    const data = medicalData[0];
-    console.log("entering firebase");
-    uploadImageToFirebase(data.photo, data.v_id)
-      .then(async (imageUrl) => {
-        console.log("imageURL");
-        data["photo"] = imageUrl;
-        const response = await sendMedicalData(data);
-        if (response.data) {
-          console.log("data: ", response.data);
-          removeRecordFromMedicalDataTable(response.data)
-            .then((success) => {
-              isDashboardLoading(false);
-              console.log("Data synced successfully");
-              Alert.alert("Data Synced Successfully!");
-            })
-            .catch((error) => {
-              console.log("error in removing medical data:", response.data);
-              setIsDashboardLoading(false);
-            });
-        } else {
-          console.log("error in sending medical data");
-          setIsDashboardLoading(false);
+
+    setIsDashboardLoading(true);
+
+    const Promises = new Array();
+    medicalData.forEach((data) => {
+      Promises.push(
+        new Promise((resolve, reject) => {
+          uploadImageToFirebase(data.photo, data.v_id).then(
+            async (imageUrl) => {
+              data["photo"] = imageUrl;
+              sendMedicalData(data)
+                .then((response) => {
+                  resolve(response.data);
+                })
+                .catch((error) => {
+                  reject(error);
+                });
+            }
+          );
+        })
+      );
+    });
+
+    console.log("promises size", Promises.length);
+
+    Promise.allSettled(Promises).then((value) => {
+      console.log(value);
+      const deleteIds = new Array();
+      value.forEach((e) => {
+        if (e.status === "fulfilled") {
+          deleteIds.push(e.value);
         }
-      })
-      .catch((error) => {
-        console.log(error);
+      });
+      const DeletePromises = new Array();
+
+      deleteIds.forEach((id) => {
+        DeletePromises.push(
+          new Promise((resolve, reject) => {
+            removeRecordFromMedicalDataTable(id)
+              .then(() => {
+                resolve(`ID: ${id} done`);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          })
+        );
+      });
+      console.log(deleteIds);
+      Promise.allSettled(DeletePromises).then((value) => {
+        value.forEach((e) => {
+          console.log(e.value, e.status);
+        });
         setIsDashboardLoading(false);
       });
+    });
   };
 
   const syncDB = () => {
-    console.log("Sync DB");
-    setIsDashboardLoading(true);
-    console.log("loading true");
-    if (isConnected) {
-      // send all medicalData rows and delete after send
-      getMedicalDataFromTable(loadMedicalData).catch((error) => {
-        console.log("syncdb error", error);
-        Alert.alert("Sync error!");
-        setIsDashboardLoading(false);
-      });
-      // TODO:  get new appoinment data
-    } else {
-      console.log("NO INTERNET");
+    // send medical data
+    getMedicalDataFromTable(loadMedicalData).catch((error) => {
+      console.log("get medical data from table error: ", error);
       setIsDashboardLoading(false);
-      Alert.alert("Please connect to internet!");
-    }
+    });
+
+    // get new appointment list
+    getAppointmentList(e_id).then((response) => {
+      if (response.data) {
+        const appointmentList = response.data;
+        // create a promise list for each insert table query
+        const promiseList = appointmentList.map((row) => {
+          return insertAppointments(row);
+        });
+        // get reponse for each of the query promises
+        Promise.allSettled(promiseList).then((value) => {
+          console.log("value: ", value);
+        });
+        console.log("inserted data in appointment table");
+      } else {
+        console.log("get appointment list api error");
+      }
+    });
   };
 
   const loadAppointmentFromDatabase = (appointmentList) => {
