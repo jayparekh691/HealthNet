@@ -95,8 +95,6 @@ function AppointmentCard({ data, onPress }) {
                 flexDirection: "row",
               }}
             >
-              {/* TODO: the below div (mobile number) is redundant used both in
-               appointment card and appoinment modal card create a component */}
               <TouchableWithoutFeedback
                 onPress={() => {
                   makeCall(data.mobilenumber.substring(4));

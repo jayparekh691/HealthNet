@@ -14,6 +14,7 @@ function CustomButton({
   title,
   onPress,
   style,
+  textStyle,
 }) {
   const { width, height } = useWindowDimensions();
 
@@ -41,7 +42,7 @@ function CustomButton({
       ]}
       onPress={onPress}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 }

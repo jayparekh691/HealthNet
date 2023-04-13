@@ -47,7 +47,7 @@ function PinTextBox({
         value={value}
         onKeyPress={onKeyPress}
         textAlign="center"
-        keyboardType="numeric"
+        keyboardType="number-pad"
         returnKeyType="done"
         autoFocus={autoFocus}
         secureTextEntry={isSecure}
