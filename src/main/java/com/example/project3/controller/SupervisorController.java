@@ -51,7 +51,7 @@ public class SupervisorController {
         employeeServices.deactivateEmployee(id);
     }
 
-    @PostMapping("/assign-fieldworker/{p_id}/{f_id}")
+    @GetMapping("/assign-fieldworker/{p_id}/{f_id}")
     @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<Patient> assignFieldWorker(@PathVariable("p_id") Integer pid,@PathVariable("f_id") Integer fid){
         Patient patient1 = this.supervisorServices.assignFieldWorker(pid,fid);

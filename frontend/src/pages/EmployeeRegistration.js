@@ -166,7 +166,7 @@ function EmployeeRegistration() {
                   maxLength={10}
                   pattern="[1-9]{1}[0-9]{9}"
                   title="mobile no can only be between 0 to 9"
-                  placeholder="Enter mobilenumber"
+                  placeholder="+91"
                   value={employeeData.mobilenumber}
                   onChange={handleChange}
                   required

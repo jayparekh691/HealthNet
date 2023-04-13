@@ -30,10 +30,10 @@ async function getFieldworkerList() {
 }
 
 async function assignFieldworker(patientID, fieldWorkerID) {
-  const responseData = await axios.post(
+  const responseData = await axios.get(
     assignFieldworkerAPI(patientID, fieldWorkerID),
     {
-      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+      headers: { Authorization: `Bearer ${getValueForKey("token")}`},
     }
   );
   return responseData;

@@ -59,15 +59,16 @@ function Login() {
             },
           });
         } else {
-          // when role is not corretly selected
-          toast.error("Incorrect role selected");
+          
         }
       } else {
         // incorrect email or password
-        toast.error("Incorrect email or password");
+       
       }
     } catch (error) {
+      toast.error("Incorrect email or password");
       handleAuthentication(error.response, navigate, "/login");
+      
     }
   }
 
