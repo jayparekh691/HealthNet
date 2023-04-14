@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getValueForKey } from "../utils/localStorage";
 const doctorListAPI = `http://localhost:9080/api/employee/get-all-doctors`;
 const registerPatientAPI = `http://localhost:9080/api/patient/add-patient`;
 const addPatientAppointmentAPI = (patientID, doctorID) =>
@@ -10,12 +11,16 @@ const updatePatientAPI = (patientID) =>
   `http://localhost:9080/api/patient/update-patient/${patientID}`;
 
 async function getDoctorList() {
-  const responseData = await axios.get(doctorListAPI);
+  const responseData = await axios.get(doctorListAPI, {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function registerPatient(patientData) {
-  const responseData = await axios.post(registerPatientAPI, patientData);
+  const responseData = await axios.post(registerPatientAPI, patientData, {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
@@ -29,26 +34,36 @@ async function addPatientAppointment(patientID, doctorID) {
     {
       curr_date: curr_date,
       is_treated: false,
+    },
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
     }
   );
   return responseData;
 }
 
 async function getAllPatientList() {
-  const responseData = await axios.get(getALLAppointmentAPI);
+  const responseData = await axios.get(getALLAppointmentAPI, {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function searchPatient(searchValue) {
   console.log(searchValue);
-  const responseData = await axios.get(searchPatientAPI(searchValue));
+  const responseData = await axios.get(searchPatientAPI(searchValue), {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function updatePatientDetails(patientID, updatedPatientData) {
   const responseData = await axios.post(
     updatePatientAPI(patientID),
-    updatedPatientData
+    updatedPatientData,
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+    }
   );
   return responseData;
 }

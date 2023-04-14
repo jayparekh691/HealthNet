@@ -8,12 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     Employee findEmployeeByEmailAndPassword(String email,String password);
-    List<Employee> findEmployeeByRole(String role);
+    List<Employee> findEmployeeByRoles(String role);
     List<Employee> findEmployeeByNameContaining(String name);
     void deleteById(Integer id);
+
+    Optional<Employee> findByEmail(String email);
     Employee findEmployeeByEmail(String s);
 }

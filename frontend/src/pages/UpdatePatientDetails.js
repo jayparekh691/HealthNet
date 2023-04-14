@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updatePatientDetails } from "../services/receptionistServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function UpdatePatientDetails() {
   const state = useLocation().state;
@@ -43,15 +44,19 @@ function UpdatePatientDetails() {
   async function onUpdatePatientDetails(event) {
     event.preventDefault();
     console.log(updatedPatientData);
-    const responseData = await updatePatientDetails(
-      state.patientObj.pid,
-      updatedPatientData
-    );
-    if (responseData.data) {
-      toast.success(`Updated Patient Data`);
-      navigate(-1);
-    } else {
-      toast.error("Unable to Update Patient data");
+    try {
+      const responseData = await updatePatientDetails(
+        state.patientObj.pid,
+        updatedPatientData
+      );
+      if (responseData.data) {
+        toast.success(`Updated Patient Data`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to Update Patient data");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 

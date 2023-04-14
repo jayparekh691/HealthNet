@@ -4,6 +4,7 @@ import { updatePassword } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { handleAuthentication } from "../utils/authentication";
 
 function UpdatePassword() {
   const navigate = useNavigate();

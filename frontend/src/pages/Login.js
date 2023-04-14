@@ -3,6 +3,7 @@ import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { handleAuthentication } from "../utils/authentication";
 
 function Login() {
   const navigate = useNavigate();
@@ -27,41 +28,47 @@ function Login() {
 
   async function onSubmit(event) {
     event.preventDefault();
-    const responseData = await login(loginData);
-    console.log(responseData);
-    console.log(loginData);
-    const data = responseData.data;
-    console.log(data);
-    if (loginData.email === data.email) {
-      toast.success("Welcome!");
-      if (data.role === "Receptionist") {
-        // show receptionist dashboard
-
-        navigate("/receptionist-dashboard", {
-          state: {
-            r_id: data.e_id,
-          },
-        });
-      } else if (data.role === "Doctor") {
-        // show doctor dashboard
-        navigate("/doctor-dashboard", {
-          state: {
-            d_id: data.e_id,
-          },
-        });
-      } else if (data.role === "Admin") {
-        navigate("/admin-dashboard", {
-          state: {
-            a_id: data.e_id,
-          },
-        });
+    try {
+      const responseData = await login(loginData);
+      console.log(responseData);
+      console.log(loginData);
+      const data = responseData.data;
+      console.log(data);
+      if (loginData.email === data.email) {
+        if (data.roles === "Receptionist") {
+          // show receptionist dashboard
+          toast.success("Welcome!");
+          navigate("/receptionist-dashboard", {
+            state: {
+              r_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Doctor") {
+          toast.success("Welcome!");
+          // show doctor dashboard
+          navigate("/doctor-dashboard", {
+            state: {
+              d_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Admin") {
+          toast.success("Welcome!");
+          navigate("/admin-dashboard", {
+            state: {
+              a_id: data.e_id,
+            },
+          });
+        } else {
+          
+        }
       } else {
-        // when role is not corretly selected
-        toast.error("Incorrect role selected");
+        // incorrect email or password
+       
       }
-    } else {
-      // incorrect email or password
+    } catch (error) {
       toast.error("Incorrect email or password");
+      handleAuthentication(error.response, navigate, "/login");
+      
     }
   }
 

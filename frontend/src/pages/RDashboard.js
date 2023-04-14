@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "reactjs-popup/dist/index.css";
 import TextField from "@mui/material/TextField";
 import SelectModal from "../components/SelectModal";
+import { handleAuthentication } from "../utils/authentication";
 
 function RDashboard() {
   const state = useLocation().state;
@@ -19,6 +20,7 @@ function RDashboard() {
   const [searchValue, setSearchValue] = useState("");
   const [receptionistId, setReceptionistId] = useState(null);
   const [modalIndex, setModalIndex] = useState(-1);
+  const [appointmentAdded, setAppointmentAdded] = useState(false);
 
   function addPatient() {
     navigate("/patient-registration");
@@ -36,39 +38,52 @@ function RDashboard() {
   useEffect(() => {
     setReceptionistId(state.r_id);
     (async function () {
-      const responseData = await getAllPatientList();
-      const data = responseData.data;
-      console.log(data);
-      if (data) {
-        setPatientList(
-          data.filter((e) => {
-            return e.treated === false;
-          })
-        );
+      try {
+        const responseData = await getAllPatientList();
+        const data = responseData.data;
+        console.log(data);
+        if (data) {
+          setPatientList(
+            data.filter((e) => {
+              return e.treated === false;
+            })
+          );
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
 
     (async function getDoctors() {
-      const responseData = await getDoctorList();
-      let doctorListData = responseData.data;
-      console.log(doctorListData);
-      if (doctorListData) {
-        setDoctorList(doctorListData);
+      try {
+        const responseData = await getDoctorList();
+        let doctorListData = responseData.data;
+        console.log(doctorListData);
+        if (doctorListData) {
+          setDoctorList(doctorListData);
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
-  }, [state.r_id]);
+  }, [state.r_id, appointmentAdded]);
 
   async function addAppointment(p_id) {
     // add appointment for patient using pid
-    const responseData = await addPatientAppointment(p_id, doctorID);
-    const appointmentData = responseData.data;
-    console.log(appointmentData);
-    if (appointmentData) {
-      toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-    } else {
-      toast.error(`Unable to generate Appointment`);
+    try {
+      const responseData = await addPatientAppointment(p_id, doctorID);
+      const appointmentData = responseData.data;
+      console.log(appointmentData);
+      if (appointmentData) {
+        toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+        setAppointmentAdded((pv) => !appointmentAdded);
+      } else {
+        toast.error(`Unable to generate Appointment`);
+      }
+      closeModal();
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
-    closeModal();
   }
 
   function handleChangeInDoctor(event) {
@@ -100,11 +115,15 @@ function RDashboard() {
     // api call to get list
     if (value !== "") {
       (async function getSearchedPatientList() {
-        const responseData = await searchPatient(value);
-        let searchedPatientList = responseData.data;
-        if (searchedPatientList) {
-          console.log(searchedPatientList);
-          setSearchedPatientList(searchedPatientList);
+        try {
+          const responseData = await searchPatient(value);
+          let searchedPatientList = responseData.data;
+          if (searchedPatientList) {
+            console.log(searchedPatientList);
+            setSearchedPatientList(searchedPatientList);
+          }
+        } catch (error) {
+          handleAuthentication(error.response, navigate, "/login");
         }
       })();
     }
@@ -302,7 +321,6 @@ function RDashboard() {
               <div
                 className="table-wrapper"
                 style={{
-                  // height: "100%",
                   maxHeight: "300px",
                   overflowY: "scroll",
                 }}
@@ -341,5 +359,4 @@ function RDashboard() {
     </div>
   );
 }
-
 export default RDashboard;

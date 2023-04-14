@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { setKey } from "../utils/localStorage";
 const loginAPI = `http://localhost:9080/api/employee/login`;
 
 const updatePasswordAPI = (employeeId) =>
@@ -10,6 +10,10 @@ const forgotPasswordAPI = (email) =>
 
 async function login(loginData) {
   const responseData = await axios.post(loginAPI, loginData);
+  if (responseData.data) {
+    console.log(responseData.data.token);
+    setKey("token", responseData.data.token);
+  }
   return responseData;
 }
 

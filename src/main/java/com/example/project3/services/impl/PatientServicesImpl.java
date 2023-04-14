@@ -18,6 +18,7 @@ public class PatientServicesImpl implements PatientServices {
 
     @Override
     public Patient createPatient(Patient patient) {
+        patient.setMobilenumber("+91 "+patient.getMobilenumber());
         this.patientRepo.save(patient);
         return patient;
     }
@@ -30,7 +31,7 @@ public class PatientServicesImpl implements PatientServices {
         patient1.setCity(patient.getCity());
         patient1.setName(patient.getName());
         patient1.setAge(patient.getAge());
-        patient1.setMobilenumber(patient.getMobilenumber());
+        patient1.setMobilenumber("+91 "+patient.getMobilenumber());
         patient1.setPincode(patient.getPincode());
         this.patientRepo.save(patient1);
         return patient1;

@@ -28,7 +28,7 @@ public class Employee {
     private String address;
     private String mobilenumber;
     private char gender;
-    private String role;
+    private String roles;
     private String specialization;
     private boolean deleted=Boolean.FALSE;
     @OneToMany(fetch = FetchType.EAGER)

@@ -4,6 +4,7 @@ import { forgotPassword } from "../services/loginService";
 import { toast } from "react-toastify";
 import InputField from "../components/InputField";
 import { LoadingIndicator } from "../components/LoadingIndicator";
+import { handleAuthentication } from "../utils/authentication";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function ForgotPassword() {
   async function onSubmit(event) {
     event.preventDefault();
     setLoading(true);
+
     const responseData = await forgotPassword(email);
     setLoading(false);
     console.log(responseData);
