@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getEmployeeList, deleteEmployee } from "../services/adminServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { handleAuthentication } from "../utils/authentication";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -11,9 +12,10 @@ function ADashboard() {
   const [searchName, setSearchName] = useState("");
   const [employeeList, setEmployeeList] = useState([]);
   const [adminId, setAdminId] = useState(null);
+  const [deleted, setDeleted] = useState(false);
   useEffect(() => {
     setAdminId(state.a_id);
-  }, [state.a_id]);
+  }, [state.a_id, deleted]);
 
   function addEmployee() {
     navigate("/employee-registration");
@@ -26,11 +28,15 @@ function ADashboard() {
     // api call to get list
     if (value !== "") {
       (async function getEmployees() {
-        const responseData = await getEmployeeList(value);
-        let employeeList = responseData.data;
-        if (employeeList) {
-          console.log(employeeList);
-          setEmployeeList(employeeList);
+        try {
+          const responseData = await getEmployeeList(value);
+          let employeeList = responseData.data;
+          if (employeeList) {
+            console.log(employeeList);
+            setEmployeeList(employeeList);
+          }
+        } catch (error) {
+          handleAuthentication(error.response, navigate, "/login");
         }
       })();
     }
@@ -48,9 +54,14 @@ function ADashboard() {
     console.log(event.target.value);
 
     (async function deleteEmployeeById() {
-      const responseData = await deleteEmployee(e_id);
-      console.log(responseData);
-      toast.success(`Employee Deleted`);
+      try {
+        const responseData = await deleteEmployee(e_id);
+        console.log(responseData);
+        toast.success(`Employee Deleted`);
+        setDeleted((pv) => !deleted);
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
+      }
     })();
 
     const index = Number(event.target.value);
@@ -140,7 +151,7 @@ function ADashboard() {
             <tbody style={{}}>
               {employeeList
                 .filter((e) => {
-                  return e.deleted === false && e.role !== "Admin";
+                  return e.deleted === false && e.roles !== "Admin";
                 })
                 .map((e, i) => {
                   return (
@@ -148,7 +159,7 @@ function ADashboard() {
                       <th>{e.e_id}</th>
                       <th>{e.name}</th>
                       <th>{e.gender}</th>
-                      <th>{e.role}</th>
+                      <th>{e.roles}</th>
                       <th>{e.email}</th>
                       <td>
                         <button

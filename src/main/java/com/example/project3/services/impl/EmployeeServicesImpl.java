@@ -8,6 +8,10 @@ import io.jsonwebtoken.lang.Strings;
 //import org.apache.logging.log4j.util.Strings;
 import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -22,31 +26,35 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Autowired
     private EmployeeRepo employeeRepo;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
     private EmailUtils emailUtils;
     @Override
-    public Employee login(Employee employee) {
-        Employee employee1 = this.employeeRepo.findEmployeeByEmailAndPassword(employee.getEmail(), employee.getPassword());
-        return employee1;
-    }
-    @Override
     public Employee createEmployee(Employee employee) {
+        String pass=employee.getPassword();
+        employee.setMobilenumber("+91 "+employee.getMobilenumber());
+        employee.setPassword(passwordEncoder.encode(pass));
         this.employeeRepo.save(employee);
+        employee.setPassword(pass);
         return employee;
     }
-
     @Override
     public Employee updateEmployee(Employee employee, Integer id) {
+        String pass=employee.getPassword();
         Employee employee1 =this.employeeRepo.findById(id).orElseThrow();
         employee1.setEmail(employee.getEmail());
         employee1.setName(employee.getName());
         employee1.setSpecialization(employee.getSpecialization());
         employee1.setName(employee.getName());
         employee1.setGender(employee.getGender());
-        employee1.setPassword(employee.getPassword());
-        employee1.setRole(employee.getRole());
-        employee1.setMobilenumber(employee.getMobilenumber());
+        employee1.setPassword(passwordEncoder.encode(pass));
+        employee1.setRoles(employee.getRoles());
+        employee1.setMobilenumber("+91 "+employee.getMobilenumber());
         employee1.setAddress(employee.getAddress());
         this.employeeRepo.save(employee1);
+        employee1.setPassword(pass);
         return employee1;
     }
 
@@ -65,7 +73,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Override
     public  List<Employee> getAllDoctors(){
         String role="doctor";
-        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        List<Employee> employees = this.employeeRepo.findEmployeeByRoles(role);
         return employees;
     }
 
@@ -76,7 +84,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
             Employee employee = this.employeeRepo.findEmployeeByEmail(request);
             String newPassword = new DecimalFormat("000000")
                     .format(new Random().nextInt(999999));
-            employee.setPassword(newPassword);
+            employee.setPassword(passwordEncoder.encode(newPassword));
             this.emailUtils.forgotMail(employee.getEmail(),"New Credentials",newPassword);
             System.out.println(employee.getEmail());
             System.out.println(employee.getPassword());
@@ -93,8 +101,9 @@ public class EmployeeServicesImpl implements EmployeeServices {
     public String updatePassword(Integer request, String old_pass, String new_pass) {
         Employee employee = this.employeeRepo.findById(request).orElseThrow();
         if(employee!=null){
-            if(employee.getPassword().equals(old_pass)) {
-                employee.setPassword(new_pass);
+            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employee.getEmail(),old_pass));
+            if(authentication.isAuthenticated()) {
+                employee.setPassword(passwordEncoder.encode(new_pass));
                 this.employeeRepo.save(employee);
                 return "Success";
             }

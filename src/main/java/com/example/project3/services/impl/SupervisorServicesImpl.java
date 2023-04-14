@@ -34,6 +34,8 @@ public class SupervisorServicesImpl implements SupervisorServices {
         List<Appointment> appointments=this.appointmentRepo.findByPatient(patient);
         for(Appointment appointment:appointments)
         {
+            if(appointment.getFollowup()==null)
+                continue;
             List<Visit> visits=appointment.getFollowup().getVisitList();
             for(Visit v:visits)
             {
@@ -55,6 +57,8 @@ public class SupervisorServicesImpl implements SupervisorServices {
         List<Appointment> appointments=this.appointmentRepo.findByPatient(patient);
         for(Appointment appointment:appointments)
         {
+            if(appointment.getFollowup()==null)
+                continue;
             List<Visit> visits=appointment.getFollowup().getVisitList();
             for(Visit v:visits)
             {
@@ -112,7 +116,7 @@ public class SupervisorServicesImpl implements SupervisorServices {
     @Override
     public List<Employee> getFieldWorkerList() {
         String role="FieldWorker";
-        List<Employee> employees = this.employeeRepo.findEmployeeByRole(role);
+        List<Employee> employees = this.employeeRepo.findEmployeeByRoles(role);
         return employees;
     }
     @Override
@@ -157,11 +161,12 @@ public class SupervisorServicesImpl implements SupervisorServices {
     @Override
     public List<Employee> searchFieldWorkerByName(String name) {
         List<Employee> employees = this.employeeRepo.findEmployeeByNameContaining(name);
+        List<Employee> finalEmp=new ArrayList<>();
         for(Employee e:employees)
         {
-            if(e.getRole()!="FieldWorker")
-                employees.remove(e);
+            if(e.getRoles()=="FieldWorker")
+                finalEmp.add(e);
         }
-        return employees;
+        return finalEmp;
     }
 }

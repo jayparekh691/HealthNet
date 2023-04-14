@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updateEmployee } from "../services/adminServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function UpdateEmployeeDetails() {
   const state = useLocation().state;
@@ -19,12 +20,12 @@ function UpdateEmployeeDetails() {
     specialization: state.employeeObj.specialization,
     mobilenumber: state.employeeObj.mobilenumber,
     address: state.employeeObj.address,
-    role: state.employeeObj.role,
+    roles: state.employeeObj.roles,
   });
   const [genderDefault, setGenderDefault] = useState(state.employeeObj.gender);
   useEffect(() => {
     setEmplyeeObj(state.employeeObj);
-    if (state.employeeObj.role === "Doctor") {
+    if (state.employeeObj.roles === "Doctor") {
       setDisabled((pv) => {
         return false;
       });
@@ -33,7 +34,7 @@ function UpdateEmployeeDetails() {
         return true;
       });
     }
-  }, [state.employeeObj, state.employeeObj.role]);
+  }, [state.employeeObj, state.employeeObj.roles]);
 
   function handleChange(event) {
     // event.preventDefault();
@@ -53,15 +54,19 @@ function UpdateEmployeeDetails() {
     event.preventDefault();
     console.log(updatedEmployeeData);
     // add employee data
-    const responseData = await updateEmployee(
-      updatedEmployeeData.e_id,
-      updatedEmployeeData
-    );
-    if (responseData.data) {
-      toast.success(`Updated Employee Data`);
-      navigate(-1);
-    } else {
-      toast.error("Unable to Update Employee data");
+    try {
+      const responseData = await updateEmployee(
+        updatedEmployeeData.e_id,
+        updatedEmployeeData
+      );
+      if (responseData.data) {
+        toast.success(`Updated Employee Data`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to Update Employee data");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -168,13 +173,13 @@ function UpdateEmployeeDetails() {
               <div className="select-box">
                 <span className="details">Role</span>
                 <select
-                  value={updatedEmployeeData.role}
-                  name="role"
+                  value={updatedEmployeeData.roles}
+                  name="roles"
                   onChange={handleChange}
                   disabled={true}
                 >
-                  <option value={updatedEmployeeData.role}>
-                    {updatedEmployeeData.role}
+                  <option value={updatedEmployeeData.roles}>
+                    {updatedEmployeeData.roles}
                   </option>
                 </select>
               </div>

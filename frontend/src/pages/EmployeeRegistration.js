@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerEmployee } from "../services/adminServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function EmployeeRegistration() {
   const navigate = useNavigate();
@@ -15,13 +16,12 @@ function EmployeeRegistration() {
     address: "",
     mobilenumber: "",
     specialization: "",
-    role: "Receptionist",
+    roles: "Receptionist",
   });
 
   const [genderDefault, setGenderDefault] = useState("M");
 
   function handleChange(event) {
-    // event.preventDefault();
     const { name, value } = event.target;
     setEmployeeData((pv) => {
       return {
@@ -32,11 +32,11 @@ function EmployeeRegistration() {
     if (name === "gender") {
       setGenderDefault(value);
     }
-    if (name === "role" && value === "Doctor") {
+    if (name === "roles" && value === "Doctor") {
       setDisabled((pv) => {
         return false;
       });
-    } else if (name === "role") {
+    } else if (name === "roles") {
       setDisabled((pv) => {
         return true;
       });
@@ -47,11 +47,17 @@ function EmployeeRegistration() {
     e.preventDefault();
     console.log(employeeData);
     // add employee data
-    const responseData = await registerEmployee(employeeData);
-    if (responseData.data) {
-      toast.success(`Employee Added`);
-    } else {
-      toast.error("Unable to Add Employee");
+    try {
+      const responseData = await registerEmployee(employeeData);
+      handleAuthentication(responseData, navigate, "/login");
+      if (responseData.data) {
+        toast.success(`Employee Added`);
+        // navigate(-1);
+      } else {
+        toast.error("Unable to Add Employee");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
   }
 
@@ -160,7 +166,7 @@ function EmployeeRegistration() {
                   maxLength={10}
                   pattern="[1-9]{1}[0-9]{9}"
                   title="mobile no can only be between 0 to 9"
-                  placeholder="Enter mobilenumber"
+                  placeholder="+91"
                   value={employeeData.mobilenumber}
                   onChange={handleChange}
                   required
@@ -170,8 +176,8 @@ function EmployeeRegistration() {
                 <span className="details">Role</span>
 
                 <select
-                  value={employeeData.role}
-                  name="role"
+                  value={employeeData.roles}
+                  name="roles"
                   onChange={handleChange}
                 >
                   <option value="Receptionist">Receptionist</option>

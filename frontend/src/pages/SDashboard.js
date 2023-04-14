@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Popup from "reactjs-popup";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
+import { handleAuthentication } from "../utils/authentication";
 
 function SDashboard() {
   //get unassigned patients
@@ -25,18 +26,26 @@ function SDashboard() {
 
   useEffect(() => {
     (async function getUnassignedPatientList() {
-      const responseData = await getPatientList();
-      const data = responseData.data;
-      if (data) {
-        setPatientList(data);
-        console.log(data);
+      try {
+        const responseData = await getPatientList();
+        const data = responseData.data;
+        if (data) {
+          setPatientList(data);
+          console.log(data);
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
     (async function getFieldWorkerList() {
-      const responseData = await getFieldworkerList();
-      const data = responseData.data;
-      if (data) {
-        setFieldWorkerList(data);
+      try {
+        const responseData = await getFieldworkerList();
+        const data = responseData.data;
+        if (data) {
+          setFieldWorkerList(data);
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
   }, [assigned]);
@@ -56,6 +65,7 @@ function SDashboard() {
 
   async function assign(pid) {
     console.log(pid);
+    // try {
     const responseData = await assignFieldworker(pid, fieldWorkerID);
     const data = responseData.data;
     if (data) {
@@ -65,6 +75,9 @@ function SDashboard() {
       toast.error(`Unable to assign Field Worker`);
     }
     setAssigned((pv) => !assigned);
+    // } catch (error) {
+    //   handleAuthentication(error.response, navigate, "/login");
+    // }
   }
 
   async function reassign(oldFieldWorkerID) {
@@ -73,15 +86,19 @@ function SDashboard() {
     if (reassignedFieldWorkerID === null) {
       alert("Field worker not selected");
     } else {
-      const responseData = await reassignFieldWorker(
-        oldFieldWorkerID,
-        reassignedFieldWorkerID
-      );
-      const data = responseData.data;
-      if (data) {
-        toast.success(`Field Worker has been reassigned`);
-      } else {
-        toast.error(`Unable to Reassign Field Worker`);
+      try {
+        const responseData = await reassignFieldWorker(
+          oldFieldWorkerID,
+          reassignedFieldWorkerID
+        );
+        const data = responseData.data;
+        if (data) {
+          toast.success(`Field Worker has been reassigned`);
+        } else {
+          toast.error(`Unable to Reassign Field Worker`);
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     }
     setAssigned((pv) => !assigned);

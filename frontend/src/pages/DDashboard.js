@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
+import { handleAuthentication } from "../utils/authentication";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -11,17 +12,21 @@ function DDashboard() {
   useEffect(() => {
     setDoctorID(state.d_id);
     (async function () {
-      const responseData = await getAllPatients(state.d_id);
-      const data = responseData.data;
-      console.log(data);
-      if (data) {
-        setPatientList(
-          data.filter((e) => {
-            return e.treated === false;
-          })
-        );
-      } else {
-        console.log("error! ");
+      try {
+        const responseData = await getAllPatients(state.d_id);
+        const data = responseData.data;
+        console.log(data);
+        if (data) {
+          setPatientList(
+            data.filter((e) => {
+              return e.treated === false;
+            })
+          );
+        } else {
+          console.log("error! ");
+        }
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login");
       }
     })();
   }, [state.d_id]);

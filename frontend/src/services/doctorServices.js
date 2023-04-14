@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { getValueForKey } from "../utils/localStorage";
 const getAllPatientWithDoctorIDAPI = (doctorID) =>
   `http://localhost:9080/api/doctor/get-all-appointments-of-doctor/${doctorID}`;
 const writeDiagnosisAPI = (appointmentID) =>
@@ -24,14 +24,19 @@ const markSeenByDoctorAPI = (visitID) =>
   `http://localhost:9080/api/doctor/set-visit-as-seen/${visitID}`;
 
 async function getAllPatients(doctorID) {
-  const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID));
+  const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID), {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function writeDiagnosis(appointmentID, writtenData) {
   const responseData = await axios.post(
     writeDiagnosisAPI(appointmentID),
-    writtenData
+    writtenData,
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+    }
   );
   return responseData;
 }
@@ -39,37 +44,52 @@ async function writeDiagnosis(appointmentID, writtenData) {
 async function submitFollowUp(appointmentID, followUpDetails) {
   const responseData = await axios.post(
     writeFollowUpAPI(appointmentID),
-    followUpDetails
+    followUpDetails,
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+    }
   );
   return responseData;
 }
 
 async function getPatientList(doctorID, searchValue) {
   const responseData = await axios.get(
-    searchedPatientListAPI(doctorID, searchValue)
+    searchedPatientListAPI(doctorID, searchValue),
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+    }
   );
   return responseData;
 }
 
 async function getPatientHistory(doctorID, patientID) {
   const responseData = await axios.get(
-    patientMedicalHistoryAPI(doctorID, patientID)
+    patientMedicalHistoryAPI(doctorID, patientID),
+    {
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+    }
   );
   return responseData;
 }
 
 async function deactivateFollowUp(appointmentID) {
-  const responseData = await axios.post(deactivateFollowUpAPI(appointmentID));
+  const responseData = await axios.post(deactivateFollowUpAPI(appointmentID), {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function getNewVisitRecords(doctorID) {
-  const responseData = await axios.get(newVisitListAPI(doctorID));
+  const responseData = await axios.get(newVisitListAPI(doctorID), {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 
 async function markSeenByDoctor(visitID) {
-  const responseData = await axios.get(markSeenByDoctorAPI(visitID));
+  const responseData = await axios.get(markSeenByDoctorAPI(visitID), {
+    headers: { Authorization: `Bearer ${getValueForKey("token")}` },
+  });
   return responseData;
 }
 export {
