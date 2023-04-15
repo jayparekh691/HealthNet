@@ -49,7 +49,10 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 VisitModel visitModel = new VisitModel();
                 visitModel.setV_id(visit.getV_id());
                 visitModel.setP_id(appointment.getPatient().getPid());
-                visitModel.setInstruction(appointment.getFollowup().getInstructions());
+                visitModel.setSugarLevel(appointment.getFollowup().getInstructions().isSugarLevel());
+                visitModel.setTemperature(appointment.getFollowup().getInstructions().isTemperature());
+                visitModel.setSpo2Level(appointment.getFollowup().getInstructions().isSpo2Level());
+                visitModel.setBloodPressure(appointment.getFollowup().getInstructions().isBloodPressure());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
                 visitModel.setPrescription(appointment.getDiagnostics().getPrescription());
