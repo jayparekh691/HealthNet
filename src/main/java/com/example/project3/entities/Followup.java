@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,7 +17,8 @@ public class Followup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int f_id;
-    private String instructions;
+    @OneToOne(fetch = FetchType.EAGER)
+    private FollowupInstructions instructions;
     private int gap;
     private int visitCount;
 

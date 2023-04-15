@@ -21,6 +21,8 @@ public class DoctorServicesImpl implements DoctorServices {
     @Autowired
     private TwilioOTPService twilioOTPService;
     @Autowired
+    private FollowupInstructionsRepo followupInstructionsRepo;
+    @Autowired
     private AppointmentRepo appointmentRepo;
     @Autowired
     private PatientRepo patientRepo;
@@ -52,6 +54,8 @@ public class DoctorServicesImpl implements DoctorServices {
     @Override
     public Appointment writeFollowup(Followup followup, Integer id) {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow();
+        FollowupInstructions instructions = followup.getInstructions();
+        this.followupInstructionsRepo.save(instructions);
         appointment.setFollowup(followup);
         appointment.setFollowupRemaining(true);
         int count=followup.getVisitCount();
