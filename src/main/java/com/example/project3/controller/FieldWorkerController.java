@@ -24,12 +24,21 @@ public class FieldWorkerController {
         List<VisitModel> visitModelList = this.fieldWorkerServices.getAppointmentListFW(fid);
         return new ResponseEntity<>(visitModelList,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/remove-appointmentList-fieldWorker/{f_id}")
+    @PreAuthorize("hasAuthority('FieldWorker')")
+    public ResponseEntity<List<Integer>> removeAppointmentListFW(@PathVariable("f_id") Integer fid){
+        List<Integer> patientList = this.fieldWorkerServices.currentPatientList(fid);
+        return new ResponseEntity<>(patientList,HttpStatus.ACCEPTED);
+    }
+
     @GetMapping("/get-visit-details/{p_id}")
     @PreAuthorize("hasAuthority('FieldWorker')")
     public ResponseEntity<Appointment> getVisitDetails(@PathVariable("p_id") Integer id) {
         Appointment appointment=this.fieldWorkerServices.getVisitDetails(id);
         return new ResponseEntity<>(appointment,HttpStatus.ACCEPTED);
     }
+
     @PostMapping("/save-visit")
 //    @PreAuthorize("hasAuthority('FieldWorker')")
     public ResponseEntity<Integer> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) throws IOException {

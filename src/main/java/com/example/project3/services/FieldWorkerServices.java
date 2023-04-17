@@ -11,4 +11,6 @@ public interface FieldWorkerServices {
     Appointment getVisitDetails(Integer id);
 
     Integer saveVisit(ReceiveVistDataModel md) throws IOException;
+
+    List<Integer> currentPatientList(Integer id);
 }

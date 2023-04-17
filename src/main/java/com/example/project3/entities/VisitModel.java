@@ -7,7 +7,11 @@ import java.util.Date;
 @Data
 public class VisitModel {
     private int v_id;
-    private String instruction;
+    private int p_id;
+    private boolean temperature;
+    private boolean sugarLevel;
+    private boolean bloodPressure;
+    private boolean spo2Level;
     private String prescription;
     private String name;
     private int age;

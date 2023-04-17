@@ -48,7 +48,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                     continue;
                 VisitModel visitModel = new VisitModel();
                 visitModel.setV_id(visit.getV_id());
-                visitModel.setInstruction(appointment.getFollowup().getInstructions());
+                visitModel.setP_id(appointment.getPatient().getPid());
+                visitModel.setSugarLevel(appointment.getFollowup().getInstructions().isSugarLevel());
+                visitModel.setTemperature(appointment.getFollowup().getInstructions().isTemperature());
+                visitModel.setSpo2Level(appointment.getFollowup().getInstructions().isSpo2Level());
+                visitModel.setBloodPressure(appointment.getFollowup().getInstructions().isBloodPressure());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
                 visitModel.setPrescription(appointment.getDiagnostics().getPrescription());
@@ -94,5 +98,17 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         visit.setDate(receiveVistDataModel.getDate());
         this.visitRepo.save(visit);
         return visit.getV_id();
+    }
+
+    @Override
+    public List<Integer> currentPatientList(Integer id) {
+        List<Patient> patientList = new ArrayList<>();
+        Employee employee = this.employeeRepo.findById(id).orElseThrow();
+        patientList = this.patientRepo.findPatientByFieldworker(employee);
+        List<Integer> patientIDs = new ArrayList<>();
+        for(Patient patient : patientList) {
+            patientIDs.add(patient.getPid());
+        }
+        return patientIDs;
     }
 }
