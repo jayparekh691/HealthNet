@@ -85,14 +85,14 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
             return visit.getV_id();
         visit.setV_id(receiveVistDataModel.getV_id());
         MedicalData medicalData = new MedicalData();
-        medicalData.setBloodPressure(receiveVistDataModel.getBp());
-        medicalData.setSugarLevel(receiveVistDataModel.getSugar_level());
+        medicalData.setBloodPressure(receiveVistDataModel.getBloodPressure());
+        medicalData.setSugarLevel(receiveVistDataModel.getSugarLevel());
         medicalData.setTemperature(receiveVistDataModel.getTemperature());
         medicalData.setPhoto(receiveVistDataModel.getPhoto());
         visit.setVisited(true);
         Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
         visit.setFieldWorker(employee);
-        medicalData.setSpo2Level(receiveVistDataModel.getBloodoxygen());
+        medicalData.setSpo2Level(receiveVistDataModel.getSpo2Level());
         this.medicalRepo.save(medicalData);
         visit.setMedicalData(medicalData);
         visit.setDate(receiveVistDataModel.getDate());

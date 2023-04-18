@@ -13,13 +13,13 @@ import java.util.Date;
 @Setter
 public class ReceiveVistDataModel {
     private int v_id;
-    private String bp;
-    private String sugar_level;
+    private String bloodPressure;
+    private String sugarLevel;
     private String temperature;
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String photo;
-    private String bloodoxygen;
+    private String spo2Level;
     private boolean isVisited;
     private int f_id;
     private Date date;
