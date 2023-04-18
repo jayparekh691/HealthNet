@@ -35,7 +35,7 @@ const Modal = ({
               value={data.e_id}
               onClick={() => reassign(data.e_id, patientID)}
             >
-              Reassign
+              Confirm
             </button>
           </span>
           <span style={{ marginRight: "10px" }}>

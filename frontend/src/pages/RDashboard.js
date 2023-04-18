@@ -289,11 +289,13 @@ function RDashboard() {
                               {modalIndex === i && (
                                 <SelectModal
                                   key={i}
-                                  doctorList={doctorList}
+                                  list={doctorList}
                                   data={e}
-                                  addAppointment={addAppointment}
+                                  submitButton={addAppointment}
                                   closeModal={closeModal}
                                   handleOptionChange={handleChangeInDoctor}
+                                  heading={"Select Doctor"}
+                                  buttonName={"CONFIRM"}
                                 />
                               )}
                             </div>
