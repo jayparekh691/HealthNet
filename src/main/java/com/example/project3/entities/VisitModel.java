@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class VisitModel {
     private int v_id;
-    private int p_id;
+    private int followup_id;
     private boolean temperature;
     private boolean sugarLevel;
     private boolean bloodPressure;
@@ -25,5 +25,4 @@ public class VisitModel {
     private boolean isvisited;
     private Date date;
     private String otp;
-    private int f_id;
 }

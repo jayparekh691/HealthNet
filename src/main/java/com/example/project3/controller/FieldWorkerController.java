@@ -28,7 +28,7 @@ public class FieldWorkerController {
     @GetMapping("/remove-appointmentList-fieldWorker/{f_id}")
     @PreAuthorize("hasAuthority('FieldWorker')")
     public ResponseEntity<List<Integer>> removeAppointmentListFW(@PathVariable("f_id") Integer fid){
-        List<Integer> patientList = this.fieldWorkerServices.currentPatientList(fid);
+        List<Integer> patientList = this.fieldWorkerServices.currentFollowupList(fid);
         return new ResponseEntity<>(patientList,HttpStatus.ACCEPTED);
     }
 
