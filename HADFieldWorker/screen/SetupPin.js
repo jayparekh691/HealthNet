@@ -230,6 +230,7 @@ function SetupPin() {
               }}
             >
               <PinInputField
+                shouldFocus={false}
                 pin={secondPin}
                 onPinChange={onSecondPinCodeChange}
               />

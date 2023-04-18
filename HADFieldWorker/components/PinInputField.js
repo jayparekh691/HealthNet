@@ -7,7 +7,7 @@ import { log } from "react-native-reanimated";
 
 const { width } = Dimensions.get("screen");
 
-function PinInputField({ pin, onPinChange }) {
+function PinInputField({ pin, onPinChange, shouldFocus = true }) {
   const [isSecure, setIsSecure] = useState(true);
   const [pinNo, setPinNo] = useState(0);
   const inputRef = useRef([]);
@@ -36,7 +36,7 @@ function PinInputField({ pin, onPinChange }) {
         inputRef={(r) => {
           inputRef.current[0] = r;
         }}
-        autoFocus={pinNo === 0}
+        autoFocus={pinNo === 0 && shouldFocus}
         onKeyPress={handleKeyPress}
         name="pinOne"
         value={pin.pinOne}

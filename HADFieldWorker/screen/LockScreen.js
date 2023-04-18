@@ -16,6 +16,7 @@ import { getValueFor, removeItem, stringFromObject } from "../utils/Util";
 import { TouchableOpacity } from "react-native";
 import PinInputField from "../components/PinInputField";
 import { LoadingContext } from "../contexts/LoadingContext";
+import { ConnectivityContext } from "../contexts/ConnectivityContext";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -24,6 +25,9 @@ function LockScreen() {
 
   const { isDashboardLoadingState } = useContext(LoadingContext);
   const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
+
+  const { isConnectedState } = useContext(ConnectivityContext);
+  const [isConnected] = isConnectedState;
 
   const [pin, setPin] = useState({
     pinOne: "",
@@ -52,10 +56,11 @@ function LockScreen() {
   };
 
   const onContinue = async () => {
-    setIsDashboardLoading(true);
+    // setIsDashboardLoading(true);
     const lockPin = await getValueFor("pin");
     console.log("lockscreen", lockPin);
     if (stringFromObject(pin) === lockPin) {
+      console.log("lockscreen network", isConnected);
       navigation.navigate("drawerNavigator");
     } else {
       Alert.alert("Incorrect Pin!");
@@ -154,6 +159,7 @@ function LockScreen() {
             (async () => {
               await removeItem("pin");
               await removeItem("user");
+              await removeItem("token");
             })();
           }}
         >
