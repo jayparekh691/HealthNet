@@ -73,7 +73,7 @@ async function getPatientHistory(doctorID, patientID) {
 }
 
 async function deactivateFollowUp(appointmentID) {
-  const responseData = await axios.post(deactivateFollowUpAPI(appointmentID), {
+  const responseData = await axios.get(deactivateFollowUpAPI(appointmentID), {
     headers: { Authorization: `Bearer ${getValueForKey("token")}` },
   });
   return responseData;

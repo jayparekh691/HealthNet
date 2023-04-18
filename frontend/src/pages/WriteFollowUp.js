@@ -9,8 +9,19 @@ function WriteFollowUp() {
     useContext(WriteFollowUpContext);
 
   function handleChange(event) {
+    console.log(followUpDetails);
     const { name, value } = event.target;
     setFollowUpDetails((pv) => {
+      if (
+        name === "temperature" ||
+        name === "sugarLevel" ||
+        name === "spo2Level" ||
+        name === "bloodPressure"
+      ) {
+        const prev = { ...pv };
+        prev.instructions[name] = !prev.instructions[name];
+        return prev;
+      }
       return {
         ...pv,
         [name]: value,
@@ -29,10 +40,8 @@ function WriteFollowUp() {
         <div className="title">Follow Up</div>
         <div className="content">
           <form onSubmit={submitFollowUpDetails}>
-            <div className="user-details">
-              <div className="input-box">
-                <span className="details">Instructions</span>
-                <textarea
+            {/* <span className="details">Instructions</span> */}
+            {/* <textarea
                   name="instructions"
                   type="textarea"
                   rows={5}
@@ -40,9 +49,91 @@ function WriteFollowUp() {
                   value={followUpDetails.instructions}
                   onChange={handleChange}
                   required
+                /> */}
+            <span
+              style={{
+                fontSize: "20px",
+                fontWeight: "lighter",
+              }}
+            >
+              Readings to be taken:
+            </span>
+            <div
+              style={{
+                margin: "8px",
+                display: "flex",
+                flexDirection: "column",
+                fontSize: "18px",
+                width: "200px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Temperature</label>
+                <input
+                  name="temperature"
+                  type="checkbox"
+                  checked={followUpDetails.instructions.temperature}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label> Sugar Level</label>
+                <input
+                  name="sugarLevel"
+                  type="checkbox"
+                  checked={followUpDetails.instructions.sugarLevel}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Spo2 Level</label>
+                <input
+                  name="spo2Level"
+                  type="checkbox"
+                  checked={followUpDetails.instructions.spo2Level}
+                  onChange={handleChange}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "8px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Blood Pressure</label>
+                <input
+                  name="bloodPressure"
+                  type="checkbox"
+                  checked={followUpDetails.instructions.bloodPressure}
+                  onChange={handleChange}
                 />
               </div>
             </div>
+
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Interval</span>

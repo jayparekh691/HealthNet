@@ -123,9 +123,27 @@ function ViewNewVisitRecords() {
                       Follow Up ID: {e.followup.f_id}{" "}
                     </label>
                     <br />
-                    <label className="tableHeading">Instructions: </label>
+                    <label style={{ fontSize: "20px" }}>
+                      Readings to be taken:{" "}
+                    </label>
                     <br />
-                    <span>{e.followup.instructions}</span>
+                    <span>
+                      {e.followup.instructions.temperature &&
+                        "Temperature Readings"}
+                    </span>
+                    <br />
+                    <span>
+                      {e.followup.instructions.sugarLevel && "Sugar Level"}
+                    </span>
+                    <br />
+                    <span>
+                      {e.followup.instructions.bloodPressure &&
+                        "Blood Pressure"}
+                    </span>
+                    <br />
+                    <span>
+                      {e.followup.instructions.spo2Level && "spo2Level"}
+                    </span>
                     <br />
                     <label className="tableHeading">Interval: </label>
                     <br />
@@ -175,19 +193,37 @@ function ViewNewVisitRecords() {
                                   </label>
                                   <br />
                                   <span>
-                                    BP: {v.medicalData && v.medicalData.bp}
+                                    Temperature Readings:
+                                    {e.followup.instructions.temperature &&
+                                      v.medicalData.temperature}
                                   </span>
                                   <br />
                                   <span>
-                                    Sugar:
-                                    {v.medicalData && v.medicalData.sugar_level}
+                                    Sugar Level:
+                                    {e.followup.instructions.sugarLevel &&
+                                      v.medicalData.sugarLevel}
                                   </span>
                                   <br />
                                   <span>
-                                    Temperature:
-                                    {v.medicalData && v.medicalData.temperature}
+                                    Blood Pressure:
+                                    {e.followup.instructions.bloodPressure &&
+                                      v.medicalData.bloodPressure}
                                   </span>
                                   <br />
+                                  <span>
+                                    spO2 Level:
+                                    {e.followup.instructions.spo2Level &&
+                                      v.medicalData.spo2Level}
+                                  </span>
+                                  <br />
+                                  {v.medicalData.photo !== null &&
+                                    v.medicalData.photo !== "" && (
+                                      <img
+                                        style={{ height: "200px" }}
+                                        src={v.medicalData.photo}
+                                        alt="medicalphoto"
+                                      />
+                                    )}
                                   {/* TODO: put this button to the right end */}
                                   <span>
                                     <button
