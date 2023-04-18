@@ -87,7 +87,7 @@ public class DoctorController {
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/deactivate-followup/{a_id}")
+    @GetMapping("/deactivate-followup/{a_id}")
     @PreAuthorize("hasAuthority('Doctor')")
     public ResponseEntity deactivateFollowup(@PathVariable("a_id") Integer id){
         Appointment appointment1 = this.doctorServices.deactivateFollowup(id);
