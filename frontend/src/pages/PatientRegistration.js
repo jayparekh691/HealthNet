@@ -72,7 +72,10 @@ function PatientRegistration() {
         const responseData = await addPatientAppointment(pid, doctorID);
         const appointmentData = responseData.data;
         console.log(appointmentData);
-        toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+        toast.success(
+          `Patient Registered and Appointment generated with ID: ${appointmentData.a_id}!`
+        );
+        navigate(-1);
       }
     } catch (error) {
       handleAuthentication(error.response, navigate, "/login");
