@@ -9,8 +9,8 @@ import {
 import "reactjs-popup/dist/index.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Popup from "reactjs-popup";
 import Modal from "../components/Modal";
+import SelectModal from "../components/SelectModal";
 import { useNavigate } from "react-router-dom";
 import { handleAuthentication } from "../utils/authentication";
 
@@ -23,6 +23,7 @@ function SDashboard() {
   const [assigned, setAssigned] = useState(false);
   const [reassignedFieldWorkerID, setReassignedFieldWorkerID] = useState(null);
   const [modalIndex, setModalIndex] = useState(-1);
+  const [newModalIndex, setNewModalIndex] = useState(-1);
 
   useEffect(() => {
     (async function getUnassignedPatientList() {
@@ -65,19 +66,20 @@ function SDashboard() {
 
   async function assign(pid) {
     console.log(pid);
-    // try {
-    const responseData = await assignFieldworker(pid, fieldWorkerID);
-    const data = responseData.data;
-    if (data) {
-      console.log(data);
-      toast.success(`Field Worker has been assigned`);
-    } else {
-      toast.error(`Unable to assign Field Worker`);
+    try {
+      const responseData = await assignFieldworker(pid, fieldWorkerID);
+      const data = responseData.data;
+      if (data) {
+        console.log(data);
+        toast.success(`Field Worker has been assigned`);
+      } else {
+        toast.error(`Unable to assign Field Worker`);
+      }
+      setAssigned((pv) => !assigned);
+      closeSelectModal();
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
     }
-    setAssigned((pv) => !assigned);
-    // } catch (error) {
-    //   handleAuthentication(error.response, navigate, "/login");
-    // }
   }
 
   async function reassign(oldFieldWorkerID) {
@@ -109,6 +111,12 @@ function SDashboard() {
   }
   function closeModal() {
     setModalIndex(-1);
+  }
+  function openSelectModal(index) {
+    setNewModalIndex(index);
+  }
+  function closeSelectModal() {
+    setNewModalIndex(-1);
   }
 
   function dueVisit(event) {
@@ -186,49 +194,33 @@ function SDashboard() {
                   </tr>
                 </tbody>
                 <tbody style={{ flex: "1", overflowY: "auto" }}>
-                  {patientList.map((e, i) => {
+                  {patientList.map((e, id) => {
                     return (
-                      <tr key={i}>
+                      <tr key={id}>
                         <th>{e.name}</th>
                         <th>{e.age}</th>
                         <th>{e.gender}</th>
                         <td>
                           <div>
-                            <Popup
-                              contentStyle={{ width: "20%", height: "35%" }}
-                              trigger={<button> Assign</button>}
-                              position="right center"
+                            <button
+                              onClick={() => {
+                                openSelectModal(id);
+                              }}
                             >
-                              <div style={{ padding: 10 }}>
-                                <label className="popup-heading">
-                                  Select Field Worker
-                                </label>
-                                <div className="popup-select-box">
-                                  <select
-                                    name="name"
-                                    onChange={handleChangeInFieldWorker}
-                                  >
-                                    <option hidden>Select</option>
-                                    {fieldWorkerList.map((e) => {
-                                      return (
-                                        <option value={e.e_id} key={e.e_id}>
-                                          {e.name}
-                                        </option>
-                                      );
-                                    })}
-                                  </select>
-                                </div>
-                                <div>
-                                  <button
-                                    className="button"
-                                    value={i}
-                                    onClick={() => assign(e.pid)}
-                                  >
-                                    ASSIGN
-                                  </button>
-                                </div>
-                              </div>
-                            </Popup>
+                              Assign
+                            </button>
+                            {newModalIndex === id && (
+                              <SelectModal
+                                key={id}
+                                list={fieldWorkerList}
+                                submitButton={assign}
+                                buttonName={"ASSIGN"}
+                                data={e}
+                                closeModal={closeSelectModal}
+                                handleOptionChange={handleChangeInFieldWorker}
+                                heading={"Select Field Worker"}
+                              />
+                            )}
                           </div>
                         </td>
                       </tr>

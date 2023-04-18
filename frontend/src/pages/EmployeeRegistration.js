@@ -52,7 +52,7 @@ function EmployeeRegistration() {
       handleAuthentication(responseData, navigate, "/login");
       if (responseData.data) {
         toast.success(`Employee Added`);
-        // navigate(-1);
+        navigate(-1);
       } else {
         toast.error("Unable to Add Employee");
       }

@@ -5,13 +5,13 @@ import jakarta.persistence.Lob;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 
 @Data
 @Getter
 @Setter
-public class ReceiveVistDataModel {
+public class ReceiveVisitDataModel {
     private int v_id;
     private String bloodPressure;
     private String sugarLevel;

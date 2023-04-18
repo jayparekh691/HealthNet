@@ -78,7 +78,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    public  Integer saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
+    public  Integer saveVisit(ReceiveVisitDataModel receiveVistDataModel) throws IOException {
 
         Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
         if(visit.isVisited()==true)
