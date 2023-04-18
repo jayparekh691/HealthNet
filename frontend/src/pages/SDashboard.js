@@ -13,6 +13,7 @@ import Modal from "../components/Modal";
 import SelectModal from "../components/SelectModal";
 import { useNavigate } from "react-router-dom";
 import { handleAuthentication } from "../utils/authentication";
+import { searchPatient } from "../services/receptionistServices";
 
 function SDashboard() {
   //get unassigned patients
@@ -24,6 +25,9 @@ function SDashboard() {
   const [reassignedFieldWorkerID, setReassignedFieldWorkerID] = useState(null);
   const [modalIndex, setModalIndex] = useState(-1);
   const [newModalIndex, setNewModalIndex] = useState(-1);
+  const [modalIndexOnSearch, setModalIndexOnSearch] = useState(-1);
+  const [searchedPatientList, setSearchedPatientList] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     (async function getUnassignedPatientList() {
@@ -106,6 +110,27 @@ function SDashboard() {
     setAssigned((pv) => !assigned);
     closeModal();
   }
+
+  async function reassignOnSearch(val, pid) {
+    console.log(pid);
+    try {
+      const responseData = await assignFieldworker(
+        pid,
+        reassignedFieldWorkerID
+      );
+      const data = responseData.data;
+      if (data) {
+        console.log(data);
+        toast.success(`Field Worker has been assigned`);
+      } else {
+        toast.error(`Unable to assign Field Worker`);
+      }
+      setAssigned((pv) => !assigned);
+      closeModalOnSearch();
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login");
+    }
+  }
   function openModal(index) {
     setModalIndex(index);
   }
@@ -118,10 +143,37 @@ function SDashboard() {
   function closeSelectModal() {
     setNewModalIndex(-1);
   }
+  function openModalOnSearch(index) {
+    setModalIndexOnSearch(index);
+  }
+  function closeModalOnSearch() {
+    setModalIndexOnSearch(-1);
+  }
 
   function dueVisit(event) {
     event.preventDefault();
     navigate("/visits-due-by-fieldworker");
+  }
+  function searchBarOnChange(event) {
+    event.preventDefault();
+    const { value } = event.target;
+    setSearchValue(value);
+
+    // api call to get list
+    if (value !== "") {
+      (async function getSearchedPatientList() {
+        try {
+          const responseData = await searchPatient(value);
+          let searchedPatientList = responseData.data;
+          if (searchedPatientList) {
+            console.log(searchedPatientList);
+            setSearchedPatientList(searchedPatientList);
+          }
+        } catch (error) {
+          handleAuthentication(error.response, navigate, "/login");
+        }
+      })();
+    }
   }
 
   return (
@@ -147,145 +199,238 @@ function SDashboard() {
         </button>
       </div>
 
-      <div className="paddinPage" style={{ flex: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          padding: "8px",
+          flex: 10,
+          flexDirection: "column",
+        }}
+      >
         <div
-          className="paddingPage"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <label className="tableHeading">
+            Unassigned Patients: {patientList.length}
+          </label>
+          <div className="search">
+            <TextField
+              name="Patient Search"
+              id="outlined-basic"
+              variant="outlined"
+              fullWidth
+              label="Search"
+              onChange={searchBarOnChange}
+              placeholder="Search Patient by name or mobile number"
+              value={searchValue}
+            />
+          </div>
+        </div>
+
+        <div
           style={{
             display: "flex",
             flexDirection: "row",
+            flex: 1,
           }}
         >
           <div
             className="table-wrapper"
             style={{
               flex: 1,
-              margin: "10px",
+              marginRight: "4px",
+              height: "100%",
+              maxHeight: "700px",
+              overflowY: "scroll",
+              margin: "2px",
             }}
           >
-            <div>
-              <label className="tableHeading">
-                Unassigned Patients: {patientList.length}
-              </label>
-            </div>
-            <div>
-              {/* <div style={{ width: "40%", padding: "10px" }}>
-            <TextField
-              name="Search Patient"
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
-              label="Search"
-              // onChange={}
-              // value={searchValue}
-            />
-          </div> */}
-            </div>
-            <div>
-              <table
-                style={{
-                  width: "100%",
-                }}
-              >
-                <tbody>
-                  <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                  </tr>
-                </tbody>
-                <tbody style={{ flex: "1", overflowY: "auto" }}>
-                  {patientList.map((e, id) => {
-                    return (
-                      <tr key={id}>
-                        <th>{e.name}</th>
-                        <th>{e.age}</th>
-                        <th>{e.gender}</th>
-                        <td>
-                          <div>
-                            <button
-                              onClick={() => {
-                                openSelectModal(id);
-                              }}
-                            >
-                              Assign
-                            </button>
-                            {newModalIndex === id && (
-                              <SelectModal
-                                key={id}
-                                list={fieldWorkerList}
-                                submitButton={assign}
-                                buttonName={"ASSIGN"}
-                                data={e}
-                                closeModal={closeSelectModal}
-                                handleOptionChange={handleChangeInFieldWorker}
-                                heading={"Select Field Worker"}
-                              />
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <table
+              style={{
+                width: "100%",
+              }}
+            >
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                </tr>
+              </tbody>
+              <tbody style={{ flex: "1" }}>
+                {patientList.map((e, id) => {
+                  return (
+                    <tr key={id}>
+                      <th>{e.name}</th>
+                      <th>{e.age}</th>
+                      <th>{e.gender}</th>
+                      <td>
+                        <div>
+                          <button
+                            onClick={() => {
+                              openSelectModal(id);
+                            }}
+                          >
+                            Assign
+                          </button>
+                          {newModalIndex === id && (
+                            <SelectModal
+                              key={id}
+                              list={fieldWorkerList}
+                              submitButton={assign}
+                              buttonName={"ASSIGN"}
+                              data={e}
+                              closeModal={closeSelectModal}
+                              handleOptionChange={handleChangeInFieldWorker}
+                              heading={"Select Field Worker"}
+                            />
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
           <div
-            className="table-wrapper"
             style={{
               flex: 1,
-              margin: "10px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <div>
-              <label className="tableHeading">Reassign Field Worker</label>
-            </div>
-            <div className="table-wrapper">
-              <table
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginLeft: "4px",
+              }}
+            >
+              <div
+                className="table-wrapper"
                 style={{
-                  width: "100%",
+                  height: "100%",
+                  maxHeight: "350px",
+                  overflowY: "scroll",
                 }}
               >
-                <tbody>
-                  <tr>
-                    <th>Field Worker Name</th>
-                    <th>Gender</th>
-                  </tr>
-                </tbody>
-                <tbody style={{ flex: "1", overflowY: "auto" }}>
-                  {fieldWorkerList.map((e, i) => {
-                    return (
-                      <tr key={i}>
-                        <th>{e.name}</th>
-                        <th>{e.gender}</th>
-                        <td>
-                          <div>
-                            <button
-                              onClick={() => {
-                                openModal(i);
-                              }}
-                            >
-                              Reassign
-                            </button>
-                            {modalIndex === i && (
-                              <Modal
-                                key={i}
-                                fieldWorkerList={fieldWorkerList}
-                                data={e}
-                                reassign={reassign}
-                                closeModal={closeModal}
-                                handleOptionChange={
-                                  handleChangeInReAssignFieldWorker
-                                }
-                              />
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>Name</th>
+                      <th>Age</th>
+                      <th>Gender</th>
+                    </tr>
+                  </tbody>
+                  <tbody
+                    style={{
+                      flex: "1",
+                    }}
+                  >
+                    {searchedPatientList
+                      .filter((e, i) => {
+                        return e.fieldworker !== null;
+                      })
+                      .map((e, i) => {
+                        return (
+                          <tr key={i}>
+                            <th>{e.name}</th>
+                            <th>{e.age}</th>
+                            <th>{e.gender}</th>
+                            <td>
+                              <div>
+                                <button
+                                  onClick={() => {
+                                    openModalOnSearch(i);
+                                  }}
+                                >
+                                  Reassign Field Worker
+                                </button>
+                                {modalIndexOnSearch === i && (
+                                  <Modal
+                                    key={i}
+                                    fieldWorkerList={fieldWorkerList}
+                                    data={e.fieldworker}
+                                    patientID={e.pid}
+                                    reassign={reassignOnSearch}
+                                    closeModal={closeModalOnSearch}
+                                    handleOptionChange={
+                                      handleChangeInReAssignFieldWorker
+                                    }
+                                  />
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <div style={{ alignSelf: "flex-end" }}>
+                <label className="tableHeading">Reassign Field Worker</label>
+              </div>
+              <div
+                className="table-wrapper"
+                style={{
+                  maxHeight: "300px",
+                  overflowY: "scroll",
+                }}
+              >
+                <table
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <tbody>
+                    <tr>
+                      <th>Field Worker Name</th>
+                      <th>Gender</th>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    {fieldWorkerList.map((e, i) => {
+                      return (
+                        <tr key={i}>
+                          <th>{e.name}</th>
+                          <th>{e.gender}</th>
+                          <td>
+                            <div>
+                              <button
+                                onClick={() => {
+                                  openModal(i);
+                                }}
+                              >
+                                Reassign
+                              </button>
+                              {modalIndex === i && (
+                                <Modal
+                                  key={i}
+                                  fieldWorkerList={fieldWorkerList}
+                                  data={e}
+                                  reassign={reassign}
+                                  closeModal={closeModal}
+                                  handleOptionChange={
+                                    handleChangeInReAssignFieldWorker
+                                  }
+                                />
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

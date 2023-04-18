@@ -154,6 +154,7 @@ function RDashboard() {
           Add Patient
         </button>
       </div>
+
       <div
         style={{
           display: "flex",
