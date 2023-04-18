@@ -32,11 +32,11 @@ export const createTables = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "create table if not exists appointment (address text, age integer, city text, date text, f_id integer, gender text, instruction text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription text, state text, town text, v_id integer primary key not null);",
+        "create table if not exists appointment (address text, age integer, bloodPressure integer,city text, date text, followup_id integer, gender text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription text, spo2Level integer, state text, sugarLevel integer, temperature integer, town text, v_id integer primary key not null);",
         [],
         (_, success) => {
           tx.executeSql(
-            "create table if not exists medicaldata (bloodoxygen text, bp text, date text, f_id integer, isvisited integer, photo text, sugar_level text, temperature text, v_id integer primary key not null);",
+            "create table if not exists medicaldata (spo2Level text, bloodPressure text, date text, f_id integer, isVisited integer, photo text, sugarLevel text, temperature text, v_id integer primary key not null);",
             [],
             (_, sucess) => {
               resolve("created 2 tables");
@@ -59,22 +59,25 @@ export const insertAppointments = (data) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "insert into appointment values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "insert into appointment values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             data.address,
             data.age,
+            data.bloodPressure === false ? 0 : 1,
             data.city,
             data.date,
-            data.f_id,
+            data.followup_id,
             data.gender,
-            data.instruction,
             data.isvisited === false ? 0 : 1,
             data.mobilenumber,
             data.name,
             data.otp,
             data.pincode,
             data.prescription,
+            data.spo2Level === false ? 0 : 1, //
             data.state,
+            data.sugarLevel === false ? 0 : 1, //
+            data.temperature === false ? 0 : 1, //
             data.town,
             data.v_id,
           ]
@@ -99,13 +102,13 @@ export const insertMedicalData = (data) => {
         tx.executeSql(
           "insert into medicaldata values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
-            data.bloodoxygen,
-            data.bp,
+            data.spo2Level,
+            data.bloodPressure,
             data.date,
             data.f_id,
-            data.isvisited,
+            data.isVisited,
             data.photo,
-            data.sugar_level,
+            data.sugarLevel,
             data.temperature,
             data.v_id,
           ]
@@ -200,4 +203,21 @@ export const getMedicalDataFromTable = async (loadData) => {
       console.log("loaded medicaldata list");
     }
   );
+};
+
+export const removeAppointmentsWithPID = async (fids) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from appointment where followup_id in (${fids.join(", ")});`,
+        [],
+        (_, success) => {
+          resolve(`appointment with pid ${fids} removed`);
+        },
+        (_, error) => {
+          reject("error pid removed from table");
+        }
+      );
+    });
+  });
 };
