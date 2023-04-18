@@ -78,21 +78,21 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         Appointment appointment=this.appointmentRepo.findById(id).orElseThrow();
         return appointment;
     }
-    public  Integer saveVisit(ReceiveVistDataModel receiveVistDataModel) throws IOException {
+    public  Integer saveVisit(ReceiveVisitDataModel receiveVistDataModel) throws IOException {
 
         Visit visit = this.visitRepo.findById(receiveVistDataModel.getV_id()).orElseThrow();
         if(visit.isVisited()==true)
             return visit.getV_id();
         visit.setV_id(receiveVistDataModel.getV_id());
         MedicalData medicalData = new MedicalData();
-        medicalData.setBloodPressure(receiveVistDataModel.getBp());
-        medicalData.setSugarLevel(receiveVistDataModel.getSugar_level());
+        medicalData.setBloodPressure(receiveVistDataModel.getBloodPressure());
+        medicalData.setSugarLevel(receiveVistDataModel.getSugarLevel());
         medicalData.setTemperature(receiveVistDataModel.getTemperature());
         medicalData.setPhoto(receiveVistDataModel.getPhoto());
         visit.setVisited(true);
         Employee employee = this.employeeRepo.findById(receiveVistDataModel.getF_id()).orElseThrow();
         visit.setFieldWorker(employee);
-        medicalData.setSpo2Level(receiveVistDataModel.getBloodoxygen());
+        medicalData.setSpo2Level(receiveVistDataModel.getSpo2Level());
         this.medicalRepo.save(medicalData);
         visit.setMedicalData(medicalData);
         visit.setDate(receiveVistDataModel.getDate());

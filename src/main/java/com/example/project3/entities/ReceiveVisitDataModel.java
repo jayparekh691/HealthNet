@@ -5,21 +5,21 @@ import jakarta.persistence.Lob;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 
 @Data
 @Getter
 @Setter
-public class ReceiveVistDataModel {
+public class ReceiveVisitDataModel {
     private int v_id;
-    private String bp;
-    private String sugar_level;
+    private String bloodPressure;
+    private String sugarLevel;
     private String temperature;
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String photo;
-    private String bloodoxygen;
+    private String spo2Level;
     private boolean isVisited;
     private int f_id;
     private Date date;

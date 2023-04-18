@@ -41,8 +41,8 @@ public class FieldWorkerController {
 
     @PostMapping("/save-visit")
 //    @PreAuthorize("hasAuthority('FieldWorker')")
-    public ResponseEntity<Integer> saveVisit(@RequestBody ReceiveVistDataModel receiveVistDataModel) throws IOException {
-        Integer visit=this.fieldWorkerServices.saveVisit(receiveVistDataModel);
+    public ResponseEntity<Integer> saveVisit(@RequestBody ReceiveVisitDataModel receiveVisitDataModel) throws IOException {
+        Integer visit=this.fieldWorkerServices.saveVisit(receiveVisitDataModel);
         return new ResponseEntity<>(visit,HttpStatus.ACCEPTED);
     }
 }

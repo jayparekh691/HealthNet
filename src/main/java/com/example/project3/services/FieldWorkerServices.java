@@ -10,7 +10,7 @@ public interface FieldWorkerServices {
     List<VisitModel> getAppointmentListFW(Integer fid);
     Appointment getVisitDetails(Integer id);
 
-    Integer saveVisit(ReceiveVistDataModel md) throws IOException;
+    Integer saveVisit(ReceiveVisitDataModel md) throws IOException;
 
     List<Integer> currentPatientList(Integer id);
 }
