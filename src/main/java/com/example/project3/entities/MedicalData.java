@@ -16,14 +16,14 @@ public class MedicalData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int m_id;
 
-    private String bp;
-    private String sugar_level;
+    private String bloodPressure;
+    private String sugarLevel;
     private String temperature;
+    private String spo2Level;
     @Lob
     @Column(columnDefinition ="LONGTEXT")
     private String photo;
 
-    private String bloodoxygen;
 
 
 }
