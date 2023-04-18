@@ -5,12 +5,17 @@ import com.example.project3.entities.Appointment;
 import com.example.project3.entities.Patient;
 import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.services.AppointmentServices;
+import com.example.project3.services.pdfService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RestController
@@ -20,6 +25,17 @@ public class AppointmentController {
     @Autowired
     private AppointmentServices appointmentServices;
 
+    //
+    @Autowired
+    private pdfService pdfservice;
+
+    @GetMapping("/pdf/{aid}")
+    public ResponseEntity<InputStreamResource> createPDF(@PathVariable("aid") Integer id){
+        ByteArrayInputStream pdf=pdfservice.createPdf(id);
+        HttpHeaders httpHeaders=new HttpHeaders();
+        httpHeaders.add("Content_Disposition","inline;file=prescription.pdf");
+        return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(pdf));
+    }
 
     @PostMapping("/add-appointment/{p_id}/{d_id}")
     @PreAuthorize("hasAuthority('Receptionist')")
