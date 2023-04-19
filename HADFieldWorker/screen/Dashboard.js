@@ -363,7 +363,7 @@ function Dashboard({ navigation }) {
       await removeReassignedVisitList();
       await getNewAppointments();
       setIsDashboardLoading(false);
-      setSyncDate(updateSyncTime(new Date()));
+      setSyncDate(updateSyncTime());
       return;
     }
 
@@ -432,7 +432,7 @@ function Dashboard({ navigation }) {
         await removeReassignedVisitList();
         await getNewAppointments();
         setIsDashboardLoading(false);
-        setSyncDate(updateSyncTime(new Date()));
+        setSyncDate(updateSyncTime());
       });
     });
   };

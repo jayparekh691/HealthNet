@@ -111,8 +111,7 @@ function LoginScreen() {
         setupDatabase()
           .then((success) => {
             // this is would be the latest sync since we have logged in.
-            setSyncDate(updateSyncTime(new Date()));
-
+            setSyncDate(updateSyncTime());
             navigation.navigate("setuppin");
           })
           .catch((error) => {
