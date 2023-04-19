@@ -1,5 +1,6 @@
 import { MONTHS } from "./Constants";
 import * as SecureStore from "expo-secure-store";
+
 export const getMonth = (i) => MONTHS[i];
 
 export const stringFromObject = (pin) => {
@@ -7,6 +8,24 @@ export const stringFromObject = (pin) => {
     let result = v.concat(ans);
     return result;
   }, "");
+};
+
+export const updateSyncTime = () => {
+  // NOTE: date month year time: hr:mm
+  const today = new Date();
+  const date =
+    today.getDate() +
+    " " +
+    getMonth(2) +
+    " " +
+    today.getFullYear() +
+    " | " +
+    today.getHours() +
+    " : " +
+    (today.getMinutes().toString().length === 1
+      ? "0" + today.getMinutes()
+      : today.getMinutes());
+  return date;
 };
 
 export const save = async (key, value) => {

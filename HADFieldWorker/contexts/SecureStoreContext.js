@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { getValueFor } from "../utils/Util";
+import { getValueFor, updateSyncTime } from "../utils/Util";
 export const SecureStoreContext = React.createContext();
 
 function SecureStoreProvider({ children }) {
   const [pin, setPin] = useState(null);
-  const [syncDate, setSyncDate] = useState(null);
+  const [syncDate, setSyncDate] = useState(updateSyncTime());
 
   return (
     <SecureStoreContext.Provider
