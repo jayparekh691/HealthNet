@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthNavigation from "./AuthNavigation";
 import DashboardNavigation from "./StackNavigator";
 import SecureStoreProvider, {
@@ -12,7 +12,6 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import NetInfo from "@react-native-community/netinfo";
 import AppNavigation from "./StackNavigator";
 import LoadingProvider from "../contexts/LoadingContext";
-import { connection } from "../services/syncServices";
 
 function Navigation() {
   const { pinState } = useContext(SecureStoreContext);
@@ -21,6 +20,7 @@ function Navigation() {
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected, setIsConnected] = isConnectedState;
   const [showLoading, setShowLoading] = useState(true);
+
   useEffect(() => {
     getValueFor("pin")
       .then((result) => {

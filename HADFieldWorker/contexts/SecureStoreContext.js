@@ -4,7 +4,7 @@ export const SecureStoreContext = React.createContext();
 
 function SecureStoreProvider({ children }) {
   const [pin, setPin] = useState(null);
-  const [syncDate, setSyncDate] = useState(updateSyncTime());
+  const [syncDate, setSyncDate] = useState(null);
 
   return (
     <SecureStoreContext.Provider

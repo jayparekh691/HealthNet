@@ -179,7 +179,7 @@ export const getAppointmentFromTable = async (loadData) => {
       console.log("error in loading appointment table");
     },
     (_, success) => {
-      console.log("loaded appointment list");
+      // console.log("loaded appointment list");
     }
   );
 };
