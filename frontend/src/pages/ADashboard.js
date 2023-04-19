@@ -5,6 +5,8 @@ import { getEmployeeList, deleteEmployee } from "../services/adminServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { handleAuthentication } from "../utils/authentication";
+import { logout } from "../utils/authentication";
+import ConfirmModal from "../components/ConfirmModal";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -13,6 +15,8 @@ function ADashboard() {
   const [employeeList, setEmployeeList] = useState([]);
   const [adminId, setAdminId] = useState(null);
   const [deleted, setDeleted] = useState(false);
+  const [modal, setModal] = useState(false);
+
   useEffect(() => {
     setAdminId(state.a_id);
   }, [state.a_id, deleted]);
@@ -88,6 +92,13 @@ function ADashboard() {
     navigate("/supervisor-dashboard");
   }
 
+  function openConfirmModal() {
+    setModal(true);
+  }
+  function closeConfirmModal() {
+    setModal(false);
+  }
+
   return (
     <div
       style={{
@@ -115,6 +126,23 @@ function ADashboard() {
         <button className="button2" onClick={assignFieldWorkers}>
           Assign FieldWorkers
         </button>
+        <button
+          className="button2"
+          onClick={() => {
+            openConfirmModal();
+          }}
+        >
+          Logout
+        </button>
+        {modal && (
+          <ConfirmModal
+            onSubmit={logout}
+            param1={navigate}
+            param2={"/login"}
+            closeModal={closeConfirmModal}
+            submitText={"Logout"}
+          />
+        )}
       </div>
 
       <div className="paddingPage" style={{ flex: 10 }}>
