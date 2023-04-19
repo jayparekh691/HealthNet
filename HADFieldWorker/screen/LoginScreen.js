@@ -44,7 +44,7 @@ function LoginScreen() {
   const [isConnected] = isConnectedState;
 
   const { syncDateState } = useContext(SecureStoreContext);
-  const [syncDate, setSyncDate] = syncDateState;
+  const [_, setSyncDate] = syncDateState;
 
   const navigation = useNavigation();
 
@@ -76,7 +76,6 @@ function LoginScreen() {
               const response = await getAppointmentList(e_id);
               if (response.data) {
                 const appointmentList = response.data;
-                console.log(appointmentList);
                 // create a promise list for each insert table query
                 const promiseList = appointmentList.map((row) => {
                   return insertAppointments(row);
@@ -107,16 +106,17 @@ function LoginScreen() {
     setIsLoginLoading(true);
     if (isConnected) {
       const response = await login(loginData);
-      console.log(response.data);
       if (response.data && response.data.roles === "FieldWorker") {
         await save("user", JSON.stringify(response.data));
         setupDatabase()
           .then((success) => {
             // this is would be the latest sync since we have logged in.
-            setSyncDate(updateSyncTime());
+            setSyncDate(updateSyncTime(new Date()));
+
             navigation.navigate("setuppin");
           })
           .catch((error) => {
+            zz;
             setIsLoginLoading(false);
             Alert.alert(error);
           });

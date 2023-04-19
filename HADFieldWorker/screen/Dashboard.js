@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   Dimensions,
   FlatList,
   Image,
@@ -36,6 +37,7 @@ import { getValueFor, updateSyncTime } from "../utils/Util";
 import { BackHandler } from "react-native";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
+import { AppStateContext } from "../contexts/AppStateContext";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -90,10 +92,18 @@ function Dashboard({ navigation }) {
     return 0;
   };
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        e.preventDefault();
+  const { isBackgroundState } = useContext(AppStateContext);
+  const { isMediaActiveState } = useContext(AppStateContext);
+
+  const [isBackground, setIsBackground] = isBackgroundState;
+  const [isMediaActive, setIsMediaActive] = isMediaActiveState;
+
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const backListener = navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+      if (!isMediaActive) {
         Alert.alert("Do you want to exit?", null, [
           { text: "Stay", style: "cancel" },
           {
@@ -104,9 +114,41 @@ function Dashboard({ navigation }) {
             },
           },
         ]);
-      }),
-    [navigation]
-  );
+      }
+    });
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/active|foreground/) &&
+        nextAppState === "background"
+      ) {
+        if (!isMediaActive) {
+          console.log("app going background");
+          setIsBackground(() => true);
+        }
+        console.log("is background active", isBackground);
+      } else if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        // foreground handler
+        setIsBackground(() => false);
+        console.log("is media active", isMediaActive);
+        console.log("is background active", isBackground);
+        backListener();
+        if (!isMediaActive || !isBackground) {
+          console.log("navigate to lockscreen");
+          navigation.navigate("lockScreen");
+        } else {
+          setIsMediaActive(false);
+        }
+        console.log("app coming to foreground");
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, [isMediaActive, isBackground, appState]);
 
   const loadAppointmentFromDatabase = (appointmentList) => {
     setAppointmentData(appointmentList.sort(sortComparator("date")));
@@ -321,7 +363,7 @@ function Dashboard({ navigation }) {
       await removeReassignedVisitList();
       await getNewAppointments();
       setIsDashboardLoading(false);
-      setSyncDate(updateSyncTime());
+      setSyncDate(updateSyncTime(new Date()));
       return;
     }
 
@@ -390,7 +432,7 @@ function Dashboard({ navigation }) {
         await removeReassignedVisitList();
         await getNewAppointments();
         setIsDashboardLoading(false);
-        setSyncDate(updateSyncTime());
+        setSyncDate(updateSyncTime(new Date()));
       });
     });
   };

@@ -1,5 +1,5 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -29,12 +29,28 @@ function LockScreen() {
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
 
+  const isFocused = useIsFocused();
+
   const [pin, setPin] = useState({
     pinOne: "",
     pinTwo: "",
     pinThree: "",
     pinFour: "",
   });
+
+  useEffect(() => {
+    if (isFocused) {
+      setPin(() => {
+        return {
+          pinOne: "",
+          pinTwo: "",
+          pinThree: "",
+          pinFour: "",
+        };
+      });
+    }
+  }, [isFocused]);
+
   const onPinChange = (name, text) => {
     if (name === "pinOne") {
       setPin((pv) => {
@@ -58,7 +74,6 @@ function LockScreen() {
   const onContinue = async () => {
     // setIsDashboardLoading(true);
     const lockPin = await getValueFor("pin");
-    console.log("lockscreen", lockPin);
     if (stringFromObject(pin) === lockPin) {
       console.log("lockscreen network", isConnected);
       navigation.navigate("drawerNavigator");
