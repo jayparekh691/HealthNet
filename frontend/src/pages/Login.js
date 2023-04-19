@@ -42,6 +42,7 @@ function Login() {
             state: {
               r_id: data.e_id,
             },
+            replace: true,
           });
         } else if (data.roles === "Doctor") {
           toast.success("Welcome!");
@@ -50,6 +51,7 @@ function Login() {
             state: {
               d_id: data.e_id,
             },
+            replace: true,
           });
         } else if (data.roles === "Admin") {
           toast.success("Welcome!");
@@ -57,18 +59,16 @@ function Login() {
             state: {
               a_id: data.e_id,
             },
+            replace: true,
           });
         } else {
-          
         }
       } else {
         // incorrect email or password
-       
       }
     } catch (error) {
       toast.error("Incorrect email or password");
       handleAuthentication(error.response, navigate, "/login");
-      
     }
   }
 

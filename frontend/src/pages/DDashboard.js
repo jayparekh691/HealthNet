@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
+import { logout } from "../utils/authentication";
+import ConfirmModal from "../components/ConfirmModal";
 
 function DDashboard() {
   const state = useLocation().state;
   const navigate = useNavigate();
   const [doctorID, setDoctorID] = useState(null);
   const [patientList, setPatientList] = useState([]);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     setDoctorID(state.d_id);
@@ -75,6 +78,12 @@ function DDashboard() {
       },
     });
   }
+  function openConfirmModal() {
+    setModal(true);
+  }
+  function closeConfirmModal() {
+    setModal(false);
+  }
 
   return (
     <div
@@ -103,6 +112,23 @@ function DDashboard() {
         <button className="button2" onClick={viewNewVisitRecords}>
           New Visit Records
         </button>
+        <button
+          className="button2"
+          onClick={() => {
+            openConfirmModal();
+          }}
+        >
+          Logout
+        </button>
+        {modal && (
+          <ConfirmModal
+            onSubmit={logout}
+            param1={navigate}
+            param2={"/login"}
+            closeModal={closeConfirmModal}
+            submitText={"Logout"}
+          />
+        )}
       </div>
 
       <div

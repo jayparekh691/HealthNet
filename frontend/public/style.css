@@ -224,6 +224,13 @@ button {
   text-align: start;
 }
 
+.button3 {
+  border-radius: 8px;
+  background: linear-gradient(135deg, #516395, #798cbe);
+  margin: 8px;
+  align-self: stretch;
+  text-align: start;
+}
 .tableHeading {
   font-size: 24px;
   font-weight: 600;
@@ -366,4 +373,16 @@ ul li {
     opacity: 0.5;
     transform: scale(0.5);
   }
+}
+.confirmmodal-container {
+  position: fixed;
+  max-width: 30rem;
+  width: 70%;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 1rem;
+  border-radius: 0.5rem;
+  background: rgb(255, 252, 252);
 }
