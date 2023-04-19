@@ -13,10 +13,12 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { login } from "../services/loginServices";
-import { getValueFor, removeItem, save } from "../utils/Util";
+import { getValueFor, removeItem, save, updateSyncTime } from "../utils/Util";
 import { log } from "react-native-reanimated";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
-import { SecureStoreContext } from "../contexts/SecureStoreContext";
+import SecureStoreProvider, {
+  SecureStoreContext,
+} from "../contexts/SecureStoreContext";
 import {
   cleanDatabase,
   createTables,
@@ -40,6 +42,10 @@ function LoginScreen() {
 
   const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
   const [isConnected] = isConnectedState;
+
+  const { syncDateState } = useContext(SecureStoreContext);
+  const [syncDate, setSyncDate] = syncDateState;
+
   const navigation = useNavigation();
 
   const onInputChange = (name, text) => {
@@ -106,6 +112,8 @@ function LoginScreen() {
         await save("user", JSON.stringify(response.data));
         setupDatabase()
           .then((success) => {
+            // this is would be the latest sync since we have logged in.
+            setSyncDate(updateSyncTime());
             navigation.navigate("setuppin");
           })
           .catch((error) => {

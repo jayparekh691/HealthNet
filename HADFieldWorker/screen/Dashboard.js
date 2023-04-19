@@ -32,8 +32,10 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import { getValueFor } from "../utils/Util";
+import { getValueFor, updateSyncTime } from "../utils/Util";
 import { BackHandler } from "react-native";
+import { SecureStoreContext } from "../contexts/SecureStoreContext";
+import { Ionicons } from "@expo/vector-icons";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -52,6 +54,9 @@ function Dashboard({ navigation }) {
 
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
+
+  const { syncDateState } = useContext(SecureStoreContext);
+  const [syncDate, setSyncDate] = syncDateState;
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -120,7 +125,36 @@ function Dashboard({ navigation }) {
             alignItems: "center",
           }}
         >
-          <Text>Last Sync</Text>
+          <View
+            style={{
+              alignItems: "flex-end",
+              marginRight: 10,
+              backgroundColor: COLOR.lightGray,
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              borderRadius: 8,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "200",
+                letterSpacing: 0.6,
+              }}
+            >
+              {" "}
+              LAST SYNC
+            </Text>
+            <Text
+              style={{
+                fontWeight: "500",
+                letterSpacing: 0.6,
+                textAlign: "center",
+              }}
+            >
+              {syncDate}
+            </Text>
+          </View>
+
           <MaterialCommunityIcons
             style={{
               marginRight: 12,
@@ -138,7 +172,7 @@ function Dashboard({ navigation }) {
         fontSize: width / 24,
       },
     });
-  }, [navigation, isConnected]);
+  }, [navigation, isConnected, syncDate]);
 
   const uploadImageToFirebase = (image, visitId) => {
     const date = new Date().toLocaleTimeString();
@@ -286,6 +320,8 @@ function Dashboard({ navigation }) {
       console.log("no medical data");
       await removeReassignedVisitList();
       await getNewAppointments();
+      setIsDashboardLoading(false);
+      setSyncDate(updateSyncTime());
       return;
     }
 
@@ -354,6 +390,7 @@ function Dashboard({ navigation }) {
         await removeReassignedVisitList();
         await getNewAppointments();
         setIsDashboardLoading(false);
+        setSyncDate(updateSyncTime());
       });
     });
   };
@@ -443,6 +480,21 @@ function Dashboard({ navigation }) {
             placeholderTextColor={COLOR.primaryColor}
             onChangeText={onFilterChange}
           />
+
+          {filter && (
+            <Ionicons
+              style={{
+                alignSelf: "center",
+                padding: 8,
+              }}
+              name="close-circle-sharp"
+              size={width / 20}
+              color={COLOR.primaryColor}
+              onPress={() => {
+                setFilter("");
+              }}
+            />
+          )}
         </View>
       </View>
       <View
@@ -504,8 +556,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: width / 22,
     color: COLOR.primaryColor,
-    paddingRight: 14,
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
 });
 
