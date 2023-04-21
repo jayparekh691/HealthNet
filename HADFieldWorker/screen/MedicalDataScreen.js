@@ -20,7 +20,7 @@ import Divider from "../components/Divider";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
-import { getValueFor } from "../utils/Util";
+import { getValueFor } from "../utils/util";
 import {
   insertMedicalData,
   removeRecordFromAppointmentTable,
