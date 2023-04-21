@@ -2,7 +2,7 @@ import axios from "axios";
 import { IP_ADDRESS } from "../utils/Constants";
 import NetInfo from "@react-native-community/netinfo";
 import { log } from "react-native-reanimated";
-import { getValueFor } from "../utils/Util";
+import { getValueFor } from "../utils/util";
 
 const getAppointmentListAPI = (id) =>
   IP_ADDRESS + `/api/fieldworker/get-appointmentList-fieldWorker/${id}`;

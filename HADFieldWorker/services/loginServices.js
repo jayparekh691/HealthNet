@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IP_ADDRESS } from "../utils/Constants";
-import { save } from "../utils/Util";
+import { save } from "../utils/util";
 const loginAPI = IP_ADDRESS + "/api/employee/login";
 
 async function login(loginData) {

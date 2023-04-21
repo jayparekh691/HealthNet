@@ -33,7 +33,7 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import { getValueFor, updateSyncTime } from "../utils/Util";
+import { getValueFor, updateSyncTime } from "../utils/util";
 import { BackHandler } from "react-native";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -57,8 +57,19 @@ function Dashboard({ navigation }) {
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
 
-  const { syncDateState } = useContext(SecureStoreContext);
-  const [syncDate, setSyncDate] = syncDateState;
+  const [syncDate, setSyncDate] = useState(null);
+
+  const updateTimeStamp = async () => {
+    const date = await getValueFor("synctimestamp");
+    console.log("date in dashboard: ", date);
+    setSyncDate(date);
+  };
+
+  useEffect(() => {
+    (async () => {
+      await updateTimeStamp();
+    })();
+  }, []);
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -101,21 +112,19 @@ function Dashboard({ navigation }) {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    const backListener = navigation.addListener("beforeRemove", (e) => {
-      e.preventDefault();
-      if (!isMediaActive) {
-        Alert.alert("Do you want to exit?", null, [
-          { text: "Stay", style: "cancel" },
-          {
-            text: "Leave",
-            style: "destructive",
-            onPress: () => {
-              BackHandler.exitApp();
-            },
-          },
-        ]);
-      }
-    });
+    // const backListener = navigation.addListener("beforeRemove", (e) => {
+    //   e.preventDefault();
+    //   Alert.alert("Do you want to exit?", null, [
+    //     { text: "Stay", style: "cancel" },
+    //     {
+    //       text: "Leave",
+    //       style: "destructive",
+    //       onPress: () => {
+    //         BackHandler.exitApp();
+    //       },
+    //     },
+    //   ]);
+    // });
 
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
@@ -124,22 +133,18 @@ function Dashboard({ navigation }) {
       ) {
         if (!isMediaActive) {
           console.log("app going background");
-          setIsBackground(() => true);
         }
-        console.log("is background active", isBackground);
       } else if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        // foreground handler
-        setIsBackground(() => false);
         console.log("is media active", isMediaActive);
-        console.log("is background active", isBackground);
-        backListener();
-        if (!isMediaActive || !isBackground) {
+        // backListener();
+        if (!isMediaActive) {
           console.log("navigate to lockscreen");
           navigation.navigate("lockScreen");
         } else {
+          console.log("setting is media active to false");
           setIsMediaActive(false);
         }
         console.log("app coming to foreground");
@@ -362,8 +367,10 @@ function Dashboard({ navigation }) {
       console.log("no medical data");
       await removeReassignedVisitList();
       await getNewAppointments();
+      await updateSyncTime(new Date());
+      await updateTimeStamp();
       setIsDashboardLoading(false);
-      setSyncDate(updateSyncTime());
+
       return;
     }
 
@@ -431,8 +438,9 @@ function Dashboard({ navigation }) {
         });
         await removeReassignedVisitList();
         await getNewAppointments();
+        await updateSyncTime(new Date());
+        await updateTimeStamp();
         setIsDashboardLoading(false);
-        setSyncDate(updateSyncTime());
       });
     });
   };

@@ -12,7 +12,7 @@ import CustomButton from "../components/CustomButton";
 import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
-import { getValueFor, removeItem, stringFromObject } from "../utils/Util";
+import { getValueFor, removeItem, stringFromObject } from "../utils/util";
 import { TouchableOpacity } from "react-native";
 import PinInputField from "../components/PinInputField";
 import { LoadingContext } from "../contexts/LoadingContext";

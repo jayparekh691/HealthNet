@@ -13,7 +13,7 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { login } from "../services/loginServices";
-import { getValueFor, removeItem, save, updateSyncTime } from "../utils/Util";
+import { getValueFor, removeItem, save, updateSyncTime } from "../utils/util";
 import { log } from "react-native-reanimated";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import SecureStoreProvider, {
@@ -42,9 +42,6 @@ function LoginScreen() {
 
   const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
   const [isConnected] = isConnectedState;
-
-  const { syncDateState } = useContext(SecureStoreContext);
-  const [_, setSyncDate] = syncDateState;
 
   const navigation = useNavigation();
 
@@ -106,12 +103,15 @@ function LoginScreen() {
     setIsLoginLoading(true);
     if (isConnected) {
       const response = await login(loginData);
+      console.log(response.data);
       if (response.data && response.data.roles === "FieldWorker") {
         await save("user", JSON.stringify(response.data));
         setupDatabase()
-          .then((success) => {
+          .then(async (success) => {
             // this is would be the latest sync since we have logged in.
-            setSyncDate(updateSyncTime());
+            console.log("before updated time");
+            await updateSyncTime(new Date());
+            console.log("updated time");
             navigation.navigate("setuppin");
           })
           .catch((error) => {

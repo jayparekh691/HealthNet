@@ -12,7 +12,7 @@ import PinTextBox from "../components/PinTextBox";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { log, set } from "react-native-reanimated";
-import Util, { getValueFor, save, stringFromObject } from "../utils/Util";
+import Util, { getValueFor, save, stringFromObject } from "../utils/util";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
 import PinInputField from "../components/PinInputField";

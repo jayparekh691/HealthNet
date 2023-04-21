@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, Text, TouchableWithoutFeedback, View } from "react-native";
 import { COLOR, RANDOM_COLOR } from "../utils/Color";
-import { getMonth } from "../utils/Util";
+import { getMonth } from "../utils/util";
 import { makeCall } from "../services/dashboardServices";
 import ContactCard from "./ContactCard";
 
