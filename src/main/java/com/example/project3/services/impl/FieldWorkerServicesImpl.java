@@ -63,7 +63,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setDate(visit.getDate());
                 visitModel.setOtp(visit.getOtp());
                 visitModel.setPrescription(pdfservice.createPdf(appointment.getA_id()));
-                visitModel.setF_id(appointment.getFollowup().getF_id());
+                visitModel.setFollowup_id(appointment.getFollowup().getF_id());
                 visitModelList.add(visitModel);
             }
         }
