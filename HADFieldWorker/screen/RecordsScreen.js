@@ -61,17 +61,17 @@ function RecordsScreen({ navigation }) {
             >
               <Text>
                 BP:{"\t\t\t\t\t\t\t\t\t\t\t"}
-                {itemData.item.bp}
+                {itemData.item.bloodPressure}
               </Text>
               <Text>
                 SUGAR LEVEL:{"\t\t"}
-                {itemData.item.sugar_level}
+                {itemData.item.sugarLevel}
               </Text>
               <Text>
                 TEMPERATURE:{"\t"} {itemData.item.temperature}
               </Text>
               <Text>
-                SpO2:{"\t"} {itemData.item.bloodoxygen}
+                SpO2:{"\t"} {itemData.item.spo2Level}
               </Text>
             </View>
           );

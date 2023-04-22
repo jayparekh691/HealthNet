@@ -48,7 +48,7 @@ function CustomTextInput({
           style={{
             marginLeft: 8,
           }}
-          name="eye"
+          name={!isSecure ? "eye" : "eye-off"}
           size={width / 24}
           color={COLOR.gray}
           onPress={() => {

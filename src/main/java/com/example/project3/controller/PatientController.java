@@ -47,7 +47,7 @@ public class PatientController {
     }
 
     @GetMapping("/search-patient-receptionist/{nORm}")
-    @PreAuthorize("hasAuthority('Receptionist')")
+    @PreAuthorize("hasAnyAuthority('Receptionist','Admin')")
     public ResponseEntity<List<Patient>> allPatientByNameOrMob(@PathVariable("nORm") String id){
         List<Patient> patient1 = this.patientServices.searchPatient(id);
         return new ResponseEntity<List<Patient>>(patient1,HttpStatus.ACCEPTED);

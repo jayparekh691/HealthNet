@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
+  Text,
   TextInput,
   View,
 } from "react-native";
@@ -16,17 +18,26 @@ import {
   getAppointmentFromTable,
   getMedicalDataFromTable,
   insertAppointments,
+  removeAppointmentsWithPID,
   removeRecordFromMedicalDataTable,
 } from "../services/databaseServices";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
-import { getAppointmentList, sendMedicalData } from "../services/syncServices";
+import { useIsFocused, useRoute } from "@react-navigation/native";
+import {
+  getAppointmentList,
+  removeVisitList,
+  sendMedicalData,
+} from "../services/syncServices";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import { getValueFor } from "../utils/Util";
+import { getValueFor, updateSyncTime } from "../utils/util";
+import { BackHandler } from "react-native";
+import { SecureStoreContext } from "../contexts/SecureStoreContext";
+import { Ionicons } from "@expo/vector-icons";
+import { AppStateContext } from "../contexts/AppStateContext";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -44,7 +55,21 @@ function Dashboard({ navigation }) {
   const [isDashboardLoading, setIsDashboardLoading] = isDashboardLoadingState;
 
   const { isConnectedState } = useContext(ConnectivityContext);
-  const [isConnected, setIsConnected] = isConnectedState;
+  const [isConnected] = isConnectedState;
+
+  const [syncDate, setSyncDate] = useState(null);
+
+  const updateTimeStamp = async () => {
+    const date = await getValueFor("synctimestamp");
+    console.log("date in dashboard: ", date);
+    setSyncDate(date);
+  };
+
+  useEffect(() => {
+    (async () => {
+      await updateTimeStamp();
+    })();
+  }, []);
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -65,28 +90,136 @@ function Dashboard({ navigation }) {
     setIsAppointmentModalActive(false);
   };
 
-  const onShowOTP = () => {
-    setIsAppointmentModalActive(false);
+  // const onShowOTP = () => {
+  //   setIsAppointmentModalActive(false);
+  // };
+
+  const sortComparator = (prop) => (a, b) => {
+    if (a[prop] > b[prop]) {
+      return 1;
+    } else if (a[prop] < b[prop]) {
+      return -1;
+    }
+    return 0;
   };
 
+  const { isBackgroundState } = useContext(AppStateContext);
+  const { isMediaActiveState } = useContext(AppStateContext);
+
+  const [isBackground, setIsBackground] = isBackgroundState;
+  const [isMediaActive, setIsMediaActive] = isMediaActiveState;
+
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    // const backListener = navigation.addListener("beforeRemove", (e) => {
+    //   e.preventDefault();
+    //   Alert.alert("Do you want to exit?", null, [
+    //     { text: "Stay", style: "cancel" },
+    //     {
+    //       text: "Leave",
+    //       style: "destructive",
+    //       onPress: () => {
+    //         BackHandler.exitApp();
+    //       },
+    //     },
+    //   ]);
+    // });
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/active|foreground/) &&
+        nextAppState === "background"
+      ) {
+        if (!isMediaActive) {
+          console.log("app going background");
+        }
+      } else if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        console.log("is media active", isMediaActive);
+        // backListener();
+        if (!isMediaActive) {
+          console.log("navigate to lockscreen");
+          navigation.navigate("lockScreen");
+        } else {
+          console.log("setting is media active to false");
+          setIsMediaActive(false);
+        }
+        console.log("app coming to foreground");
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, [isMediaActive, isBackground, appState]);
+
+  const loadAppointmentFromDatabase = (appointmentList) => {
+    setAppointmentData(appointmentList.sort(sortComparator("date")));
+    setIsDashboardLoading(false);
+  };
+
+  // NOTE: sync button is not part of dashboard screen, but it is part of drawer header
+  // so changing state of dashboard doesn't affect the state of syncDB function
+  // to update the syncDB state along with dashboard, mention the states in the useEffect [...]
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <MaterialCommunityIcons
+        <View
           style={{
-            marginRight: 12,
+            flexDirection: "row",
+            alignItems: "center",
           }}
-          name="sync"
-          color={COLOR.primaryColor}
-          size={28}
-          onPress={syncDB}
-        />
+        >
+          <View
+            style={{
+              alignItems: "flex-end",
+              marginRight: 10,
+              backgroundColor: COLOR.lightGray,
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              borderRadius: 8,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "200",
+                letterSpacing: 0.6,
+              }}
+            >
+              {" "}
+              LAST SYNC
+            </Text>
+            <Text
+              style={{
+                fontWeight: "500",
+                letterSpacing: 0.6,
+                textAlign: "center",
+              }}
+            >
+              {syncDate}
+            </Text>
+          </View>
+
+          <MaterialCommunityIcons
+            style={{
+              marginRight: 12,
+            }}
+            name="sync"
+            color={COLOR.primaryColor}
+            size={28}
+            onPress={() => {
+              syncDB();
+            }}
+          />
+        </View>
       ),
       headerTitleStyle: {
         fontSize: width / 24,
       },
     });
-  }, [navigation]);
+  }, [navigation, isConnected, syncDate]);
 
   const uploadImageToFirebase = (image, visitId) => {
     const date = new Date().toLocaleTimeString();
@@ -188,10 +321,56 @@ function Dashboard({ navigation }) {
     });
   };
 
+  const removeReassignedVisitList = async () => {
+    const e_id = JSON.parse(await getValueFor("user")).e_id;
+    await removeVisitList(e_id).then((response) => {
+      if (response.data) {
+        // new pid list
+        const newPIDs = response.data;
+        console.log("new PID: ", newPIDs);
+
+        getAppointmentFromTable((appointmentList) => {
+          // local pid list
+          let localFids = [];
+          appointmentList.forEach((appointment) => {
+            localFids.push(appointment.followup_id);
+          });
+          console.log("local fids: ", localFids);
+
+          // expired pid list
+          let removeFids = localFids.filter((fid) => {
+            return !newPIDs.includes(fid);
+          });
+          console.log("remove fids: ", removeFids);
+
+          removeAppointmentsWithPID(removeFids)
+            .then((success) => {
+              console.log(success);
+              setIsDashboardLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setIsDashboardLoading(false);
+            });
+        }).catch((error) => {
+          console.log("remove reassigned: get appointment from table error!");
+        });
+      } else {
+        setIsDashboardLoading(false);
+        console.log("remove reassigned visit list api error");
+      }
+    });
+  };
+
   const loadMedicalData = async (medicalData) => {
     if (medicalData.length === 0) {
       console.log("no medical data");
-      getNewAppointments();
+      await removeReassignedVisitList();
+      await getNewAppointments();
+      await updateSyncTime(new Date());
+      await updateTimeStamp();
+      setIsDashboardLoading(false);
+
       return;
     }
 
@@ -257,7 +436,10 @@ function Dashboard({ navigation }) {
         value.forEach((e) => {
           console.log(e.value, e.status);
         });
-        getNewAppointments();
+        await removeReassignedVisitList();
+        await getNewAppointments();
+        await updateSyncTime(new Date());
+        await updateTimeStamp();
         setIsDashboardLoading(false);
       });
     });
@@ -265,15 +447,17 @@ function Dashboard({ navigation }) {
 
   const syncDB = async () => {
     // send medical data
-    getMedicalDataFromTable(loadMedicalData).catch((error) => {
-      console.log("get medical data from table error: ", error);
+    console.log("dashboard network: ", isConnected);
+    setIsDashboardLoading(true);
+    if (isConnected) {
+      getMedicalDataFromTable(loadMedicalData).catch((error) => {
+        console.log("get medical data from table error: ", error);
+        setIsDashboardLoading(false);
+      });
+    } else {
+      Alert.alert("No Internet Connection!");
       setIsDashboardLoading(false);
-    });
-  };
-
-  const loadAppointmentFromDatabase = (appointmentList) => {
-    setAppointmentData(appointmentList);
-    setIsDashboardLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -341,11 +525,26 @@ function Dashboard({ navigation }) {
             value={filter}
             style={styles.textinput}
             keyboardType="default"
-            selectionColor={COLOR.primaryColor}
+            selectionColor={COLOR.primaryColorLight}
             placeholder="Search"
             placeholderTextColor={COLOR.primaryColor}
             onChangeText={onFilterChange}
           />
+
+          {filter && (
+            <Ionicons
+              style={{
+                alignSelf: "center",
+                padding: 8,
+              }}
+              name="close-circle-sharp"
+              size={width / 20}
+              color={COLOR.primaryColor}
+              onPress={() => {
+                setFilter("");
+              }}
+            />
+          )}
         </View>
       </View>
       <View
@@ -370,7 +569,10 @@ function Dashboard({ navigation }) {
             }}
             keyExtractor={(itemData, i) => itemData.v_id}
             data={appointmentData.filter((v) => {
-              return new Date(v.date) >= today;
+              return (
+                new Date(v.date) >= today &&
+                v.name.toLowerCase().includes(filter.toLowerCase())
+              );
             })}
             renderItem={(itemData) => {
               return (
@@ -404,8 +606,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: width / 22,
     color: COLOR.primaryColor,
-    paddingRight: 14,
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
 });
 

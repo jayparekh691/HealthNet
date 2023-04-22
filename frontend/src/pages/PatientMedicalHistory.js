@@ -23,18 +23,17 @@ function PatientMedicalHistory() {
   }, [state.patientHistory, state.patientObj, deactivate]);
 
   async function onDeactivateFollowUp(appointmentID) {
-    // try{
-    const responseData = await deactivateFollowUp(appointmentID);
-    if (responseData) {
-      console.log("deactivated");
-      toast.success("Follow Up has been deactivated!");
-      setDeactivated((pv) => !deactivate);
-    } else {
+    try {
+      const responseData = await deactivateFollowUp(appointmentID);
+      if (responseData) {
+        console.log("deactivated");
+        toast.success("Follow Up has been deactivated!");
+        setDeactivated((pv) => !deactivate);
+      }
+    } catch (error) {
       toast.error("Sorry, Please try again");
+      handleAuthentication(error.response, navigate, "/login");
     }
-    // } catch (error) {
-    //   handleAuthentication(error.response, navigate, "/login");
-    // }
   }
 
   return (
@@ -131,9 +130,32 @@ function PatientMedicalHistory() {
                     <AccordionDetails>
                       {
                         <Typography>
-                          <label className="tableHeading">Instructions: </label>
+                          {/* <label className="tableHeading">Instructions: </label>
                           <br />
                           <span>{e.followup.instructions}</span>
+                          <br /> */}
+                          <label className="tableHeading">
+                            Readings to be taken:{" "}
+                          </label>
+                          <br />
+                          <span>
+                            {e.followup.instructions.temperature &&
+                              "Temperature Readings"}
+                          </span>
+                          <br />
+                          <span>
+                            {e.followup.instructions.sugarLevel &&
+                              "Sugar Level"}
+                          </span>
+                          <br />
+                          <span>
+                            {e.followup.instructions.bloodPressure &&
+                              "Blood Pressure"}
+                          </span>
+                          <br />
+                          <span>
+                            {e.followup.instructions.spo2Level && "spo2Level"}
+                          </span>
                           <br />
                           <label className="tableHeading">Interval: </label>
                           <br />
@@ -179,18 +201,40 @@ function PatientMedicalHistory() {
                                       Medical Data:
                                     </label>
                                     <br />
-                                    <span>BP: {v.medicalData.bp}</span>
+                                    <span>
+                                      Temperature:
+                                      {e.followup.instructions.temperature &&
+                                        v.medicalData.temperature}
+                                    </span>
                                     <br />
                                     <span>
                                       Sugar:
-                                      {v.medicalData.sugar_level}
+                                      {e.followup.instructions.sugarLevel &&
+                                        v.medicalData.sugarLevel}
                                     </span>
                                     <br />
                                     <span>
-                                      Temperature:
-                                      {v.medicalData &&
-                                        v.medicalData.temperature}
+                                      BP:
+                                      {e.followup.instructions.bloodPressure &&
+                                        v.medicalData.bloodPressure}
                                     </span>
+                                    <br />
+                                    <span>
+                                      spO2Level:
+                                      {e.followup.instructions.spo2Level &&
+                                        v.medicalData.spo2Level}
+                                    </span>
+                                    <br />
+
+                                    {v.medicalData.photo !== null &&
+                                      v.medicalData.photo !== "" && (
+                                        <img
+                                          style={{ height: "200px" }}
+                                          src={v.medicalData.photo}
+                                          alt="medicalphoto"
+                                        />
+                                      )}
+
                                     <br />
                                   </Typography>
                                 }

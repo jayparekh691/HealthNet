@@ -120,7 +120,7 @@ function VisitsDueByFieldWorker() {
                 <th>Due Date</th>
               </tr>
             </tbody>
-            <tbody style={{}}>
+            <tbody>
               {dueVisitList.map((v, i) => {
                 return (
                   <tr key={i}>

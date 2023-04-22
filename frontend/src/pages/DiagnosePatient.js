@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   DiagnoseContext,
-  diagnoseData,
   resetDiagnoseData,
 } from "../contexts/DiagnoseContext";
 import {
@@ -18,6 +17,7 @@ import {
 } from "../contexts/WriteFollowUpContext";
 import { LoadingIndicator } from "../components/LoadingIndicator";
 import { handleAuthentication } from "../utils/authentication";
+import ConfirmModal from "../components/ConfirmModal";
 
 function DiagnosePatient() {
   const state = useLocation().state;
@@ -30,6 +30,7 @@ function DiagnosePatient() {
   const [followUpDetails, setFollowUpDetails] =
     useContext(WriteFollowUpContext);
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     setAppointmentID(state.a_id);
@@ -73,8 +74,7 @@ function DiagnosePatient() {
     navigate("/write-follow-up");
   }
 
-  async function onSubmit(event) {
-    event.preventDefault();
+  async function onSubmit() {
     console.log(writtenData);
     try {
       const responseData = await writeDiagnosis(appointmentID, writtenData);
@@ -118,13 +118,27 @@ function DiagnosePatient() {
       handleAuthentication(error.response, navigate, "/login");
     }
   }
+  function openConfirmModal(event) {
+    event.preventDefault();
+    setModal(true);
+  }
+  function closeConfirmModal() {
+    setModal(false);
+  }
 
   return (
     <div className="formPage">
       <div className="container">
         <div className="title">Diagnosis and Prescription</div>
         <div className="content">
-          <form onSubmit={onSubmit}>
+          <form onSubmit={openConfirmModal}>
+            {modal && (
+              <ConfirmModal
+                onSubmit={onSubmit}
+                closeModal={closeConfirmModal}
+                submitText={"Submit"}
+              />
+            )}
             <div className="user-details">
               <div className="input-box">
                 <span className="details">Diagnosis</span>

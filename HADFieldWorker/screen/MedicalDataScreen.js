@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -10,20 +10,28 @@ import {
 } from "react-native";
 import { Styles } from "../utils/Styles";
 import { COLOR } from "../utils/Color";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Divider from "../components/Divider";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
-import { getValueFor } from "../utils/Util";
+import { getValueFor } from "../utils/util";
 import {
   insertMedicalData,
   removeRecordFromAppointmentTable,
 } from "../services/databaseServices";
+import { AppStateContext } from "../contexts/AppStateContext";
 const { width, height } = Dimensions.get("screen");
 
 function MedicalDataScreen() {
+  const { isMediaActiveState } = useContext(AppStateContext);
+  const [isMediaActive, setIsMediaActive] = isMediaActiveState;
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
 
   const data = useRoute().params;
@@ -35,13 +43,13 @@ function MedicalDataScreen() {
   });
 
   const [medicalData, setMedicalData] = useState({
-    bloodoxygen: "",
-    bp: "",
+    spo2Level: "",
+    bloodPressure: "",
     date: today.split("T")[0],
     f_id: null,
     isVisited: false,
     photo: null,
-    sugar_level: "",
+    sugarLevel: "",
     temperature: "",
     v_id: data.v_id,
   });
@@ -54,6 +62,12 @@ function MedicalDataScreen() {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setImagePersmission(status.status === "granted");
     })();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log("going back to dashboard screen");
+    };
   }, []);
 
   const onInputChange = (name, text) => {
@@ -77,19 +91,17 @@ function MedicalDataScreen() {
   const isAllValueFilled = (medicalData) => {
     return (
       medicalData.f_id !== null &&
-      bpData.sys !== "" &&
-      bpData.dia !== "" &&
-      medicalData.sugar_level !== "" &&
-      medicalData.temperature !== "" &&
-      medicalData.bloodoxygen !== ""
-      // NOTE: allowing photo as optional
-      // medicalData.photo !== ""
+      (data.sugarLevel === 1 ? medicalData.sugar_level !== "" : true) &&
+      (data.temperature === 1 ? medicalData.temperature !== "" : true) &&
+      (data.spo2Level === 1 ? medicalData.bloodoxygen !== "" : true) &&
+      (data.bloodPressure === 1 ? bpData.sys !== "" && bpData.dia !== "" : true)
     );
   };
 
   const onSubmitData = async () => {
     const f_id = JSON.parse(await getValueFor("user")).e_id;
-    medicalData.bp = bpData.sys + "/" + bpData.dia;
+    medicalData.bloodPressure =
+      data.bloodPressure === 1 ? bpData.sys + "/" + bpData.dia : "";
     medicalData.f_id = f_id;
     if (!isAllValueFilled(medicalData)) {
       Alert.alert("Please fill all data!");
@@ -118,6 +130,9 @@ function MedicalDataScreen() {
   };
 
   const openCamera = async () => {
+    setIsMediaActive(() => {
+      return true;
+    });
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -132,6 +147,9 @@ function MedicalDataScreen() {
   };
 
   const uploadImage = async () => {
+    setIsMediaActive(() => {
+      return true;
+    });
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -263,7 +281,8 @@ function MedicalDataScreen() {
           </View>
         </View>
         <Divider />
-        <View
+        {/*  TODO: instruction to be added later */}
+        {/* <View
           style={{
             minheight: height / 12,
             maxHeight: height / 4,
@@ -285,7 +304,7 @@ function MedicalDataScreen() {
           >
             {data.instruction}
           </Text>
-        </View>
+        </View>  */}
         <Divider />
         <View style={{ marginVertical: 8 }}>
           <View
@@ -295,6 +314,7 @@ function MedicalDataScreen() {
           >
             <View
               style={{
+                opacity: data.bloodPressure === 1 ? 1 : 0.3,
                 flex: 5,
                 height: 148,
                 margin: 4,
@@ -323,44 +343,47 @@ function MedicalDataScreen() {
                   (mmHg)
                 </Text>
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <TextInput
-                  style={styles.textinput}
-                  keyboardType="numeric"
-                  selectionColor={COLOR.white}
-                  placeholder="SYS"
-                  placeholderTextColor={COLOR.gray}
-                  onChangeText={(text) => {
-                    onBPDataChange("sys", text);
-                  }}
-                />
-                <Text
+              {data.bloodPressure === 1 && (
+                <View
                   style={{
-                    color: COLOR.white,
-                    fontSize: width / 12,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
-                  {"/"}
-                </Text>
-                <TextInput
-                  style={styles.textinput}
-                  keyboardType="numeric"
-                  selectionColor={COLOR.white}
-                  placeholder="DIA"
-                  placeholderTextColor={COLOR.gray}
-                  onChangeText={(text) => {
-                    onBPDataChange("dia", text);
-                  }}
-                />
-              </View>
+                  <TextInput
+                    style={styles.textinput}
+                    keyboardType="numeric"
+                    selectionColor={COLOR.white}
+                    placeholder="SYS"
+                    placeholderTextColor={COLOR.gray}
+                    onChangeText={(text) => {
+                      onBPDataChange("sys", text);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLOR.white,
+                      fontSize: width / 12,
+                    }}
+                  >
+                    {"/"}
+                  </Text>
+                  <TextInput
+                    style={styles.textinput}
+                    keyboardType="numeric"
+                    selectionColor={COLOR.white}
+                    placeholder="DIA"
+                    placeholderTextColor={COLOR.gray}
+                    onChangeText={(text) => {
+                      onBPDataChange("dia", text);
+                    }}
+                  />
+                </View>
+              )}
             </View>
             <View
               style={{
+                opacity: data.temperature === 1 ? 1 : 0.3,
                 flex: 4,
                 height: 148,
                 width: 148,
@@ -390,15 +413,17 @@ function MedicalDataScreen() {
                   (°F)
                 </Text>
               </Text>
-              <TextInput
-                style={styles.textinputBlack}
-                keyboardType="numeric"
-                selectionColor={COLOR.black}
-                placeholderTextColor={COLOR.black}
-                onChangeText={(text) => {
-                  onInputChange("temperature", text);
-                }}
-              />
+              {data.temperature === 1 && (
+                <TextInput
+                  style={styles.textinputBlack}
+                  keyboardType="numeric"
+                  selectionColor={COLOR.black}
+                  placeholderTextColor={COLOR.black}
+                  onChangeText={(text) => {
+                    onInputChange("temperature", text);
+                  }}
+                />
+              )}
             </View>
           </View>
           <View
@@ -408,6 +433,7 @@ function MedicalDataScreen() {
           >
             <View
               style={{
+                opacity: data.spo2Level === 1 ? 1 : 0.3,
                 flex: 4,
                 height: 148,
                 width: 148,
@@ -438,18 +464,21 @@ function MedicalDataScreen() {
                 </Text>
               </Text>
 
-              <TextInput
-                style={styles.textinputBlack}
-                keyboardType="numeric"
-                selectionColor={COLOR.black}
-                placeholderTextColor={COLOR.black}
-                onChangeText={(text) => {
-                  onInputChange("bloodoxygen", text);
-                }}
-              />
+              {data.spo2Level === 1 && (
+                <TextInput
+                  style={styles.textinputBlack}
+                  keyboardType="numeric"
+                  selectionColor={COLOR.black}
+                  placeholderTextColor={COLOR.black}
+                  onChangeText={(text) => {
+                    onInputChange("bloodoxygen", text);
+                  }}
+                />
+              )}
             </View>
             <View
               style={{
+                opacity: data.sugarLevel === 1 ? 1 : 0.3,
                 flex: 5,
                 height: 148,
                 margin: 4,
@@ -482,15 +511,17 @@ function MedicalDataScreen() {
                   alignItems: "flex-start",
                 }}
               >
-                <TextInput
-                  style={styles.textinput}
-                  keyboardType="numeric"
-                  selectionColor={COLOR.white}
-                  placeholderTextColor={COLOR.white}
-                  onChangeText={(text) => {
-                    onInputChange("sugar_level", text);
-                  }}
-                />
+                {data.sugarLevel === 1 && (
+                  <TextInput
+                    style={styles.textinput}
+                    keyboardType="numeric"
+                    selectionColor={COLOR.white}
+                    placeholderTextColor={COLOR.white}
+                    onChangeText={(text) => {
+                      onInputChange("sugar_level", text);
+                    }}
+                  />
+                )}
               </View>
             </View>
           </View>
@@ -567,9 +598,7 @@ function MedicalDataScreen() {
             </View>
           )}
         </View>
-
         <Divider />
-
         <View>
           <CustomButton
             style={{

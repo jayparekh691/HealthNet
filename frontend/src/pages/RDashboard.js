@@ -9,6 +9,8 @@ import "reactjs-popup/dist/index.css";
 import TextField from "@mui/material/TextField";
 import SelectModal from "../components/SelectModal";
 import { handleAuthentication } from "../utils/authentication";
+import { logout } from "../utils/authentication";
+import ConfirmModal from "../components/ConfirmModal";
 
 function RDashboard() {
   const state = useLocation().state;
@@ -21,6 +23,7 @@ function RDashboard() {
   const [receptionistId, setReceptionistId] = useState(null);
   const [modalIndex, setModalIndex] = useState(-1);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
+  const [modal, setModal] = useState(false);
 
   function addPatient() {
     navigate("/patient-registration");
@@ -107,6 +110,13 @@ function RDashboard() {
     setModalIndex(-1);
   }
 
+  function openConfirmModal() {
+    setModal(true);
+  }
+  function closeConfirmModal() {
+    setModal(false);
+  }
+
   function searchBarOnChange(event) {
     event.preventDefault();
     const { value } = event.target;
@@ -153,7 +163,25 @@ function RDashboard() {
         <button className="button2" onClick={addPatient}>
           Add Patient
         </button>
+        <button
+          className="button2"
+          onClick={() => {
+            openConfirmModal();
+          }}
+        >
+          Logout
+        </button>
+        {modal && (
+          <ConfirmModal
+            onSubmit={logout}
+            param1={navigate}
+            param2={"/login"}
+            closeModal={closeConfirmModal}
+            submitText={"Logout"}
+          />
+        )}
       </div>
+
       <div
         style={{
           display: "flex",

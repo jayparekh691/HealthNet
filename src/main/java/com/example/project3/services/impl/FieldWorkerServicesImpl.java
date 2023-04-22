@@ -32,16 +32,11 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
         for(Patient p:patients)
         {
             List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
-            List<Appointment> appointments1 = new ArrayList<>();
             for (Appointment appointment : appointments) {
-//                appointment.setDiagnostics(null);
-                appointment.setDoctor(null);
                 if (appointment.getFollowupRemaining() == true) {
-                    appointments1.add(appointment);
+                    finalAppointments.add(appointment);
                 }
             }
-            for(Appointment appointment:appointments1)
-                finalAppointments.add(appointment);
         }
         List<VisitModel> visitModelList=new ArrayList<>();
         for(Appointment appointment : finalAppointments){
@@ -50,7 +45,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                     continue;
                 VisitModel visitModel = new VisitModel();
                 visitModel.setV_id(visit.getV_id());
-                visitModel.setP_id(appointment.getPatient().getPid());
+                visitModel.setFollowup_id(appointment.getFollowup().getF_id());
                 visitModel.setSugarLevel(appointment.getFollowup().getInstructions().isSugarLevel());
                 visitModel.setTemperature(appointment.getFollowup().getInstructions().isTemperature());
                 visitModel.setSpo2Level(appointment.getFollowup().getInstructions().isSpo2Level());
@@ -103,14 +98,19 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     }
 
     @Override
-    public List<Integer> currentPatientList(Integer id) {
-        List<Patient> patientList = new ArrayList<>();
+    public List<Integer> currentFollowupList(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
-        patientList = this.patientRepo.findPatientByFieldworker(employee);
-        List<Integer> patientIDs = new ArrayList<>();
-        for(Patient patient : patientList) {
-            patientIDs.add(patient.getPid());
+        List<Patient> patients = this.patientRepo.findPatientByFieldworker(employee);
+        List<Integer> followupList=new ArrayList<Integer>();
+        for(Patient p:patients)
+        {
+            List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
+            for (Appointment appointment : appointments) {
+                if (appointment.getFollowupRemaining() == true) {
+                    followupList.add(appointment.getFollowup().getF_id());
+                }
+            }
         }
-        return patientIDs;
+        return followupList;
     }
 }
