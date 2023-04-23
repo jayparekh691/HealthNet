@@ -69,7 +69,7 @@ function RDashboard() {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
-  }, [state.r_id, appointmentAdded]);
+  }, [state.r_id, appointmentAdded, navigate]);
 
   async function addAppointment(p_id) {
     // add appointment for patient using pid
