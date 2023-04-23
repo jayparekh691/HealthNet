@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   Dimensions,
   FlatList,
   Image,
@@ -32,10 +33,11 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import { getValueFor, updateSyncTime } from "../utils/Util";
+import { getValueFor, updateSyncTime } from "../utils/util";
 import { BackHandler } from "react-native";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
+import { AppStateContext } from "../contexts/AppStateContext";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -55,8 +57,19 @@ function Dashboard({ navigation }) {
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
 
-  const { syncDateState } = useContext(SecureStoreContext);
-  const [syncDate, setSyncDate] = syncDateState;
+  const [syncDate, setSyncDate] = useState(null);
+
+  const updateTimeStamp = async () => {
+    const date = await getValueFor("synctimestamp");
+    console.log("date in dashboard: ", date);
+    setSyncDate(date);
+  };
+
+  useEffect(() => {
+    (async () => {
+      await updateTimeStamp();
+    })();
+  }, []);
 
   const onFilterChange = (text) => {
     setFilter(text);
@@ -90,23 +103,57 @@ function Dashboard({ navigation }) {
     return 0;
   };
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        e.preventDefault();
-        Alert.alert("Do you want to exit?", null, [
-          { text: "Stay", style: "cancel" },
-          {
-            text: "Leave",
-            style: "destructive",
-            onPress: () => {
-              BackHandler.exitApp();
-            },
-          },
-        ]);
-      }),
-    [navigation]
-  );
+  const { isBackgroundState } = useContext(AppStateContext);
+  const { isMediaActiveState } = useContext(AppStateContext);
+
+  const [isBackground, setIsBackground] = isBackgroundState;
+  const [isMediaActive, setIsMediaActive] = isMediaActiveState;
+
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    // const backListener = navigation.addListener("beforeRemove", (e) => {
+    //   e.preventDefault();
+    //   Alert.alert("Do you want to exit?", null, [
+    //     { text: "Stay", style: "cancel" },
+    //     {
+    //       text: "Leave",
+    //       style: "destructive",
+    //       onPress: () => {
+    //         BackHandler.exitApp();
+    //       },
+    //     },
+    //   ]);
+    // });
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/active|foreground/) &&
+        nextAppState === "background"
+      ) {
+        if (!isMediaActive) {
+          console.log("app going background");
+        }
+      } else if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        console.log("is media active", isMediaActive);
+        // backListener();
+        if (!isMediaActive) {
+          console.log("navigate to lockscreen");
+          navigation.navigate("lockScreen");
+        } else {
+          console.log("setting is media active to false");
+          setIsMediaActive(false);
+        }
+        console.log("app coming to foreground");
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, [isMediaActive, isBackground, appState]);
 
   const loadAppointmentFromDatabase = (appointmentList) => {
     setAppointmentData(appointmentList.sort(sortComparator("date")));
@@ -320,8 +367,10 @@ function Dashboard({ navigation }) {
       console.log("no medical data");
       await removeReassignedVisitList();
       await getNewAppointments();
+      await updateSyncTime(new Date());
+      await updateTimeStamp();
       setIsDashboardLoading(false);
-      setSyncDate(updateSyncTime());
+
       return;
     }
 
@@ -389,8 +438,9 @@ function Dashboard({ navigation }) {
         });
         await removeReassignedVisitList();
         await getNewAppointments();
+        await updateSyncTime(new Date());
+        await updateTimeStamp();
         setIsDashboardLoading(false);
-        setSyncDate(updateSyncTime());
       });
     });
   };

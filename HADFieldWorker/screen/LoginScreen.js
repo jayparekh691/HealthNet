@@ -13,7 +13,7 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
 import { login } from "../services/loginServices";
-import { getValueFor, removeItem, save, updateSyncTime } from "../utils/Util";
+import { getValueFor, removeItem, save, updateSyncTime } from "../utils/util";
 import { log } from "react-native-reanimated";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import SecureStoreProvider, {
@@ -42,9 +42,6 @@ function LoginScreen() {
 
   const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
   const [isConnected] = isConnectedState;
-
-  const { syncDateState } = useContext(SecureStoreContext);
-  const [syncDate, setSyncDate] = syncDateState;
 
   const navigation = useNavigation();
 
@@ -76,7 +73,6 @@ function LoginScreen() {
               const response = await getAppointmentList(e_id);
               if (response.data) {
                 const appointmentList = response.data;
-                console.log(appointmentList);
                 // create a promise list for each insert table query
                 const promiseList = appointmentList.map((row) => {
                   return insertAppointments(row);
@@ -111,12 +107,15 @@ function LoginScreen() {
       if (response.data && response.data.roles === "FieldWorker") {
         await save("user", JSON.stringify(response.data));
         setupDatabase()
-          .then((success) => {
+          .then(async (success) => {
             // this is would be the latest sync since we have logged in.
-            setSyncDate(updateSyncTime());
+            console.log("before updated time");
+            await updateSyncTime(new Date());
+            console.log("updated time");
             navigation.navigate("setuppin");
           })
           .catch((error) => {
+            zz;
             setIsLoginLoading(false);
             Alert.alert(error);
           });

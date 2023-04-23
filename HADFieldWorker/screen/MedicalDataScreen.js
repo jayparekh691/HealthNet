@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -10,20 +10,28 @@ import {
 } from "react-native";
 import { Styles } from "../utils/Styles";
 import { COLOR } from "../utils/Color";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Divider from "../components/Divider";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
-import { getValueFor } from "../utils/Util";
+import { getValueFor } from "../utils/util";
 import {
   insertMedicalData,
   removeRecordFromAppointmentTable,
 } from "../services/databaseServices";
+import { AppStateContext } from "../contexts/AppStateContext";
 const { width, height } = Dimensions.get("screen");
 
 function MedicalDataScreen() {
+  const { isMediaActiveState } = useContext(AppStateContext);
+  const [isMediaActive, setIsMediaActive] = isMediaActiveState;
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
 
   const data = useRoute().params;
@@ -54,6 +62,12 @@ function MedicalDataScreen() {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setImagePersmission(status.status === "granted");
     })();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log("going back to dashboard screen");
+    };
   }, []);
 
   const onInputChange = (name, text) => {
@@ -116,6 +130,9 @@ function MedicalDataScreen() {
   };
 
   const openCamera = async () => {
+    setIsMediaActive(() => {
+      return true;
+    });
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -130,6 +147,9 @@ function MedicalDataScreen() {
   };
 
   const uploadImage = async () => {
+    setIsMediaActive(() => {
+      return true;
+    });
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,

@@ -2,6 +2,7 @@ package com.example.project3.entities;
 
 import lombok.Data;
 
+import java.io.ByteArrayInputStream;
 import java.util.Date;
 
 @Data
@@ -12,7 +13,7 @@ public class VisitModel {
     private boolean sugarLevel;
     private boolean bloodPressure;
     private boolean spo2Level;
-    private String prescription;
+    private ByteArrayInputStream prescription;
     private String name;
     private int age;
     private String address;

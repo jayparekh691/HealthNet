@@ -5,7 +5,7 @@ import com.example.project3.repo.*;
 import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.example.project3.services.pdfService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,8 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
     private VisitRepo visitRepo;
     @Autowired
     private MedicalRepo medicalRepo;
+    @Autowired
+    private pdfService pdfservice;
     @Override
     public List<VisitModel> getAppointmentListFW(Integer fid) {
         Employee employee = this.employeeRepo.findById(fid).orElseThrow();
@@ -50,7 +52,6 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setBloodPressure(appointment.getFollowup().getInstructions().isBloodPressure());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
-                visitModel.setPrescription(appointment.getDiagnostics().getPrescription());
                 visitModel.setAddress(appointment.getPatient().getAddress());
                 visitModel.setCity(appointment.getPatient().getCity());
                 visitModel.setGender(appointment.getPatient().getGender());
@@ -61,6 +62,8 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setIsvisited(visit.isVisited());
                 visitModel.setDate(visit.getDate());
                 visitModel.setOtp(visit.getOtp());
+                visitModel.setPrescription(pdfservice.createPdf(appointment.getA_id()));
+                visitModel.setFollowup_id(appointment.getFollowup().getF_id());
                 visitModelList.add(visitModel);
             }
         }
