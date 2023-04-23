@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,12 @@ import { toast } from "react-toastify";
 import { handleAuthentication } from "../utils/authentication";
 
 function Login() {
+  //FIXME: on back button pressed, the login screen is showing for few mili
+  window.history.forward();
+  window.onunload = async function () {
+    return;
+  };
+
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     email: "",
@@ -38,11 +44,11 @@ function Login() {
         if (data.roles === "Receptionist") {
           // show receptionist dashboard
           toast.success("Welcome!");
+
           navigate("/receptionist-dashboard", {
             state: {
               r_id: data.e_id,
             },
-            replace: true,
           });
         } else if (data.roles === "Doctor") {
           toast.success("Welcome!");
@@ -51,7 +57,6 @@ function Login() {
             state: {
               d_id: data.e_id,
             },
-            replace: true,
           });
         } else if (data.roles === "Admin") {
           toast.success("Welcome!");

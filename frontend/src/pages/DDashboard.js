@@ -32,7 +32,7 @@ function DDashboard() {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
-  }, [state.d_id]);
+  }, [state.d_id, navigate]);
 
   function updatePassword(event) {
     event.preventDefault();

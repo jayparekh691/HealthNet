@@ -25,7 +25,6 @@ function DiagnosePatient() {
   const [appointmentID, setAppointmentID] = useState(null);
   const [patientObj, setPatientObj] = useState({});
   const [doctorID, setDoctorID] = useState(null);
-  const [patientHistory, setPatientHistory] = useState([]);
   const [writtenData, setWrittenData] = useContext(DiagnoseContext);
   const [followUpDetails, setFollowUpDetails] =
     useContext(WriteFollowUpContext);
@@ -54,9 +53,6 @@ function DiagnosePatient() {
       try {
         const responseData = await getPatientHistory(doctorID, patientObj.pid);
         let data = responseData.data;
-        if (data) {
-          setPatientHistory(data);
-        }
         console.log(data);
         navigate("/patient-medical-history", {
           state: {
