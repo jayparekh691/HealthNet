@@ -37,7 +37,7 @@ public class EmployeeServicesImpl implements EmployeeServices {
         employee.setMobilenumber("+91 "+employee.getMobilenumber());
         employee.setPassword(passwordEncoder.encode(pass));
         this.employeeRepo.save(employee);
-        employee.setPassword(pass);
+        employee.setPassword(null);
         return employee;
     }
     @Override
