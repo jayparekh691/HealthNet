@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
+  Alert,
   Dimensions,
   Text,
   TouchableOpacity,
@@ -13,11 +14,20 @@ import { log } from "react-native-reanimated";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { login } from "../services/loginServices";
-import { getValueFor, save } from "../utils/util";
+import { getValueFor, save, updateSyncTime } from "../utils/util";
+import {
+  cleanDatabase,
+  createTables,
+  insertAppointments,
+} from "../services/databaseServices";
+import { getAppointmentList } from "../services/syncServices";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
 function LoginComponent({ onPress, index }) {
+  const navigation = useNavigation();
+
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
 
@@ -92,11 +102,14 @@ function LoginComponent({ onPress, index }) {
       const response = await login(loginData);
       console.log(response.data);
       if (response.data && response.data.roles === "FieldWorker") {
+        console.log("saving user data");
         await save("user", JSON.stringify(response.data));
         setupDatabase()
           .then(async (success) => {
+            console.log("setup done");
             // this is would be the latest sync since we have logged in.
             await updateSyncTime(new Date());
+            console.log("navigating to setuppin");
             navigation.navigate("setuppin");
           })
           .catch((error) => {

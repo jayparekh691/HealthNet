@@ -28,7 +28,7 @@ export const updateSyncTime = async () => {
   const date =
     today.getDate() +
     " " +
-    getMonth(2) +
+    getMonth(today.getMonth()) +
     " " +
     today.getFullYear() +
     " | " +
