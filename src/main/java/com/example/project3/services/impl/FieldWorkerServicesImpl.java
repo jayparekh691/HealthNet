@@ -6,6 +6,8 @@ import com.example.project3.services.FieldWorkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.project3.services.pdfService;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +64,8 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setIsvisited(visit.isVisited());
                 visitModel.setDate(visit.getDate());
                 visitModel.setOtp(visit.getOtp());
-                visitModel.setPrescription(pdfservice.createPdf(appointment.getA_id()));
-                visitModel.setFollowup_id(appointment.getFollowup().getF_id());
+                ByteArrayInputStream in=pdfservice.createPdf(appointment.getA_id());
+                visitModel.setPrescription(in.readAllBytes());
                 visitModelList.add(visitModel);
             }
         }

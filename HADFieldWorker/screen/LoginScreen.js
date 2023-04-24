@@ -38,7 +38,7 @@ const { width, height } = Dimensions.get("screen");
 function LoginScreen() {
   const { isLoginLoadingState } = useContext(LoadingContext);
   const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
-  const [index, setIndex] = useState(2);
+  const [index, setIndex] = useState(0);
   const [component, setComponent] = useState(null);
 
   const navigation = useNavigation();
@@ -58,8 +58,6 @@ function LoginScreen() {
           />
         );
       });
-    } else {
-      showUpdateComponent(4);
     }
   }, [index, setComponent]);
 

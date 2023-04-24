@@ -19,7 +19,7 @@ public class Diagnostics {
     private int d_id;
     private String diagnosis;
     private String remarks;
-    private String prescription;
+    public String prescription;
 
 
 }
