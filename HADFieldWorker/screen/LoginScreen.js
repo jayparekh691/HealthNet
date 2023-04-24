@@ -6,13 +6,13 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/Color";
 import { Styles } from "../utils/Styles";
-import { login } from "../services/loginServices";
 import { getValueFor, removeItem, save, updateSyncTime } from "../utils/util";
 import { log } from "react-native-reanimated";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
@@ -27,106 +27,52 @@ import {
 import { getAppointmentList } from "../services/syncServices";
 import CustomTextInput from "../components/CustomTextInput";
 import { LoadingContext } from "../contexts/LoadingContext";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import LoginComponent from "../components/LoginComponent";
+import ForgotPasswordComponent from "../components/ForgotPasswordComponent";
+import UpdatePasswordComponent from "../components/UpdatePasswordComponent";
 // import * as SQLite from "expo-sqlite";
 
 const { width, height } = Dimensions.get("screen");
 
 function LoginScreen() {
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const { isConnectedState } = useContext(ConnectivityContext);
   const { isLoginLoadingState } = useContext(LoadingContext);
-
   const [isLoginLoading, setIsLoginLoading] = isLoginLoadingState;
-  const [isConnected] = isConnectedState;
+  const [index, setIndex] = useState(2);
+  const [component, setComponent] = useState(null);
 
   const navigation = useNavigation();
 
-  const onInputChange = (name, text) => {
-    setLoginData((pv) => {
-      return {
-        ...pv,
-        [name]: text,
-      };
-    });
-  };
-
-  const setupDatabase = async () => {
-    return new Promise((resolve, reject) => {
-      // clean database: delete the tables from database
-      cleanDatabase()
-        .then((success) => {
-          console.log("database cleaned");
-
-          // create 2 tables
-          createTables()
-            .then(async (success) => {
-              console.log("database created");
-              // get the user id from secure store
-              const e_id = JSON.parse(await getValueFor("user")).e_id;
-              console.log("userid ", e_id);
-
-              // call api for appointment list for the user
-              const response = await getAppointmentList(e_id);
-              if (response.data) {
-                const appointmentList = response.data;
-                // create a promise list for each insert table query
-                const promiseList = appointmentList.map((row) => {
-                  return insertAppointments(row);
-                });
-
-                // get reponse for each of the query promises
-                Promise.allSettled(promiseList).then((value) => {
-                  console.log("value: ", value);
-                });
-                resolve("inserted data in appointment table");
-              } else {
-                reject("get appointment list api error");
-              }
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
-
-  const handleSignIn = async () => {
-    // check internet connectivity
-    console.log("login screen network: ", isConnected);
-    setIsLoginLoading(true);
-    if (isConnected) {
-      const response = await login(loginData);
-      console.log(response.data);
-      if (response.data && response.data.roles === "FieldWorker") {
-        await save("user", JSON.stringify(response.data));
-        setupDatabase()
-          .then(async (success) => {
-            // this is would be the latest sync since we have logged in.
-            console.log("before updated time");
-            await updateSyncTime(new Date());
-            console.log("updated time");
-            navigation.navigate("setuppin");
-          })
-          .catch((error) => {
-            zz;
-            setIsLoginLoading(false);
-            Alert.alert(error);
-          });
-      } else {
-        setIsLoginLoading(false);
-        Alert.alert("Invalid Email or password");
-      }
+  useEffect(() => {
+    if (index === 0) {
+      setComponent(() => {
+        return <LoginComponent index={1} onPress={changeIndex} />;
+      });
+    } else if (index === 1) {
+      setComponent(() => {
+        return (
+          <ForgotPasswordComponent
+            index={0}
+            onPress={changeIndex}
+            showUpdateComponent={showUpdateComponent}
+          />
+        );
+      });
     } else {
-      setIsLoginLoading(false);
-      Alert.alert("Please check internet connection!");
+      showUpdateComponent(4);
     }
+  }, [index, setComponent]);
+
+  const showUpdateComponent = (id) => {
+    setIndex(2);
+    setComponent(() => {
+      return <UpdatePasswordComponent e_id={id} onUpdate={changeIndex} />;
+    });
+  };
+
+  const changeIndex = (i) => {
+    console.log("change index to ", i);
+    setIndex(i);
   };
 
   if (isLoginLoading) {
@@ -143,55 +89,7 @@ function LoginScreen() {
     );
   }
 
-  return (
-    <View style={styles.screen}>
-      <View
-        style={{
-          width: width / 2,
-        }}
-      >
-        <View
-          style={{
-            justifyContent: "flex-start",
-          }}
-        >
-          <CustomTextInput
-            value={loginData.email}
-            placeholder={"USERNAME"}
-            onChangeText={(text) => onInputChange("email", text)}
-          />
-        </View>
-        <View>
-          <CustomTextInput
-            value={loginData.password}
-            placeholder={"PASSWORD"}
-            hasSecureEye={true}
-            onChangeText={(text) => onInputChange("password", text)}
-          />
-        </View>
-
-        <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          <View>
-            <CustomButton
-              backgroundColor={COLOR.primaryColor}
-              textColor="white"
-              title="LOGIN"
-              onPress={handleSignIn}
-              style={{
-                elevation: 10,
-                shadowColor: "#000000",
-                shadowOffset: { width: 4, height: 4 },
-              }}
-            />
-          </View>
-        </View>
-      </View>
-    </View>
-  );
+  return <View style={styles.screen}>{component}</View>;
 }
 
 const styles = StyleSheet.create({

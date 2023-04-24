@@ -32,7 +32,7 @@ export const createTables = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "create table if not exists appointment (address text, age integer, bloodPressure integer,city text, date text, followup_id integer, gender text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription text, spo2Level integer, state text, sugarLevel integer, temperature integer, town text, v_id integer primary key not null);",
+        "create table if not exists appointment (address text, age integer, bloodPressure integer,city text, date text, followup_id integer, gender text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription blob, spo2Level integer, state text, sugarLevel integer, temperature integer, town text, v_id integer primary key not null);",
         [],
         (_, success) => {
           tx.executeSql(
