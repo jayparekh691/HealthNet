@@ -13,7 +13,7 @@ public class VisitModel {
     private boolean sugarLevel;
     private boolean bloodPressure;
     private boolean spo2Level;
-    private ByteArrayInputStream prescription;
+    public byte[] prescription;
     private String name;
     private int age;
     private String address;

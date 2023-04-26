@@ -99,20 +99,26 @@ public class EmployeeServicesImpl implements EmployeeServices {
 
     @Override
     public String updatePassword(Integer request, String old_pass, String new_pass) {
-        Employee employee = this.employeeRepo.findById(request).orElseThrow();
-        if(employee!=null){
-            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employee.getEmail(),old_pass));
-            if(authentication.isAuthenticated()) {
-                employee.setPassword(passwordEncoder.encode(new_pass));
-                this.employeeRepo.save(employee);
-                return "Success";
+        try {
+            Employee employee = this.employeeRepo.findById(request).orElseThrow();
+            if(employee!=null){
+                try {
+                    Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employee.getEmail(),old_pass));
+                    System.out.println("LAX");
+                    if(authentication.isAuthenticated()) {
+                        employee.setPassword(passwordEncoder.encode(new_pass));
+                        this.employeeRepo.save(employee);
+                        return "Success";
+                    }
+                } catch (Exception e) {
+                    return "Old password doesn't match!";
+                }
             }
-            else
-                return "Old Password not match";
+        } catch(Exception e) {
+            return "Employee Doesn't Exist!";
         }
-        return "Employee Doesn't Exist";
+        return "error";
     }
-
 
     @Override
     public List<Employee> findEmployeeByName(String name){
