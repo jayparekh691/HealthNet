@@ -37,6 +37,12 @@ function EmployeeRegistration() {
         return false;
       });
     } else if (name === "roles") {
+      setEmployeeData((pv) => {
+        return {
+          ...pv,
+          specialization: "",
+        };
+      });
       setDisabled((pv) => {
         return true;
       });

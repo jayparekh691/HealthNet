@@ -24,8 +24,6 @@ function RDashboard() {
   const [modalIndex, setModalIndex] = useState(-1);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
   const [modal, setModal] = useState(false);
-  const date = new Date();
-  const curr_date = date.toISOString().split("T")[0];
 
   function addPatient() {
     navigate("/patient-registration");
@@ -249,21 +247,17 @@ function RDashboard() {
                 </tr>
               </tbody>
               <tbody style={{ flex: "1" }}>
-                {patientList
-                  .filter((f, ind) => {
-                    return f.curr_date === curr_date;
-                  })
-                  .map((e, i) => {
-                    return (
-                      <tr key={i}>
-                        <th>{e.a_id}</th>
-                        <th>{e.patient.name}</th>
-                        <th>{e.patient.age}</th>
-                        <th>{e.patient.gender}</th>
-                        <th>{e.doctor.name}</th>
-                      </tr>
-                    );
-                  })}
+                {patientList.map((e, i) => {
+                  return (
+                    <tr key={i}>
+                      <th>{e.a_id}</th>
+                      <th>{e.patient.name}</th>
+                      <th>{e.patient.age}</th>
+                      <th>{e.patient.gender}</th>
+                      <th>{e.doctor.name}</th>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
