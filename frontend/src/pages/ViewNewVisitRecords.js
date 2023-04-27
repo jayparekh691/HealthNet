@@ -127,24 +127,32 @@ function ViewNewVisitRecords() {
                       Readings to be taken:{" "}
                     </label>
                     <br />
-                    <span>
-                      {e.followup.instructions.temperature &&
-                        "Temperature Readings"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.sugarLevel && "Sugar Level"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.bloodPressure &&
-                        "Blood Pressure"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.spo2Level && "spo2Level"}
-                    </span>
-                    <br />
+                    {e.followup.instructions.temperature && (
+                      <>
+                        <span>Temperature Readings</span>
+                        <br />
+                      </>
+                    )}
+
+                    {e.followup.instructions.sugarLevel && (
+                      <>
+                        <span>Sugar Level</span>
+                        <br />
+                      </>
+                    )}
+
+                    {e.followup.instructions.bloodPressure && (
+                      <>
+                        <span>Blood Pressure</span>
+                        <br />
+                      </>
+                    )}
+                    {e.followup.instructions.spo2Level && (
+                      <>
+                        <span>spo2Level</span>
+                        <br />
+                      </>
+                    )}
                     <label className="tableHeading">Interval: </label>
                     <br />
                     <span>{e.followup.gap}</span>
@@ -192,30 +200,45 @@ function ViewNewVisitRecords() {
                                     Medical Data:
                                   </label>
                                   <br />
-                                  <span>
-                                    Temperature Readings:
-                                    {e.followup.instructions.temperature &&
-                                      v.medicalData.temperature}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    Sugar Level:
-                                    {e.followup.instructions.sugarLevel &&
-                                      v.medicalData.sugarLevel}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    Blood Pressure:
-                                    {e.followup.instructions.bloodPressure &&
-                                      v.medicalData.bloodPressure}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    spO2 Level:
-                                    {e.followup.instructions.spo2Level &&
-                                      v.medicalData.spo2Level}
-                                  </span>
-                                  <br />
+                                  {e.followup.instructions.temperature && (
+                                    <>
+                                      <span>
+                                        Temperature Readings:
+                                        {v.medicalData.temperature}
+                                      </span>
+                                      <br />
+                                    </>
+                                  )}
+
+                                  {e.followup.instructions.sugarLevel && (
+                                    <>
+                                      <span>
+                                        Sugar Level:
+                                        {v.medicalData.sugarLevel}
+                                      </span>
+                                      <br />
+                                    </>
+                                  )}
+
+                                  {e.followup.instructions.bloodPressure && (
+                                    <>
+                                      <span>
+                                        Blood Pressure:
+                                        {v.medicalData.bloodPressure}
+                                      </span>
+                                      <br />
+                                    </>
+                                  )}
+
+                                  {e.followup.instructions.spo2Level && (
+                                    <>
+                                      <span>
+                                        spO2Level: {v.medicalData.spo2Level}
+                                      </span>
+                                      <br />
+                                    </>
+                                  )}
+
                                   {v.medicalData.photo !== null &&
                                     v.medicalData.photo !== "" && (
                                       <img
