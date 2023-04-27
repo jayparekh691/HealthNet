@@ -4,7 +4,7 @@ import { updatePassword } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { handleAuthentication } from "../utils/authentication";
+import { logout } from "../utils/authentication";
 
 function UpdatePassword() {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ function UpdatePassword() {
       console.log(data);
       if (data === "Success") {
         toast.success("Password Successfully changed");
-        navigate(-2);
+        logout(navigate, "/login");
       } else {
         toast.error(
           "Could not change password, check if you have given the correct old password"
@@ -55,20 +55,21 @@ function UpdatePassword() {
 
   return (
     <div className="formPage">
-      <div className="container">
+      <div className="container" style={{ width: "500px" }}>
         <div className="title">Update Password</div>
         <div
           className="content"
           style={{ display: "flex", justifyContent: "center" }}
         >
           <form onSubmit={onUpdatePassword}>
-            <div className="user-details" style={{ display: "block" }}>
+            <div className="user-details" style={{ display: "flex" }}>
               <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Old Password"}
                   name="old_pass"
                   type="password"
                   value={passwordObj.old_pass}
+                  placeholder={"Enter Old Password"}
                   onChange={handleChange}
                 />
               </div>
@@ -78,6 +79,7 @@ function UpdatePassword() {
                   name="new_pass"
                   type="password"
                   value={passwordObj.new_pass}
+                  placeholder={"Enter New Password"}
                   onChange={handleChange}
                 />
               </div>
@@ -87,11 +89,12 @@ function UpdatePassword() {
                   name="confirmNewPassword"
                   type="password"
                   value={confirmNewPassword}
+                  placeholder={"ReEnter Password"}
                   onChange={handleChange}
                 />
               </div>
             </div>
-            <div className="button" style={{ width: "100%" }}>
+            <div className="button">
               <input type="submit" value="Update Password" />
             </div>
           </form>

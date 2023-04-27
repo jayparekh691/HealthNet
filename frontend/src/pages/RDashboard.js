@@ -206,7 +206,7 @@ function RDashboard() {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              label="Search"
+              label="Search Patients"
               onChange={searchBarOnChange}
               placeholder="Search Patient by name or mobile number"
               value={searchValue}

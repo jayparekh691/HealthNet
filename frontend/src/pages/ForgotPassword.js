@@ -35,20 +35,26 @@ function ForgotPassword() {
         },
       });
     } else {
-      toast.error("Incorrect email entered");
+      toast.error(
+        "This email is not registered! Please enter your registered email"
+      );
     }
+  }
+
+  function login() {
+    navigate("/login");
   }
 
   return (
     <div className="formPage">
-      <div className="container">
+      <div className="container" style={{ width: "500px" }}>
         <div className="title">Forgot Password</div>
         <div
           className="content"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
-          <form onSubmit={onSubmit}>
-            <div className="user-details" style={{ display: "block" }}>
+          <form onSubmit={onSubmit} style={{ flex: 1 }}>
+            <div className="user-details">
               <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Email"}
@@ -56,12 +62,22 @@ function ForgotPassword() {
                   type={"email"}
                   value={email}
                   onChange={handleChange}
+                  placeholder={"Email"}
                   required
                 />
               </div>
             </div>
             <div className="button">
               <input type="submit" value="Reset Password" />
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <button
+                className="button2"
+                style={{ color: "black", fontWeight: "300", fontSize: "16px" }}
+                onClick={login}
+              >
+                Back to Login?
+              </button>
             </div>
           </form>
         </div>

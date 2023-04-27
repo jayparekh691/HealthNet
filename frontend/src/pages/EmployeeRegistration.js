@@ -37,6 +37,12 @@ function EmployeeRegistration() {
         return false;
       });
     } else if (name === "roles") {
+      setEmployeeData((pv) => {
+        return {
+          ...pv,
+          specialization: "",
+        };
+      });
       setDisabled((pv) => {
         return true;
       });
@@ -73,7 +79,7 @@ function EmployeeRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter name"
+                  placeholder="Name"
                   value={employeeData.name}
                   onChange={handleChange}
                   required
@@ -127,7 +133,7 @@ function EmployeeRegistration() {
                 <input
                   name="email"
                   type="email"
-                  placeholder="Enter email"
+                  placeholder="Email"
                   value={employeeData.email}
                   onChange={handleChange}
                   required
@@ -138,7 +144,7 @@ function EmployeeRegistration() {
                 <input
                   name="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder="Password"
                   value={employeeData.password}
                   onChange={handleChange}
                   required
@@ -151,7 +157,7 @@ function EmployeeRegistration() {
                   type="textarea"
                   rows={3}
                   cols={38}
-                  placeholder="Enter address"
+                  placeholder="Address"
                   value={employeeData.address}
                   onChange={handleChange}
                   required
@@ -191,7 +197,7 @@ function EmployeeRegistration() {
                   disabled={disabled}
                   name="specialization"
                   type="text"
-                  placeholder="Enter specialization"
+                  placeholder="Specialization"
                   value={employeeData.specialization}
                   onChange={handleChange}
                   required={disabled === false ? true : false}
