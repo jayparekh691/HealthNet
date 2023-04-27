@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -14,10 +16,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE appointment SET deleted = true WHERE e_id=?")
-@Where(clause = "deleted=false")
+//@SQLDelete(sql = "UPDATE appointment SET deleted = true WHERE e_id=?")
+//@Where(clause = "deleted=false")
 public class Appointment {
-
+//    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int a_id;
