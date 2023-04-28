@@ -49,6 +49,7 @@ public class EmployeeController {
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
 //        Employee employee1 = this.employeeServices.login(employee);
       Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+//        System.out.println("parekh");
       if(authentication.isAuthenticated()) {
           String token=jwtService.generateToken(authRequest.getEmail());
           Employee emp=this.empRepo.findByEmail(authRequest.getEmail()).orElseThrow();
@@ -60,7 +61,7 @@ public class EmployeeController {
           loginResponse.setE_id(emp.getE_id());
           return new ResponseEntity<>(loginResponse,HttpStatus.ACCEPTED);
       }
-      else throw new UsernameNotFoundException("Invalid Username or password");
+      else return new ResponseEntity<>("Invalid Username or password",HttpStatus.CONFLICT);
     }
     @GetMapping("/get-all-doctors")
     @PreAuthorize("hasAuthority('Receptionist')")
