@@ -1,4 +1,5 @@
 package com.example.project3.entities;
+import com.example.project3.config.AesEncryptor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,15 +17,21 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int pid;
-
+    @Convert(converter = AesEncryptor.class)
+    private Integer pid;
+    @Convert(converter = AesEncryptor.class)
     private String name;
     private int age;
+    @Convert(converter = AesEncryptor.class)
     private String mobilenumber;
     private char gender;
+    @Convert(converter = AesEncryptor.class)
     private String address;
+    @Convert(converter = AesEncryptor.class)
     private String town;
+    @Convert(converter = AesEncryptor.class)
     private String city;
+    @Convert(converter = AesEncryptor.class)
     private String state;
     private int pincode;
 
