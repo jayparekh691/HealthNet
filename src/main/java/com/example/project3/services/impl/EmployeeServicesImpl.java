@@ -61,6 +61,9 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Override
     public Employee getEmployeeById(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
+        String s = employee.getMobilenumber();
+        s.substring(4);
+        employee.setMobilenumber(s);
         return employee;
     }
 
@@ -123,6 +126,12 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Override
     public List<Employee> findEmployeeByName(String name){
         List<Employee> employees=this.employeeRepo.findEmployeeByNameContaining(name);
+        for(Employee employee:employees){
+            String s = employee.getMobilenumber();
+            s = s.substring(4);
+//            System.out.println(s);
+            employee.setMobilenumber(s);
+        }
         return employees;
     }
     @Override
