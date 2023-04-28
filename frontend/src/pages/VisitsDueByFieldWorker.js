@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { handleAuthentication } from "../utils/authentication";
 import { useNavigate } from "react-router-dom";
+import { getValueForKey } from "../utils/localStorage";
 
 function VisitsDueByFieldWorker() {
   const navigate = useNavigate();
@@ -18,18 +19,20 @@ function VisitsDueByFieldWorker() {
   const [assigned, setAssigned] = useState(false);
   const [reassignedFieldWorkerID, setReassignedFieldWorkerID] = useState(null);
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     (async function getDueVisitList() {
       try {
         const responseData = await dueVisits();
-        const data = responseData.data;
-        if (data) {
-          setDueVisitList(data);
+        const visitListData = responseData.data;
+        if (visitListData) {
+          setDueVisitList(visitListData);
         }
       } catch (error) {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
-
     (async function getFieldWorkerList() {
       try {
         const responseData = await getFieldworkerList();
@@ -41,6 +44,11 @@ function VisitsDueByFieldWorker() {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
+
+    if (dueVisitList.length === 0) {
+      alert("No Visits Due");
+      navigate(-1);
+    }
   }, [assigned]);
 
   async function reassign(e_id, patientID) {
@@ -65,8 +73,12 @@ function VisitsDueByFieldWorker() {
     setAssigned((pv) => !assigned);
     closeModal();
   }
-  function openModal(index) {
-    setModalIndex(index);
+  function openModal(index, fieldWorker) {
+    if (fieldWorker === null) {
+      toast.error("The patient has not been assigned a Field Worker!");
+    } else {
+      setModalIndex(index);
+    }
   }
   function closeModal() {
     setModalIndex(-1);
@@ -90,17 +102,13 @@ function VisitsDueByFieldWorker() {
             alignItems: "flex-end",
           }}
         >
-          <div
-            style={{
-              justifyItems: "center",
-              // alignItems: "flex-end",
-            }}
-          >
-            <span className="tableHeading" style={{}}>
+          <div style={{ margin: "16px" }}>
+            <label className="tableHeading" style={{ textAlign: "center" }}>
               Visits Due:
-            </span>
+            </label>
           </div>
         </div>
+
         {/* TODO: Change gender to display full form */}
         <div
           style={{
@@ -110,54 +118,60 @@ function VisitsDueByFieldWorker() {
             overflowY: "scroll",
           }}
         >
-          <table>
-            <tbody>
-              <tr>
-                <th>Patient Name</th>
-                <th>Gender</th>
-                <th>Age</th>
-                <th>Field Worker Name</th>
-                <th>Due Date</th>
-              </tr>
-            </tbody>
-            <tbody>
-              {dueVisitList.map((v, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{v.patient.name}</th>
-                    <th>{v.patient.gender}</th>
-                    <th>{v.patient.age}</th>
-                    <th>{v.patient.fieldworker.name}</th>
-                    <th>{v.visit[0].date.split("T")[0]}</th>
-                    <td>
-                      <div style={{ marginLeft: "24px" }}>
-                        <button
-                          onClick={() => {
-                            openModal(i);
-                          }}
-                        >
-                          Reassign Field Worker
-                        </button>
-                        {modalIndex === i && (
-                          <Modal
-                            key={i}
-                            fieldWorkerList={fieldWorkerList}
-                            data={v.patient.fieldworker}
-                            patientID={v.patient.pid}
-                            reassign={reassign}
-                            closeModal={closeModal}
-                            handleOptionChange={
-                              handleChangeInReAssignFieldWorker
-                            }
-                          />
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {dueVisitList.length !== 0 && (
+            <table>
+              <tbody>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Gender</th>
+                  <th>Age</th>
+                  <th>Field Worker Name</th>
+                  <th>Due Date</th>
+                </tr>
+              </tbody>
+              <tbody>
+                {dueVisitList.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <th>{v.patient.name}</th>
+                      <th>{v.patient.gender}</th>
+                      <th>{v.patient.age}</th>
+                      <th>
+                        {v.patient.fieldworker === null
+                          ? "Not Assigned"
+                          : v.patient.fieldworker.name}
+                      </th>
+                      <th>{v.visit[0].date.split("T")[0]}</th>
+                      <td>
+                        <div style={{ marginLeft: "24px" }}>
+                          <button
+                            onClick={() => {
+                              openModal(i, v.patient.fieldworker);
+                            }}
+                          >
+                            Reassign Field Worker
+                          </button>
+                          {modalIndex === i && (
+                            <Modal
+                              key={i}
+                              fieldWorkerList={fieldWorkerList}
+                              data={v.patient.fieldworker}
+                              patientID={v.patient.pid}
+                              reassign={reassign}
+                              closeModal={closeModal}
+                              handleOptionChange={
+                                handleChangeInReAssignFieldWorker
+                              }
+                            />
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

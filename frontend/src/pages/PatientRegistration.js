@@ -8,6 +8,7 @@ import {
   registerPatient,
 } from "../services/receptionistServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function PatientRegistration() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function PatientRegistration() {
 
   // storing the doctorlist from location.state into doctorList state
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     async function getDoctors() {
       try {
         const responseData = await getDoctorList();
@@ -100,7 +104,7 @@ function PatientRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter name"
+                  placeholder="Name"
                   value={patientData.name}
                   onChange={handleChange}
                   required
@@ -113,7 +117,7 @@ function PatientRegistration() {
                   type="number"
                   min={0}
                   max={120}
-                  placeholder="Enter age"
+                  placeholder="Age"
                   value={patientData.age}
                   onChange={handleChange}
                   required
@@ -169,7 +173,7 @@ function PatientRegistration() {
                   type="textarea"
                   rows={3}
                   cols={37}
-                  placeholder="Enter address"
+                  placeholder="Address"
                   value={patientData.address}
                   onChange={handleChange}
                   required
@@ -198,7 +202,7 @@ function PatientRegistration() {
                 <input
                   name="town"
                   type="text"
-                  placeholder="Enter town"
+                  placeholder="Town"
                   value={patientData.town}
                   onChange={handleChange}
                   required
@@ -209,7 +213,7 @@ function PatientRegistration() {
                 <input
                   name="city"
                   type="text"
-                  placeholder="Enter city"
+                  placeholder="City"
                   value={patientData.city}
                   onChange={handleChange}
                   required
@@ -220,7 +224,7 @@ function PatientRegistration() {
                 <input
                   name="state"
                   type="text"
-                  placeholder="Enter state"
+                  placeholder="State"
                   value={patientData.state}
                   onChange={handleChange}
                   required
@@ -233,7 +237,7 @@ function PatientRegistration() {
                   type="number"
                   min={100000}
                   max={999999}
-                  placeholder="Enter pincode"
+                  placeholder="Pincode"
                   value={patientData.pincode}
                   onChange={handleChange}
                   required

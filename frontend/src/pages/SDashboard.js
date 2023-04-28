@@ -14,6 +14,7 @@ import SelectModal from "../components/SelectModal";
 import { useNavigate } from "react-router-dom";
 import { handleAuthentication } from "../utils/authentication";
 import { searchPatient } from "../services/receptionistServices";
+import { getValueForKey } from "../utils/localStorage";
 
 function SDashboard() {
   //get unassigned patients
@@ -30,6 +31,9 @@ function SDashboard() {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     (async function getUnassignedPatientList() {
       try {
         const responseData = await getPatientList();
@@ -223,7 +227,7 @@ function SDashboard() {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              label="Search"
+              label="Search Patients"
               onChange={searchBarOnChange}
               placeholder="Search Patient by name or mobile number"
               value={searchValue}

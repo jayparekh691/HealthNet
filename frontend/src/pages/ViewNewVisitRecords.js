@@ -11,6 +11,8 @@ import {
 } from "../services/doctorServices";
 import { toast } from "react-toastify";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
+import { Padding } from "@mui/icons-material";
 
 function ViewNewVisitRecords() {
   const navigate = useNavigate();
@@ -18,6 +20,9 @@ function ViewNewVisitRecords() {
   const [newVisitList, setNewVisitList] = useState([]);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     (async function getNewVisit() {
       try {
         const responseData = await getNewVisitRecords(state.doctorID);
@@ -30,6 +35,10 @@ function ViewNewVisitRecords() {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
+    if (newVisitList.length === 0) {
+      alert("No New Visits");
+      navigate(-1);
+    }
   }, [state.doctorID]);
 
   async function markAsSeenByDoctor(visitID) {
@@ -51,16 +60,9 @@ function ViewNewVisitRecords() {
   return (
     <div>
       <div style={{ margin: "16px" }}>
-        {newVisitList.length !== 0 && (
-          <label className="tableHeading" style={{ textAlign: "center" }}>
-            New Visit Records
-          </label>
-        )}
-        {newVisitList.length === 0 && (
-          <label className="tableHeading" style={{ textAlign: "center" }}>
-            No New Visit Records
-          </label>
-        )}
+        <label className="tableHeading" style={{ textAlign: "center" }}>
+          New Visit Records
+        </label>
       </div>
       <div>
         {newVisitList.map((e, i) => {
@@ -127,24 +129,32 @@ function ViewNewVisitRecords() {
                       Readings to be taken:{" "}
                     </label>
                     <br />
-                    <span>
-                      {e.followup.instructions.temperature &&
-                        "Temperature Readings"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.sugarLevel && "Sugar Level"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.bloodPressure &&
-                        "Blood Pressure"}
-                    </span>
-                    <br />
-                    <span>
-                      {e.followup.instructions.spo2Level && "spo2Level"}
-                    </span>
-                    <br />
+                    {e.followup.instructions.temperature && (
+                      <>
+                        <span>Temperature Readings</span>
+                        <br />
+                      </>
+                    )}
+
+                    {e.followup.instructions.sugarLevel && (
+                      <>
+                        <span>Sugar Level</span>
+                        <br />
+                      </>
+                    )}
+
+                    {e.followup.instructions.bloodPressure && (
+                      <>
+                        <span>Blood Pressure</span>
+                        <br />
+                      </>
+                    )}
+                    {e.followup.instructions.spo2Level && (
+                      <>
+                        <span>spo2Level</span>
+                        <br />
+                      </>
+                    )}
                     <label className="tableHeading">Interval: </label>
                     <br />
                     <span>{e.followup.gap}</span>
@@ -187,52 +197,85 @@ function ViewNewVisitRecords() {
                             </AccordionSummary>
                             <AccordionDetails>
                               {
-                                <Typography>
-                                  <label className="tableHeading">
-                                    Medical Data:
-                                  </label>
-                                  <br />
-                                  <span>
-                                    Temperature Readings:
-                                    {e.followup.instructions.temperature &&
-                                      v.medicalData.temperature}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    Sugar Level:
-                                    {e.followup.instructions.sugarLevel &&
-                                      v.medicalData.sugarLevel}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    Blood Pressure:
-                                    {e.followup.instructions.bloodPressure &&
-                                      v.medicalData.bloodPressure}
-                                  </span>
-                                  <br />
-                                  <span>
-                                    spO2 Level:
-                                    {e.followup.instructions.spo2Level &&
-                                      v.medicalData.spo2Level}
-                                  </span>
-                                  <br />
-                                  {v.medicalData.photo !== null &&
-                                    v.medicalData.photo !== "" && (
-                                      <img
-                                        style={{ height: "200px" }}
-                                        src={v.medicalData.photo}
-                                        alt="medicalphoto"
-                                      />
+                                <Typography
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                  }}
+                                >
+                                  <Typography
+                                    style={{
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <label className="tableHeading">
+                                      Medical Data:
+                                    </label>
+                                    <br />
+                                    {e.followup.instructions.temperature && (
+                                      <>
+                                        <span>
+                                          Temperature Readings:
+                                          {v.medicalData.temperature}
+                                        </span>
+                                        <br />
+                                      </>
                                     )}
-                                  {/* TODO: put this button to the right end */}
-                                  <span>
-                                    <button
-                                      onClick={() => markAsSeenByDoctor(v.v_id)}
+
+                                    {e.followup.instructions.sugarLevel && (
+                                      <>
+                                        <span>
+                                          Sugar Level:
+                                          {v.medicalData.sugarLevel}
+                                        </span>
+                                        <br />
+                                      </>
+                                    )}
+
+                                    {e.followup.instructions.bloodPressure && (
+                                      <>
+                                        <span>
+                                          Blood Pressure:
+                                          {v.medicalData.bloodPressure}
+                                        </span>
+                                        <br />
+                                      </>
+                                    )}
+
+                                    {e.followup.instructions.spo2Level && (
+                                      <>
+                                        <span>
+                                          spO2Level: {v.medicalData.spo2Level}
+                                        </span>
+                                        <br />
+                                      </>
+                                    )}
+
+                                    {v.medicalData.photo !== null &&
+                                      v.medicalData.photo !== "" && (
+                                        <img
+                                          style={{ height: "200px" }}
+                                          src={v.medicalData.photo}
+                                          alt="medicalphoto"
+                                        />
+                                      )}
+                                    {/* TODO: put this button to the right end */}
+                                    <br />
+                                  </Typography>
+                                  <Typography>
+                                    <span
+                                      style={{ float: "right", margin: "4px" }}
                                     >
-                                      Mark as seen
-                                    </button>
-                                  </span>
-                                  <br />
+                                      <button
+                                        onClick={() =>
+                                          markAsSeenByDoctor(v.v_id)
+                                        }
+                                      >
+                                        Mark as seen
+                                      </button>
+                                    </span>
+                                    <br />
+                                  </Typography>
                                 </Typography>
                               }
                             </AccordionDetails>
