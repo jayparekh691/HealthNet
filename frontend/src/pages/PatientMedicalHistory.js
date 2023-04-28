@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { handleAuthentication } from "../utils/authentication";
 import { getPatientHistory } from "../services/doctorServices";
+import { getValueForKey } from "../utils/localStorage";
 
 function PatientMedicalHistory() {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ function PatientMedicalHistory() {
   const [deactivate, setDeactivated] = useState(false);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+
     setPatientObj(state.patientObj);
     (async function getPatientMedicalHistory() {
       try {

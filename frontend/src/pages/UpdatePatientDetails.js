@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updatePatientDetails } from "../services/receptionistServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function UpdatePatientDetails() {
   const state = useLocation().state;
@@ -24,6 +25,9 @@ function UpdatePatientDetails() {
 
   const [genderDefault, setGenderDefault] = useState(state.patientObj.gender);
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setPatientObj(state.patientObj);
   }, [state.patientObj]);
 

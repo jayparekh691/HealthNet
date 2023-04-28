@@ -8,6 +8,7 @@ import {
   registerPatient,
 } from "../services/receptionistServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function PatientRegistration() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function PatientRegistration() {
 
   // storing the doctorlist from location.state into doctorList state
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     async function getDoctors() {
       try {
         const responseData = await getDoctorList();

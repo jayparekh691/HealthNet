@@ -1,12 +1,19 @@
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { WriteFollowUpContext } from "../contexts/WriteFollowUpContext";
+import { getValueForKey } from "../utils/localStorage";
 
 function WriteFollowUp() {
   const navigate = useNavigate();
   const [followUpDetails, setFollowUpDetails] =
     useContext(WriteFollowUpContext);
+
+  useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   function handleChange(event) {
     console.log(followUpDetails);

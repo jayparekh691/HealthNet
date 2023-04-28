@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { getPatientList } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function ViewAnyPatientHistory() {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ function ViewAnyPatientHistory() {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setDoctorID(state.d_id);
   }, [state.d_id]);
 
