@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../services/loginService";
 import { toast } from "react-toastify";
 import InputField from "../components/InputField";
 import { LoadingIndicator } from "../components/LoadingIndicator";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function ForgotPassword() {
   const navigate = useNavigate();

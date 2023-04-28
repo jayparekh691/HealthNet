@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerEmployee } from "../services/adminServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function EmployeeRegistration() {
   const navigate = useNavigate();
@@ -20,6 +21,12 @@ function EmployeeRegistration() {
   });
 
   const [genderDefault, setGenderDefault] = useState("M");
+
+  useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -53,18 +60,18 @@ function EmployeeRegistration() {
     e.preventDefault();
     console.log(employeeData);
     // add employee data
-    try {
-      const responseData = await registerEmployee(employeeData);
-      handleAuthentication(responseData, navigate, "/login");
-      if (responseData.data) {
-        toast.success(`Employee Added`);
-        navigate(-1);
-      } else {
-        toast.error("Unable to Add Employee");
-      }
-    } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+    // try {
+    const responseData = await registerEmployee(employeeData);
+    handleAuthentication(responseData, navigate, "/login");
+    if (responseData.data) {
+      toast.success(`Employee Added`);
+      navigate(-1);
+    } else {
+      toast.error("Unable to Add Employee");
     }
+    // } catch (error) {
+    //   handleAuthentication(error.response, navigate, "/login");
+    // }
   }
 
   return (

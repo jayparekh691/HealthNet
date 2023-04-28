@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updateEmployee } from "../services/adminServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function UpdateEmployeeDetails() {
   const state = useLocation().state;
@@ -24,6 +25,9 @@ function UpdateEmployeeDetails() {
   });
   const [genderDefault, setGenderDefault] = useState(state.employeeObj.gender);
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setEmplyeeObj(state.employeeObj);
     if (state.employeeObj.roles === "Doctor") {
       setDisabled((pv) => {

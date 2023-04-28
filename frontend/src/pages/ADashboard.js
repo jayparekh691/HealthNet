@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ function ADashboard() {
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setAdminId(state.a_id);
   }, [state.a_id, deleted]);
 
@@ -118,7 +122,7 @@ function ADashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={addEmployee}>
           Add Employee
@@ -179,7 +183,7 @@ function ADashboard() {
             <tbody style={{}}>
               {employeeList
                 .filter((e) => {
-                  return e.deleted === false && e.roles !== "Admin";
+                  return e.deleted === false;
                 })
                 .map((e, i) => {
                   return (

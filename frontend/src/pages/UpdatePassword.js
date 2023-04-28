@@ -5,6 +5,7 @@ import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function UpdatePassword() {
   const navigate = useNavigate();
