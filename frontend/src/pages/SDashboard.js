@@ -43,7 +43,7 @@ function SDashboard() {
           console.log(data);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
     (async function getFieldWorkerList() {
@@ -54,10 +54,10 @@ function SDashboard() {
           setFieldWorkerList(data);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-  }, [assigned]);
+  }, [assigned, navigate]);
 
   function handleChangeInFieldWorker(event) {
     event.preventDefault();
@@ -86,7 +86,7 @@ function SDashboard() {
       setAssigned((pv) => !assigned);
       closeSelectModal();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
@@ -108,7 +108,7 @@ function SDashboard() {
           toast.error(`Unable to Reassign Field Worker`);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     }
     setAssigned((pv) => !assigned);
@@ -132,7 +132,7 @@ function SDashboard() {
       setAssigned((pv) => !assigned);
       closeModalOnSearch();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
   function openModal(index) {
@@ -166,16 +166,16 @@ function SDashboard() {
     // api call to get list
     if (value !== "") {
       (async function getSearchedPatientList() {
-        try {
-          const responseData = await searchPatient(value);
-          let searchedPatientList = responseData.data;
-          if (searchedPatientList) {
-            console.log(searchedPatientList);
-            setSearchedPatientList(searchedPatientList);
-          }
-        } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+        // try {
+        const responseData = await searchPatient(value);
+        let searchedPatientList = responseData.data;
+        if (searchedPatientList) {
+          console.log(searchedPatientList);
+          setSearchedPatientList(searchedPatientList);
         }
+        // } catch (error) {
+        //   handleAuthentication(error.response, navigate, "/login", toast);
+        // }
       })();
     }
   }

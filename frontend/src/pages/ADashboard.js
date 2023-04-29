@@ -15,15 +15,22 @@ function ADashboard() {
   const [searchName, setSearchName] = useState("");
   const [employeeList, setEmployeeList] = useState([]);
   const [adminId, setAdminId] = useState(null);
-  const [deleted, setDeleted] = useState(false);
+  // const [deleted, setDeleted] = useState(false);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
     if (getValueForKey("token") === null) {
       navigate("/login");
     }
-    setAdminId(state.a_id);
-  }, [state.a_id, deleted]);
+
+    if (state === null) {
+      navigate("/login");
+    }
+
+    if (state !== null) {
+      setAdminId(state.a_id);
+    }
+  }, [state.a_id, navigate, state]);
 
   function addEmployee() {
     navigate("/employee-registration");
@@ -44,7 +51,7 @@ function ADashboard() {
             setEmployeeList(employeeList);
           }
         } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
       })();
     }
@@ -66,9 +73,9 @@ function ADashboard() {
         const responseData = await deleteEmployee(e_id);
         console.log(responseData);
         toast.success(`Employee Deleted`);
-        setDeleted((pv) => !deleted);
+        // setDeleted((pv) => !deleted);
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
 
@@ -203,15 +210,17 @@ function ADashboard() {
                         </button>
                       </td>
                       <td>
-                        <button
-                          className="button"
-                          value={i}
-                          onClick={(event) =>
-                            onDeleteButtonClicked(event, e.e_id)
-                          }
-                        >
-                          Delete
-                        </button>
+                        {e.roles !== "Admin" && (
+                          <button
+                            className="button"
+                            value={i}
+                            onClick={(event) =>
+                              onDeleteButtonClicked(event, e.e_id)
+                            }
+                          >
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

@@ -57,7 +57,7 @@ function RDashboard() {
           );
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
 
@@ -70,7 +70,7 @@ function RDashboard() {
           setDoctorList(doctorListData);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
   }, [state.r_id, appointmentAdded, navigate]);
@@ -89,14 +89,15 @@ function RDashboard() {
       }
       closeModal();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
   function handleChangeInDoctor(event) {
     event.preventDefault();
     const value = event.target.value;
-    console.log(value);
+
+    console.log("value", value);
     setDoctorID(value);
   }
 
@@ -137,7 +138,7 @@ function RDashboard() {
             setSearchedPatientList(searchedPatientList);
           }
         } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
       })();
     }
@@ -350,7 +351,7 @@ function RDashboard() {
             </div>
             <div>
               <div style={{ alignSelf: "flex-end" }}>
-                <label className="tableHeading">Doctors Available</label>
+                <label className="tableHeading">Doctor List</label>
               </div>
               <div
                 className="table-wrapper"

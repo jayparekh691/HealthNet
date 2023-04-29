@@ -53,19 +53,16 @@ public class EmployeeServicesImpl implements EmployeeServices {
     }
     @Override
     public Employee updateEmployee(Employee employee, Integer id) {
-        String pass=employee.getPassword();
         Employee employee1 =this.employeeRepo.findById(id).orElseThrow();
         employee1.setEmail(employee.getEmail());
         employee1.setName(employee.getName());
         employee1.setSpecialization(employee.getSpecialization());
         employee1.setName(employee.getName());
         employee1.setGender(employee.getGender());
-        employee1.setPassword(passwordEncoder.encode(pass));
         employee1.setRoles(employee.getRoles());
         employee1.setMobilenumber("+91 "+employee.getMobilenumber());
         employee1.setAddress(employee.getAddress());
         this.employeeRepo.save(employee1);
-        employee1.setPassword(pass);
         return employee1;
     }
 

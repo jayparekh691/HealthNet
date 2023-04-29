@@ -29,7 +29,7 @@ function UpdatePatientDetails() {
       navigate("/login");
     }
     setPatientObj(state.patientObj);
-  }, [state.patientObj]);
+  }, [state.patientObj, navigate]);
 
   function handleChange(event) {
     // event.preventDefault();
@@ -60,7 +60,7 @@ function UpdatePatientDetails() {
         toast.error("Unable to Update Patient data");
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 

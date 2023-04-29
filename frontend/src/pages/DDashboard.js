@@ -1,18 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
 import { getValueForKey } from "../utils/localStorage";
-import {
-  DiagnoseContext,
-  resetDiagnoseData,
-} from "../contexts/DiagnoseContext";
-import {
-  resetFollowupData,
-  WriteFollowUpContext,
-} from "../contexts/WriteFollowUpContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -20,16 +14,12 @@ function DDashboard() {
   const [doctorID, setDoctorID] = useState(null);
   const [patientList, setPatientList] = useState([]);
   const [modal, setModal] = useState(false);
-  const [writtenData, setWrittenData] = useContext(DiagnoseContext);
-  const [followUpDetails, setFollowUpDetails] =
-    useContext(WriteFollowUpContext);
 
   useEffect(() => {
     if (getValueForKey("token") === null) {
       navigate("/login");
     }
-    setWrittenData(resetDiagnoseData);
-    setFollowUpDetails(resetFollowupData);
+
     setDoctorID(state.d_id);
     (async function () {
       try {
@@ -46,10 +36,10 @@ function DDashboard() {
           console.log("error! ");
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-  }, [state.d_id, navigate, setFollowUpDetails, setWrittenData]);
+  }, [state.d_id, navigate]);
 
   function updatePassword(event) {
     event.preventDefault();

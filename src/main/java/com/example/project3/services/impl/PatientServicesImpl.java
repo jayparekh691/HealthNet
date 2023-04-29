@@ -6,6 +6,7 @@ import com.example.project3.services.PatientServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,9 +52,24 @@ public class PatientServicesImpl implements PatientServices {
 
     @Override
     public List<Patient> searchPatient(String id) {
+        System.out.println(id);
         List<Patient> l1=this.patientRepo.findAllByNameContaining(id);
         List<Patient> l2=this.patientRepo.findPatientsByMobilenumberContaining(id);
+        System.out.println("l1 size "+l1.size());
+        System.out.println("l2 size "+l2.size());
+        System.out.println("hello");
+        for(Patient patient : l1){
+            String s = patient.getMobilenumber();
+            s = s.substring(4);
+            patient.setMobilenumber(s);
+        }
+        for(Patient patient : l2){
+            String s = patient.getMobilenumber();
+            s = s.substring(4);
+            patient.setMobilenumber(s);
+        }
         l1.addAll(l2);
+        System.out.println("hi");
         return l1;
     }
 }

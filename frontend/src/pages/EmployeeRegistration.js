@@ -60,18 +60,18 @@ function EmployeeRegistration() {
     e.preventDefault();
     console.log(employeeData);
     // add employee data
-    // try {
-    const responseData = await registerEmployee(employeeData);
-    handleAuthentication(responseData, navigate, "/login");
-    if (responseData.data) {
-      toast.success(`Employee Added`);
-      navigate(-1);
-    } else {
-      toast.error("Unable to Add Employee");
+    try {
+      const responseData = await registerEmployee(employeeData);
+      handleAuthentication(responseData, navigate, "/login");
+      if (responseData.data) {
+        toast.success(`Employee Added`);
+        navigate(-1);
+      } else {
+        toast.error("Unable to Add Employee");
+      }
+    } catch (error) {
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
-    // } catch (error) {
-    //   handleAuthentication(error.response, navigate, "/login");
-    // }
   }
 
   return (
