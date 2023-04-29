@@ -26,11 +26,17 @@ function VisitsDueByFieldWorker() {
       try {
         const responseData = await dueVisits();
         const visitListData = responseData.data;
+
         if (visitListData) {
-          setDueVisitList(visitListData);
+          if (visitListData.length === 0) {
+            alert("No Visits Due");
+            navigate(-1);
+          } else {
+            setDueVisitList(visitListData);
+          }
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
     (async function getFieldWorkerList() {
@@ -41,15 +47,10 @@ function VisitsDueByFieldWorker() {
           setFieldWorkerList(data);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-
-    if (dueVisitList.length === 0) {
-      alert("No Visits Due");
-      navigate(-1);
-    }
-  }, [assigned]);
+  }, [assigned, navigate]);
 
   async function reassign(e_id, patientID) {
     if (reassignedFieldWorkerID === null) {
@@ -67,7 +68,7 @@ function VisitsDueByFieldWorker() {
           toast.error(`Unable to Reassign Field Worker`);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     }
     setAssigned((pv) => !assigned);

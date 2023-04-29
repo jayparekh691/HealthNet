@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getPatientList } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
 import { getValueForKey } from "../utils/localStorage";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ViewAnyPatientHistory() {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ function ViewAnyPatientHistory() {
       navigate("/login");
     }
     setDoctorID(state.d_id);
-  }, [state.d_id]);
+  }, [state.d_id, navigate]);
 
   function searchBarOnChange(event) {
     event.preventDefault();
@@ -34,7 +36,7 @@ function ViewAnyPatientHistory() {
             setSearchedPatientList(patientList);
           }
         } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
       })();
     }

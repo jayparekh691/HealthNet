@@ -17,21 +17,21 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private Integer pid;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String name;
     private int age;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String mobilenumber;
     private char gender;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String address;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String town;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String city;
-    @Convert(converter = AesEncryptor.class)
+//    @Convert(converter = AesEncryptor.class)
     private String state;
     private int pincode;
 

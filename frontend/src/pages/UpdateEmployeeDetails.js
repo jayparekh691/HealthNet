@@ -38,7 +38,7 @@ function UpdateEmployeeDetails() {
         return true;
       });
     }
-  }, [state.employeeObj, state.employeeObj.roles]);
+  }, [state.employeeObj, state.employeeObj.roles, navigate]);
 
   function handleChange(event) {
     // event.preventDefault();
@@ -70,7 +70,7 @@ function UpdateEmployeeDetails() {
         toast.error("Unable to Update Employee data");
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 

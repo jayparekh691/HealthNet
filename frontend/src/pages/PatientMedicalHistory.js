@@ -37,7 +37,7 @@ function PatientMedicalHistory() {
         }
         console.log(data);
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
   }, [state.patientObj, deactivate, state.doctorID, navigate]);
@@ -52,7 +52,7 @@ function PatientMedicalHistory() {
       }
     } catch (error) {
       toast.error("Sorry, Please try again");
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 

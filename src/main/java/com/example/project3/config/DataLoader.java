@@ -12,6 +12,11 @@ public class DataLoader  implements ApplicationRunner {
     @Autowired
     private EmployeeRepo employeeRepo;
     public void run(ApplicationArguments args) {
-        employeeRepo.save(new Employee(1, "default","default@gmail.com" ,"$2a$10$n.cEy1x7jSEW7aw2PcfRWev6I8Iry6p6GOcp8CPr7XzofII4gB7z2", "default","+91 123456789",'M',"Admin" ));
-    }
+        try {
+            employeeRepo.save(new Employee("default", "default@gmail.com", "$2a$10$n.cEy1x7jSEW7aw2PcfRWev6I8Iry6p6GOcp8CPr7XzofII4gB7z2", "default", "+91 123456789", 'M', "Admin"));
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        }
 }

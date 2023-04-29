@@ -35,7 +35,8 @@ public class AppointmentServicesImpl implements AppointmentServices {
         Employee employee = this.employeeRepo.findById(d_id).orElseThrow();
         appointment.setPatient(patient);
         appointment.setDoctor(employee);
-        String sdate = simpleDateFormat.format(appointment.getCurr_date());
+        Date date = new Date();
+        String sdate = simpleDateFormat.format(date);
         Date d = simpleDateFormat.parse(sdate);
         appointment.setCurr_date(d);
         this.appointmentRepo.save(appointment);

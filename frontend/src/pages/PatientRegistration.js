@@ -42,11 +42,11 @@ function PatientRegistration() {
           setDoctorID(doctorList[0].e_id);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     }
     getDoctors();
-  }, []);
+  }, [navigate]);
 
   function handleChange(event) {
     // event.preventDefault();
@@ -77,12 +77,12 @@ function PatientRegistration() {
         const appointmentData = responseData.data;
         console.log(appointmentData);
         toast.success(
-          `Patient Registered and Appointment generated with ID: ${appointmentData.a_id}!`
+          `Patient Registered with Appointment ID: ${appointmentData.a_id}!`
         );
         navigate(-1);
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 

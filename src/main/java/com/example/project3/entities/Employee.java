@@ -36,8 +36,7 @@ public class Employee {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Patient> patients;
 
-    public Employee(int e_id, String name, String email, String password, String address,String mobilenumber, char gender, String role) {
-        this.e_id = e_id;
+    public Employee(String name, String email, String password, String address,String mobilenumber, char gender, String role) {
         this.name = name;
         this.email = email;
         this.password = password;

@@ -92,7 +92,7 @@ function DiagnosePatient() {
               );
             }
           } catch (error) {
-            handleAuthentication(error.response, navigate, "/login");
+            handleAuthentication(error.response, navigate, "/login", toast);
           }
         } else {
           toast.success(`Diagnosis and Prescription Written`);
@@ -102,7 +102,7 @@ function DiagnosePatient() {
         toast.error("Unable to write Diagnosis and Prescription");
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
   function openConfirmModal(event) {

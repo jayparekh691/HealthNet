@@ -12,7 +12,6 @@ import {
 import { toast } from "react-toastify";
 import { handleAuthentication } from "../utils/authentication";
 import { getValueForKey } from "../utils/localStorage";
-import { Padding } from "@mui/icons-material";
 
 function ViewNewVisitRecords() {
   const navigate = useNavigate();
@@ -28,18 +27,19 @@ function ViewNewVisitRecords() {
         const responseData = await getNewVisitRecords(state.doctorID);
         let data = responseData.data;
         if (data) {
-          setNewVisitList(data);
+          if (newVisitList.length === 0) {
+            alert("No New Visits");
+            navigate(-1);
+          } else {
+            setNewVisitList(data);
+          }
         }
         console.log(data);
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-    if (newVisitList.length === 0) {
-      alert("No New Visits");
-      navigate(-1);
-    }
-  }, [state.doctorID]);
+  }, [state.doctorID, navigate, newVisitList.length]);
 
   async function markAsSeenByDoctor(visitID) {
     console.log(visitID);
@@ -53,7 +53,7 @@ function ViewNewVisitRecords() {
         toast.error("Could not mark as seen");
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
