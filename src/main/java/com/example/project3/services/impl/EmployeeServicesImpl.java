@@ -64,8 +64,8 @@ public class EmployeeServicesImpl implements EmployeeServices {
         employee1.setRoles(employee.getRoles());
         employee1.setMobilenumber("+91 "+employee.getMobilenumber());
         employee1.setAddress(employee.getAddress());
-        this.employeeRepo.save(employee1);
         employee1.setPassword(pass);
+        this.employeeRepo.save(employee1);
         return employee1;
     }
 
