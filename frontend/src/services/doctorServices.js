@@ -1,27 +1,30 @@
 import axios from "axios";
 import { getValueForKey } from "../utils/localStorage";
+import { IP_ADDRESS, PORT } from "../utils/constants";
+
 const getAllPatientWithDoctorIDAPI = (doctorID) =>
-  `http://localhost:9080/api/doctor/get-all-appointments-of-doctor/${doctorID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/get-all-appointments-of-doctor/${doctorID}`;
+
 const writeDiagnosisAPI = (appointmentID) =>
-  `http://localhost:9080/api/doctor/write-diagnostics/${appointmentID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/write-diagnostics/${appointmentID}`;
 
 const writeFollowUpAPI = (appointmentID) =>
-  `http://localhost:9080/api/doctor/write-follow-up/${appointmentID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/write-follow-up/${appointmentID}`;
 
 const searchedPatientListAPI = (doctorID, searchValue) =>
-  `http://localhost:9080/api/doctor/search-patient-doctor/${doctorID}/${searchValue}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/search-patient-doctor/${doctorID}/${searchValue}`;
 
 const patientMedicalHistoryAPI = (doctorID, patientID) =>
-  `http://localhost:9080/api/doctor/view-patient-history/${doctorID}/${patientID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/view-patient-history/${doctorID}/${patientID}`;
 
 const deactivateFollowUpAPI = (appointmentID) =>
-  `http://localhost:9080/api/doctor/deactivate-followup/${appointmentID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/deactivate-followup/${appointmentID}`;
 
 const newVisitListAPI = (doctorID) =>
-  `http://localhost:9080/api/doctor/get-unseen-list/${doctorID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/get-unseen-list/${doctorID}`;
 
 const markSeenByDoctorAPI = (visitID) =>
-  `http://localhost:9080/api/doctor/set-visit-as-seen/${visitID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/doctor/set-visit-as-seen/${visitID}`;
 
 async function getAllPatients(doctorID) {
   const responseData = await axios.get(getAllPatientWithDoctorIDAPI(doctorID), {

@@ -1,9 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
+import {
+  DiagnoseContext,
+  resetDiagnoseData,
+} from "../contexts/DiagnoseContext";
+import {
+  resetFollowupData,
+  WriteFollowUpContext,
+} from "../contexts/WriteFollowUpContext";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -11,8 +20,16 @@ function DDashboard() {
   const [doctorID, setDoctorID] = useState(null);
   const [patientList, setPatientList] = useState([]);
   const [modal, setModal] = useState(false);
+  const [writtenData, setWrittenData] = useContext(DiagnoseContext);
+  const [followUpDetails, setFollowUpDetails] =
+    useContext(WriteFollowUpContext);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+    setWrittenData(resetDiagnoseData);
+    setFollowUpDetails(resetFollowupData);
     setDoctorID(state.d_id);
     (async function () {
       try {
@@ -32,7 +49,7 @@ function DDashboard() {
         handleAuthentication(error.response, navigate, "/login");
       }
     })();
-  }, [state.d_id, navigate]);
+  }, [state.d_id, navigate, setFollowUpDetails, setWrittenData]);
 
   function updatePassword(event) {
     event.preventDefault();
@@ -95,7 +112,7 @@ function DDashboard() {
     >
       <div
         style={{
-          flex: 2,
+          flex: 3,
           height: "100vh",
           width: "300px",
           backgroundColor: "#516395",
@@ -104,7 +121,7 @@ function DDashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={viewAnyPatientHistory}>
           View Patient History
@@ -134,7 +151,7 @@ function DDashboard() {
       <div
         className="paddingPage"
         style={{
-          flex: 10,
+          flex: 12,
         }}
       >
         <div>

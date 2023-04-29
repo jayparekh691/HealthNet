@@ -1,8 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
-import { getPatientHistory, getPatientList } from "../services/doctorServices";
+import { getPatientList } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function ViewAnyPatientHistory() {
   const navigate = useNavigate();
@@ -10,9 +11,11 @@ function ViewAnyPatientHistory() {
   const [doctorID, setDoctorID] = useState(null);
   const [searchedPatientList, setSearchedPatientList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [patientHistory, setPatientHistory] = useState([]);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setDoctorID(state.d_id);
   }, [state.d_id]);
 
@@ -38,24 +41,12 @@ function ViewAnyPatientHistory() {
   }
 
   function onViewHistoryButtonClicked(p) {
-    (async function getPatientMedicalHistory() {
-      try {
-        const responseData = await getPatientHistory(doctorID, p.pid);
-        let data = responseData.data;
-        if (data) {
-          setPatientHistory(data);
-        }
-        console.log(data);
-        navigate("/patient-medical-history", {
-          state: {
-            patientHistory: data,
-            patientObj: p,
-          },
-        });
-      } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
-      }
-    })();
+    navigate("/patient-medical-history", {
+      state: {
+        patientObj: p,
+        doctorID: doctorID,
+      },
+    });
   }
 
   return (

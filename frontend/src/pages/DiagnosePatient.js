@@ -1,10 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  getPatientHistory,
-  writeDiagnosis,
-  submitFollowUp,
-} from "../services/doctorServices";
+import { writeDiagnosis, submitFollowUp } from "../services/doctorServices";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -18,6 +14,7 @@ import {
 import { LoadingIndicator } from "../components/LoadingIndicator";
 import { handleAuthentication } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
 
 function DiagnosePatient() {
   const state = useLocation().state;
@@ -32,10 +29,13 @@ function DiagnosePatient() {
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setAppointmentID(state.a_id);
     setPatientObj(state.patientObj);
     setDoctorID(state.doctorID);
-  }, [state.a_id, state.patientObj, state.doctorID]);
+  }, [state.a_id, state.patientObj, state.doctorID, navigate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -49,21 +49,12 @@ function DiagnosePatient() {
   function viewPatientHistory() {
     console.log(appointmentID);
     console.log(patientObj);
-    (async function getPatientMedicalHistory() {
-      try {
-        const responseData = await getPatientHistory(doctorID, patientObj.pid);
-        let data = responseData.data;
-        console.log(data);
-        navigate("/patient-medical-history", {
-          state: {
-            patientHistory: data,
-            patientObj: patientObj,
-          },
-        });
-      } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
-      }
-    })();
+    navigate("/patient-medical-history", {
+      state: {
+        doctorID: doctorID,
+        patientObj: patientObj,
+      },
+    });
   }
 
   function writeFollowUp() {

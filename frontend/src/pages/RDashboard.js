@@ -11,6 +11,7 @@ import SelectModal from "../components/SelectModal";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
 
 function RDashboard() {
   const state = useLocation().state;
@@ -39,6 +40,9 @@ function RDashboard() {
   }
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setReceptionistId(state.r_id);
     (async function () {
       try {
@@ -158,7 +162,7 @@ function RDashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={addPatient}>
           Add Patient
@@ -206,7 +210,7 @@ function RDashboard() {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              label="Search"
+              label="Search Patients"
               onChange={searchBarOnChange}
               placeholder="Search Patient by name or mobile number"
               value={searchValue}

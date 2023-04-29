@@ -64,7 +64,6 @@ function Login() {
             state: {
               a_id: data.e_id,
             },
-            replace: true,
           });
         } else {
         }
@@ -79,26 +78,28 @@ function Login() {
 
   return (
     <div className="formPage">
-      <div className="container">
+      <div className="container" style={{ width: "500px" }}>
         <div className="title">LOGIN</div>
         <div className="content">
           <form onSubmit={onSubmit}>
             <div className="user-details">
-              <div className="input-box">
+              <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Email"}
                   name={"email"}
                   type={"email"}
                   value={loginData.email}
+                  placeholder={"Email"}
                   onChange={handleChange}
                 />
               </div>
-              <div className="input-box">
+              <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Password"}
                   name="password"
                   type="password"
                   value={loginData.password}
+                  placeholder={"Password"}
                   onChange={handleChange}
                 />
               </div>
@@ -106,7 +107,7 @@ function Login() {
             <div className="button">
               <input type="submit" value="LOGIN" />
             </div>
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "right" }}>
               <button
                 className="button2"
                 style={{ color: "black", fontWeight: "300", fontSize: "16px" }}
