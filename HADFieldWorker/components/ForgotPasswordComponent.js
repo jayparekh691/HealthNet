@@ -17,6 +17,10 @@ function ForgotPasswordComponent({ index, onPress, showUpdateComponent }) {
 
   const handleEnterEmailForResetPassword = async () => {
     console.log(email);
+    if (email === "") {
+      Alert.alert("Please enter registered email id");
+      return;
+    }
     // call api to restore password on success go to reset password component
     const response = await forgotPassword(email);
     const data = response.data;

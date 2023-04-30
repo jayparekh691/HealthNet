@@ -4,8 +4,10 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Pressable,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
@@ -17,8 +19,27 @@ import { TouchableOpacity } from "react-native";
 import PinInputField from "../components/PinInputField";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
+import { SecureStoreContext } from "../contexts/SecureStoreContext";
+import {
+  getMedicalDataFromTable,
+  removeRecordFromMedicalDataTable,
+} from "../services/databaseServices";
+import { sendMedicalData } from "../services/syncServices";
+import { uploadImageToFirebase } from "./Dashboard";
 
 const { width, height } = Dimensions.get("screen");
+
+function Loading() {
+  return (
+    <ActivityIndicator
+      style={{
+        flex: 1,
+      }}
+      size={"large"}
+      color={COLOR.primaryColor}
+    />
+  );
+}
 
 function LockScreen() {
   const navigation = useNavigation();
@@ -29,18 +50,147 @@ function LockScreen() {
   const { isConnectedState } = useContext(ConnectivityContext);
   const [isConnected] = isConnectedState;
 
+  const { pinState } = useContext(SecureStoreContext);
+  const [pin, setPin] = pinState;
+
   const isFocused = useIsFocused();
 
-  const [pin, setPin] = useState({
+  const [lockPin, setLockPin] = useState({
     pinOne: "",
     pinTwo: "",
     pinThree: "",
     pinFour: "",
   });
 
+  const cleanData = () => {
+    console.log("Clearing all keys");
+    (async () => {
+      await removeItem("pin");
+      await removeItem("user");
+      await removeItem("token");
+      setPin(null);
+    })();
+  };
+
+  const loadMedicalData = async (medicalData) => {
+    if (medicalData.length === 0) {
+      console.log("no medical data");
+      console.log("all medical has been synced!");
+      cleanData();
+      setIsDashboardLoading(false);
+      return;
+    }
+
+    setIsDashboardLoading(true);
+
+    const Promises = new Array();
+    medicalData.forEach((data) => {
+      Promises.push(
+        new Promise((resolve, reject) => {
+          if (data.photo === null) {
+            sendMedicalData(data)
+              .then((response) => {
+                resolve(response.data);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          } else {
+            uploadImageToFirebase(data.photo, data.v_id).then(
+              async (imageUrl) => {
+                data["photo"] = imageUrl;
+                sendMedicalData(data)
+                  .then((response) => {
+                    resolve(response.data);
+                  })
+                  .catch((error) => {
+                    reject(error);
+                  });
+              }
+            );
+          }
+        })
+      );
+    });
+
+    console.log("promises size", Promises.length);
+
+    Promise.allSettled(Promises).then((value) => {
+      console.log(value);
+      const deleteIds = new Array();
+      value.forEach((e) => {
+        if (e.status === "fulfilled") {
+          deleteIds.push(e.value);
+        }
+      });
+      const DeletePromises = new Array();
+
+      deleteIds.forEach((id) => {
+        DeletePromises.push(
+          new Promise((resolve, reject) => {
+            removeRecordFromMedicalDataTable(id)
+              .then(() => {
+                resolve(`ID: ${id} done`);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          })
+        );
+      });
+      console.log(deleteIds);
+      Promise.allSettled(DeletePromises).then(async (value) => {
+        value.forEach((e) => {
+          console.log(e.value, e.status);
+        });
+        getMedicalDataFromTable((medicalData) => {
+          if (medicalData.length === 0) {
+            console.log("all medical has been synced!");
+            cleanData();
+          }
+        });
+      });
+    });
+  };
+
+  const onForgotPin = () => {
+    if (isConnected) {
+      Alert.alert(
+        "Forgot Pin",
+        "Are you sure want to logout?",
+        [
+          {
+            text: "Cancel",
+            onPress: () => {},
+            style: "cancel",
+          },
+          {
+            text: "Logout",
+            onPress: () => {
+              console.log("logging out .... ");
+              setIsDashboardLoading(true);
+
+              // sync all the medical data to the internet
+              getMedicalDataFromTable(loadMedicalData).catch((error) => {
+                console.log("get medical data from table error: ", error);
+                setIsDashboardLoading(false);
+              });
+              setIsDashboardLoading(false);
+            },
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    } else {
+      Alert.alert("No internet connection");
+    }
+  };
+
   useEffect(() => {
     if (isFocused) {
-      setPin(() => {
+      setLockPin(() => {
         return {
           pinOne: "",
           pinTwo: "",
@@ -53,28 +203,28 @@ function LockScreen() {
 
   const onPinChange = (name, text) => {
     if (name === "pinOne") {
-      setPin((pv) => {
+      setLockPin((pv) => {
         return { ...pv, [name]: text };
       });
     } else if (name === "pinTwo") {
-      setPin((pv) => {
+      setLockPin((pv) => {
         return { ...pv, [name]: text };
       });
     } else if (name === "pinThree") {
-      setPin((pv) => {
+      setLockPin((pv) => {
         return { ...pv, [name]: text };
       });
     } else if (name === "pinFour") {
-      setPin((pv) => {
+      setLockPin((pv) => {
         return { ...pv, [name]: text };
       });
     }
   };
 
   const onContinue = async () => {
-    // setIsDashboardLoading(true);
-    const lockPin = await getValueFor("pin");
-    if (stringFromObject(pin) === lockPin) {
+    setIsDashboardLoading(true);
+    const securedPin = await getValueFor("pin");
+    if (stringFromObject(lockPin) === securedPin) {
       console.log("lockscreen network", isConnected);
       navigation.navigate("drawerNavigator");
     } else {
@@ -84,17 +234,7 @@ function LockScreen() {
   };
 
   if (isDashboardLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size={"large"} color={COLOR.primaryColor} />
-      </View>
-    );
+    return Loading();
   }
 
   return (
@@ -163,21 +303,11 @@ function LockScreen() {
                 alignItems: "center",
               }}
             >
-              <PinInputField pin={pin} onPinChange={onPinChange} />
+              <PinInputField pin={lockPin} onPinChange={onPinChange} />
             </View>
           </View>
         </View>
-        <TouchableOpacity
-          activeOpacity={0}
-          onPress={() => {
-            console.log("Clearing all keys");
-            (async () => {
-              await removeItem("pin");
-              await removeItem("user");
-              await removeItem("token");
-            })();
-          }}
-        >
+        <Pressable onPress={onForgotPin}>
           <Text
             style={{
               fontSize: width / 30,
@@ -185,9 +315,9 @@ function LockScreen() {
               fontWeight: 400,
             }}
           >
-            forgot passcode?
+            forgot pin?
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View

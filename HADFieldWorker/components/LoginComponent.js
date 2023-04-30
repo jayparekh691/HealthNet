@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
-function LoginComponent({ onPress, index }) {
+function LoginComponent({ changeIndexTo, index }) {
   const navigation = useNavigation();
 
   const { isConnectedState } = useContext(ConnectivityContext);
@@ -50,6 +50,7 @@ function LoginComponent({ onPress, index }) {
   };
 
   const setupDatabase = async () => {
+    console.log("inside setup database");
     return new Promise((resolve, reject) => {
       // clean database: delete the tables from database
       cleanDatabase()
@@ -78,6 +79,8 @@ function LoginComponent({ onPress, index }) {
                 Promise.allSettled(promiseList).then((value) => {
                   console.log("value: ", value);
                 });
+
+                // FIXME: what if failed in storing some of the failed promises
                 resolve("inserted data in appointment table");
               } else {
                 reject("get appointment list api error");
@@ -151,7 +154,7 @@ function LoginComponent({ onPress, index }) {
       <TouchableWithoutFeedback
         activeOpacity={0}
         onPress={() => {
-          onPress(index);
+          changeIndexTo(1);
         }}
       >
         <View

@@ -3,7 +3,7 @@ export const AppStateContext = React.createContext();
 
 function AppStateProvider({ children }) {
   const [isBackground, setIsBackground] = useState(false);
-  const [isMediaActive, setIsMediaActive] = useState(false);
+  const [isMediaActive, setIsMediaActive] = useState("false");
   return (
     <AppStateContext.Provider
       value={{
