@@ -38,8 +38,83 @@ import { BackHandler } from "react-native";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
 import { AppStateContext } from "../contexts/AppStateContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
+
+export const uploadImageToFirebase = (image, visitId) => {
+  const date = new Date().toLocaleTimeString();
+  return new Promise(async (resolve, reject) => {
+    console.log("inside firebase");
+    if (image === null) resolve("null");
+    const blobImage = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", image, true);
+      xhr.send(null);
+    });
+
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const storageRef = ref(storage, "PatientImages/" + date + "$" + visitId);
+    const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+          case "storage/unauthorized":
+            // User doesn't have permission to access the object
+            reject("storage/unauthorized");
+            break;
+          case "storage/canceled":
+            // User canceled the upload
+            reject("storage/canceled");
+            break;
+
+          // ...
+
+          case "storage/unknown":
+            // Unknown error occurred, inspect error.serverResponse
+            reject("storage/unknown");
+            break;
+        }
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          resolve(downloadURL);
+        });
+      }
+    );
+  });
+};
 
 function Dashboard({ navigation }) {
   const isFocused = useIsFocused();
@@ -67,6 +142,9 @@ function Dashboard({ navigation }) {
 
   useEffect(() => {
     (async () => {
+      if (isMediaActive === "loading") {
+        setIsMediaActive("false");
+      }
       await updateTimeStamp();
     })();
   }, []);
@@ -131,29 +209,33 @@ function Dashboard({ navigation }) {
         appState.current.match(/active|foreground/) &&
         nextAppState === "background"
       ) {
-        if (!isMediaActive) {
-          console.log("app going background");
+        if (isMediaActive === "false") {
+          console.log("BACKGROUND: ", isMediaActive);
+        } else if (isMediaActive === "true") {
+          console.log("BACKGROUND: ", isMediaActive);
+        } else if (isMediaActive === "loading") {
+          console.log("BACKGROUND: ", isMediaActive);
         }
       } else if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        console.log("is media active", isMediaActive);
+        console.log("FOREGROUND: ", isMediaActive);
         // backListener();
-        if (!isMediaActive) {
+        if (isMediaActive === "false") {
           console.log("navigate to lockscreen");
           navigation.navigate("lockScreen");
-        } else {
-          console.log("setting is media active to false");
-          setIsMediaActive(false);
+        } else if (isMediaActive === "true") {
+          setIsMediaActive("false");
+        } else if (isMediaActive === "loading") {
+          setIsMediaActive("true");
         }
-        console.log("app coming to foreground");
       }
       appState.current = nextAppState;
     });
 
     return () => subscription.remove();
-  }, [isMediaActive, isBackground, appState]);
+  }, [isMediaActive, appState]);
 
   const loadAppointmentFromDatabase = (appointmentList) => {
     setAppointmentData(appointmentList.sort(sortComparator("date")));
@@ -220,80 +302,6 @@ function Dashboard({ navigation }) {
       },
     });
   }, [navigation, isConnected, syncDate]);
-
-  const uploadImageToFirebase = (image, visitId) => {
-    const date = new Date().toLocaleTimeString();
-    return new Promise(async (resolve, reject) => {
-      console.log("inside firebase");
-      if (image === null) resolve("null");
-      const blobImage = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function () {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", image, true);
-        xhr.send(null);
-      });
-
-      const metadata = {
-        contentType: "image/jpeg",
-      };
-      const storageRef = ref(storage, "PatientImages/" + date + "$" + visitId);
-      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
-
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          switch (error.code) {
-            case "storage/unauthorized":
-              // User doesn't have permission to access the object
-              reject("storage/unauthorized");
-              break;
-            case "storage/canceled":
-              // User canceled the upload
-              reject("storage/canceled");
-              break;
-
-            // ...
-
-            case "storage/unknown":
-              // Unknown error occurred, inspect error.serverResponse
-              reject("storage/unknown");
-              break;
-          }
-        },
-        () => {
-          // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            resolve(downloadURL);
-          });
-        }
-      );
-    });
-  };
 
   const getNewAppointments = async () => {
     const e_id = JSON.parse(await getValueFor("user")).e_id;
@@ -370,11 +378,8 @@ function Dashboard({ navigation }) {
       await updateSyncTime(new Date());
       await updateTimeStamp();
       setIsDashboardLoading(false);
-
       return;
     }
-
-    setIsDashboardLoading(true);
 
     const Promises = new Array();
     medicalData.forEach((data) => {
@@ -463,7 +468,7 @@ function Dashboard({ navigation }) {
   useEffect(() => {
     if (isFocused) {
       (async () => {
-        setIsDashboardLoading(true);
+        // setIsDashboardLoading(true);
         await getAppointmentFromTable(loadAppointmentFromDatabase);
       })();
     }

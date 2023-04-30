@@ -46,7 +46,7 @@ function LoginScreen() {
   useEffect(() => {
     if (index === 0) {
       setComponent(() => {
-        return <LoginComponent index={1} onPress={changeIndex} />;
+        return <LoginComponent changeIndexTo={changeIndex} />;
       });
     } else if (index === 1) {
       setComponent(() => {
