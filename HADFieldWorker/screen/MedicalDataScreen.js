@@ -286,7 +286,7 @@ function MedicalDataScreen() {
           </View>
         </View>
         {/*  TODO: instruction to be added later */}
-        {/* <View
+        <View
           style={{
             minheight: height / 12,
             maxHeight: height / 4,
@@ -306,9 +306,9 @@ function MedicalDataScreen() {
               color: COLOR.white,
             }}
           >
-            {data.instruction}
+            {data.remarks}
           </Text>
-        </View>  */}
+        </View>
         <Divider />
         <View style={{ marginVertical: 8 }}>
           <View

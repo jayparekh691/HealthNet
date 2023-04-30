@@ -22,6 +22,7 @@ public class Followup {
     private int gap;
     private int visitCount;
 
+    private String remarks;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Visit> visitList;

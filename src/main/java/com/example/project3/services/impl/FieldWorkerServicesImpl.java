@@ -52,6 +52,7 @@ public class FieldWorkerServicesImpl implements FieldWorkerServices {
                 visitModel.setTemperature(appointment.getFollowup().getInstructions().isTemperature());
                 visitModel.setSpo2Level(appointment.getFollowup().getInstructions().isSpo2Level());
                 visitModel.setBloodPressure(appointment.getFollowup().getInstructions().isBloodPressure());
+                visitModel.setRemarks(appointment.getFollowup().getRemarks());
                 visitModel.setName(appointment.getPatient().getName());
                 visitModel.setAge(appointment.getPatient().getAge());
                 visitModel.setAddress(appointment.getPatient().getAddress());

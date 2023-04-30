@@ -170,6 +170,7 @@ function DrawerNavigation(props) {
             onPress: () => {
               console.log("logging out .... ");
               setDrawerLoading(true);
+              // login
 
               // sync all the medical data to the internet
               getMedicalDataFromTable(loadMedicalData).catch((error) => {
