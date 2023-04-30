@@ -19,6 +19,7 @@ public class Followup {
     private int f_id;
     @OneToOne(fetch = FetchType.EAGER)
     private FollowupInstructions instructions;
+    private String remarks;
     private int gap;
     private int visitCount;
 

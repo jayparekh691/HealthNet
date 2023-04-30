@@ -74,20 +74,25 @@ function SDashboard() {
 
   async function assign(pid) {
     console.log(pid);
-    try {
-      const responseData = await assignFieldworker(pid, fieldWorkerID);
-      const data = responseData.data;
-      if (data) {
-        console.log(data);
-        toast.success(`Field Worker has been assigned`);
-      } else {
-        toast.error(`Unable to assign Field Worker`);
+    if (fieldWorkerID === null) {
+      alert("Field worker not selected");
+    } else {
+      try {
+        const responseData = await assignFieldworker(pid, fieldWorkerID);
+        const data = responseData.data;
+        if (data) {
+          console.log(data);
+          toast.success(`Field Worker has been assigned`);
+        } else {
+          toast.error(`Unable to assign Field Worker`);
+        }
+        setAssigned((pv) => !assigned);
+        closeSelectModal();
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
-      setAssigned((pv) => !assigned);
-      closeSelectModal();
-    } catch (error) {
-      handleAuthentication(error.response, navigate, "/login", toast);
     }
+    setFieldWorkerID(null);
   }
 
   async function reassign(oldFieldWorkerID) {
@@ -111,46 +116,55 @@ function SDashboard() {
         handleAuthentication(error.response, navigate, "/login", toast);
       }
     }
+    setReassignedFieldWorkerID(null);
     setAssigned((pv) => !assigned);
     closeModal();
   }
 
   async function reassignOnSearch(val, pid) {
     console.log(pid);
-    try {
-      const responseData = await assignFieldworker(
-        pid,
-        reassignedFieldWorkerID
-      );
-      const data = responseData.data;
-      if (data) {
-        console.log(data);
-        toast.success(`Field Worker has been assigned`);
-      } else {
-        toast.error(`Unable to assign Field Worker`);
+    if (reassignedFieldWorkerID === null) {
+      alert("Field worker not selected");
+    } else {
+      try {
+        const responseData = await assignFieldworker(
+          pid,
+          reassignedFieldWorkerID
+        );
+        const data = responseData.data;
+        if (data) {
+          console.log(data);
+          toast.success(`Field Worker has been assigned`);
+        } else {
+          toast.error(`Unable to assign Field Worker`);
+        }
+        setAssigned((pv) => !assigned);
+        closeModalOnSearch();
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
-      setAssigned((pv) => !assigned);
-      closeModalOnSearch();
-    } catch (error) {
-      handleAuthentication(error.response, navigate, "/login", toast);
     }
+    setReassignedFieldWorkerID(null);
   }
   function openModal(index) {
     setModalIndex(index);
   }
   function closeModal() {
+    setReassignedFieldWorkerID(null);
     setModalIndex(-1);
   }
   function openSelectModal(index) {
     setNewModalIndex(index);
   }
   function closeSelectModal() {
+    setFieldWorkerID(null);
     setNewModalIndex(-1);
   }
   function openModalOnSearch(index) {
     setModalIndexOnSearch(index);
   }
   function closeModalOnSearch() {
+    setReassignedFieldWorkerID(null);
     setModalIndexOnSearch(-1);
   }
 
@@ -166,16 +180,16 @@ function SDashboard() {
     // api call to get list
     if (value !== "") {
       (async function getSearchedPatientList() {
-        // try {
-        const responseData = await searchPatient(value);
-        let searchedPatientList = responseData.data;
-        if (searchedPatientList) {
-          console.log(searchedPatientList);
-          setSearchedPatientList(searchedPatientList);
+        try {
+          const responseData = await searchPatient(value);
+          let searchedPatientList = responseData.data;
+          if (searchedPatientList) {
+            console.log(searchedPatientList);
+            setSearchedPatientList(searchedPatientList);
+          }
+        } catch (error) {
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
-        // } catch (error) {
-        //   handleAuthentication(error.response, navigate, "/login", toast);
-        // }
       })();
     }
   }
@@ -250,7 +264,6 @@ function SDashboard() {
               height: "100%",
               maxHeight: "700px",
               overflowY: "scroll",
-              margin: "2px",
             }}
           >
             <table

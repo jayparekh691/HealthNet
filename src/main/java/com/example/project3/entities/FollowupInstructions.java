@@ -21,5 +21,5 @@ public class FollowupInstructions {
     private boolean sugarLevel;
     private boolean bloodPressure;
     private boolean spo2Level;
-    private String remarks;
+
 }
