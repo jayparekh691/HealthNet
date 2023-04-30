@@ -33,6 +33,17 @@ public class EmployeeServicesImpl implements EmployeeServices {
     private EmailUtils emailUtils;
     @Override
     public Employee createEmployee(Employee employee) {
+        Employee employee1 = this.employeeRepo.findEmployeeByEmail(employee.getEmail());
+        if(employee1!=null) {
+            return null;
+        }
+        employee1 = this.employeeRepo.findEmployeeByEmailAndDeletedIsTrue(employee.getEmail());
+        if(employee1!=null){
+            System.out.println("KJay");
+            employee1.setDeleted(false);
+            this.employeeRepo.save(employee1);
+            return employee1;
+        }
         String pass=employee.getPassword();
         employee.setMobilenumber("+91 "+employee.getMobilenumber());
         employee.setPassword(passwordEncoder.encode(pass));
@@ -42,25 +53,25 @@ public class EmployeeServicesImpl implements EmployeeServices {
     }
     @Override
     public Employee updateEmployee(Employee employee, Integer id) {
-        String pass=employee.getPassword();
         Employee employee1 =this.employeeRepo.findById(id).orElseThrow();
         employee1.setEmail(employee.getEmail());
         employee1.setName(employee.getName());
         employee1.setSpecialization(employee.getSpecialization());
         employee1.setName(employee.getName());
         employee1.setGender(employee.getGender());
-        employee1.setPassword(passwordEncoder.encode(pass));
         employee1.setRoles(employee.getRoles());
         employee1.setMobilenumber("+91 "+employee.getMobilenumber());
         employee1.setAddress(employee.getAddress());
         this.employeeRepo.save(employee1);
-        employee1.setPassword(pass);
         return employee1;
     }
 
     @Override
     public Employee getEmployeeById(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
+        String s = employee.getMobilenumber();
+        s.substring(4);
+        employee.setMobilenumber(s);
         return employee;
     }
 
@@ -123,6 +134,12 @@ public class EmployeeServicesImpl implements EmployeeServices {
     @Override
     public List<Employee> findEmployeeByName(String name){
         List<Employee> employees=this.employeeRepo.findEmployeeByNameContaining(name);
+        for(Employee employee:employees){
+            String s = employee.getMobilenumber();
+            s = s.substring(4);
+//            System.out.println(s);
+            employee.setMobilenumber(s);
+        }
         return employees;
     }
     @Override

@@ -4,6 +4,9 @@ import { getAllPatients } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -13,6 +16,10 @@ function DDashboard() {
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+
     setDoctorID(state.d_id);
     (async function () {
       try {
@@ -29,7 +36,7 @@ function DDashboard() {
           console.log("error! ");
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
   }, [state.d_id, navigate]);
@@ -95,7 +102,7 @@ function DDashboard() {
     >
       <div
         style={{
-          flex: 2,
+          flex: 3,
           height: "100vh",
           width: "300px",
           backgroundColor: "#516395",
@@ -104,7 +111,7 @@ function DDashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={viewAnyPatientHistory}>
           View Patient History
@@ -134,7 +141,7 @@ function DDashboard() {
       <div
         className="paddingPage"
         style={{
-          flex: 10,
+          flex: 12,
         }}
       >
         <div>

@@ -1,14 +1,19 @@
 import { deleteKey } from "../utils/localStorage";
 
-export const handleAuthentication = (response, navigationHandler, url) => {
+export const handleAuthentication = (
+  response,
+  navigationHandler,
+  url,
+  toast
+) => {
   if (response.status === 401 || response.status === 403) {
-    navigationHandler[0] = navigationHandler[navigationHandler.length - 1];
-    navigationHandler(url, { replace: true });
+    deleteKey("token");
+    navigationHandler(url);
+    toast.error("Please relogin again. Your session has expired");
   }
 };
 
 export const logout = (navigationHandler, url) => {
   deleteKey("token");
-  navigationHandler[0] = navigationHandler[navigationHandler.length - 1];
-  navigationHandler(url, { replace: true });
+  navigationHandler(url);
 };

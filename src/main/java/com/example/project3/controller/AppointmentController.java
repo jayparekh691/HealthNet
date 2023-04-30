@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class AppointmentController {
 
     @PostMapping("/add-appointment/{p_id}/{d_id}")
     @PreAuthorize("hasAuthority('Receptionist')")
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment, @PathVariable("p_id") Integer p_id, @PathVariable("d_id") Integer d_id){
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment, @PathVariable("p_id") Integer p_id, @PathVariable("d_id") Integer d_id) throws ParseException {
         Appointment appointment1 = this.appointmentServices.createAppointment(appointment,p_id,d_id);
         return new ResponseEntity<>(appointment1, HttpStatus.CREATED);
     }

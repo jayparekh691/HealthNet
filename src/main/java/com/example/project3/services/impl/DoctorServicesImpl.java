@@ -38,7 +38,18 @@ public class DoctorServicesImpl implements DoctorServices {
     public List<Appointment> getAppointmentByDoctorId(Integer id) {
         Employee employee = this.employeeRepo.findById(id).orElseThrow();
         List<Appointment> appointments = this.appointmentRepo.findByDoctor(employee);
-        return appointments;
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        List<Appointment> appointments1 = new ArrayList<>();
+        String today = simpleDateFormat.format(new Date());
+        for(Appointment appointment :appointments){
+            System.out.println(today);
+            String tdate = simpleDateFormat.format(appointment.getCurr_date());
+            System.out.println(tdate);
+            if(tdate.equals(today) && appointment.isTreated()==false)
+                appointments1.add(appointment);
+        }
+        return appointments1;
     }
 
     @Override

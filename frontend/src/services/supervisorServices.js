@@ -1,19 +1,21 @@
 import axios from "axios";
 import { getValueForKey } from "../utils/localStorage";
-const unassignedPatientListAPI = `http://localhost:9080/api/supervisor/get-valid-patients/`;
+import { IP_ADDRESS, PORT } from "../utils/constants";
 
-const fieldWorkerListAPI = `http://localhost:9080/api/supervisor/get-fieldworker-list/`;
+const unassignedPatientListAPI = `http://${IP_ADDRESS}:${PORT}/api/supervisor/get-valid-patients/`;
+
+const fieldWorkerListAPI = `http://${IP_ADDRESS}:${PORT}/api/supervisor/get-fieldworker-list/`;
 
 const assignFieldworkerAPI = (patientID, fieldWorkerID) =>
-  `http://localhost:9080/api/supervisor/assign-fieldworker/${patientID}/${fieldWorkerID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/supervisor/assign-fieldworker/${patientID}/${fieldWorkerID}`;
 
 const reassignFieldworkerAPI = (oldFieldWorkerID, reassignedFieldWorkerID) =>
-  `http://localhost:9080/api/supervisor/reassign-fieldworker/${oldFieldWorkerID}/${reassignedFieldWorkerID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/supervisor/reassign-fieldworker/${oldFieldWorkerID}/${reassignedFieldWorkerID}`;
 
-const dueVisitsByFieldWorkerAPI = `http://localhost:9080/api/supervisor/due-visits`;
+const dueVisitsByFieldWorkerAPI = `http://${IP_ADDRESS}:${PORT}/api/supervisor/due-visits`;
 
 const reassignFieldworkerChangeDueDateAPI = (patientID, newFieldWorkerID) =>
-  `http://localhost:9080/api/supervisor/reassign-field-worker-pid/${patientID}/${newFieldWorkerID}`;
+  `http://${IP_ADDRESS}:${PORT}/api/supervisor/reassign-field-worker-pid/${patientID}/${newFieldWorkerID}`;
 
 async function getPatientList() {
   const responseData = await axios.get(unassignedPatientListAPI, {
@@ -33,7 +35,7 @@ async function assignFieldworker(patientID, fieldWorkerID) {
   const responseData = await axios.get(
     assignFieldworkerAPI(patientID, fieldWorkerID),
     {
-      headers: { Authorization: `Bearer ${getValueForKey("token")}`},
+      headers: { Authorization: `Bearer ${getValueForKey("token")}` },
     }
   );
   return responseData;

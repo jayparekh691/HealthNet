@@ -19,4 +19,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
     Optional<Employee> findByEmail(String email);
     Employee findEmployeeByEmail(String s);
+    @Query(value = "select * from employee where email=?1 and deleted is TRUE ",nativeQuery = true)
+    Employee findEmployeeByEmailAndDeletedIsTrue(String s);
 }

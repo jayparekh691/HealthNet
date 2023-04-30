@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerEmployee } from "../services/adminServices";
 import { handleAuthentication } from "../utils/authentication";
+import { getValueForKey } from "../utils/localStorage";
 
 function EmployeeRegistration() {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ function EmployeeRegistration() {
 
   const [genderDefault, setGenderDefault] = useState("M");
 
+  useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   function handleChange(event) {
     const { name, value } = event.target;
     setEmployeeData((pv) => {
@@ -37,6 +44,12 @@ function EmployeeRegistration() {
         return false;
       });
     } else if (name === "roles") {
+      setEmployeeData((pv) => {
+        return {
+          ...pv,
+          specialization: "",
+        };
+      });
       setDisabled((pv) => {
         return true;
       });
@@ -57,7 +70,7 @@ function EmployeeRegistration() {
         toast.error("Unable to Add Employee");
       }
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
@@ -73,7 +86,7 @@ function EmployeeRegistration() {
                 <input
                   name="name"
                   type="text"
-                  placeholder="Enter name"
+                  placeholder="Name"
                   value={employeeData.name}
                   onChange={handleChange}
                   required
@@ -127,7 +140,7 @@ function EmployeeRegistration() {
                 <input
                   name="email"
                   type="email"
-                  placeholder="Enter email"
+                  placeholder="Email"
                   value={employeeData.email}
                   onChange={handleChange}
                   required
@@ -138,7 +151,7 @@ function EmployeeRegistration() {
                 <input
                   name="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder="Password"
                   value={employeeData.password}
                   onChange={handleChange}
                   required
@@ -151,7 +164,7 @@ function EmployeeRegistration() {
                   type="textarea"
                   rows={3}
                   cols={38}
-                  placeholder="Enter address"
+                  placeholder="Address"
                   value={employeeData.address}
                   onChange={handleChange}
                   required
@@ -191,7 +204,7 @@ function EmployeeRegistration() {
                   disabled={disabled}
                   name="specialization"
                   type="text"
-                  placeholder="Enter specialization"
+                  placeholder="Specialization"
                   value={employeeData.specialization}
                   onChange={handleChange}
                   required={disabled === false ? true : false}

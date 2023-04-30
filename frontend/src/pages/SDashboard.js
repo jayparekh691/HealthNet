@@ -14,6 +14,7 @@ import SelectModal from "../components/SelectModal";
 import { useNavigate } from "react-router-dom";
 import { handleAuthentication } from "../utils/authentication";
 import { searchPatient } from "../services/receptionistServices";
+import { getValueForKey } from "../utils/localStorage";
 
 function SDashboard() {
   //get unassigned patients
@@ -30,6 +31,9 @@ function SDashboard() {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     (async function getUnassignedPatientList() {
       try {
         const responseData = await getPatientList();
@@ -39,7 +43,7 @@ function SDashboard() {
           console.log(data);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
     (async function getFieldWorkerList() {
@@ -50,10 +54,10 @@ function SDashboard() {
           setFieldWorkerList(data);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-  }, [assigned]);
+  }, [assigned, navigate]);
 
   function handleChangeInFieldWorker(event) {
     event.preventDefault();
@@ -82,7 +86,7 @@ function SDashboard() {
       setAssigned((pv) => !assigned);
       closeSelectModal();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
@@ -104,7 +108,7 @@ function SDashboard() {
           toast.error(`Unable to Reassign Field Worker`);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     }
     setAssigned((pv) => !assigned);
@@ -128,7 +132,7 @@ function SDashboard() {
       setAssigned((pv) => !assigned);
       closeModalOnSearch();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
   function openModal(index) {
@@ -162,16 +166,16 @@ function SDashboard() {
     // api call to get list
     if (value !== "") {
       (async function getSearchedPatientList() {
-        try {
-          const responseData = await searchPatient(value);
-          let searchedPatientList = responseData.data;
-          if (searchedPatientList) {
-            console.log(searchedPatientList);
-            setSearchedPatientList(searchedPatientList);
-          }
-        } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+        // try {
+        const responseData = await searchPatient(value);
+        let searchedPatientList = responseData.data;
+        if (searchedPatientList) {
+          console.log(searchedPatientList);
+          setSearchedPatientList(searchedPatientList);
         }
+        // } catch (error) {
+        //   handleAuthentication(error.response, navigate, "/login", toast);
+        // }
       })();
     }
   }
@@ -223,7 +227,7 @@ function SDashboard() {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              label="Search"
+              label="Search Patients"
               onChange={searchBarOnChange}
               placeholder="Search Patient by name or mobile number"
               value={searchValue}

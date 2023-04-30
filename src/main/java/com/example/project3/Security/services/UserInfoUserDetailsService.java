@@ -15,9 +15,9 @@ public class UserInfoUserDetailsService implements UserDetailsService {
     @Autowired
     private EmployeeRepo repo;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Employee> userInfo=repo.findByEmail(username);
-        System.out.println("HELLO               ");
-        return userInfo.map(EmployeeToUserDetails::new).orElseThrow(()->new UsernameNotFoundException("User Not Found!!"+username));
+    public UserDetails loadUserByUsername(String username) {
+            Optional<Employee> userInfo = repo.findByEmail(username);
+//            System.out.println("HELLO               ");
+            return userInfo.map(EmployeeToUserDetails::new).orElseThrow(() -> new UsernameNotFoundException("User Not Found!!" + username));
     }
 }

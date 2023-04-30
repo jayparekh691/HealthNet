@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { handleAuthentication } from "../utils/authentication";
 
 function Login() {
   //FIXME: on back button pressed, the login screen is showing for few mili
@@ -34,71 +33,74 @@ function Login() {
 
   async function onSubmit(event) {
     event.preventDefault();
-    try {
-      const responseData = await login(loginData);
-      console.log(responseData);
-      console.log(loginData);
-      const data = responseData.data;
-      console.log(data);
-      if (loginData.email === data.email) {
-        if (data.roles === "Receptionist") {
-          // show receptionist dashboard
-          toast.success("Welcome!");
+    // try {
+    const responseData = await login(loginData);
+    console.log(responseData);
+    console.log(loginData);
+    const data = responseData.data;
+    console.log(data);
+    console.log(data.email);
+    if (loginData.email === data.email) {
+      if (data.roles === "Receptionist") {
+        // show receptionist dashboard
+        toast.success("Welcome!");
 
-          navigate("/receptionist-dashboard", {
-            state: {
-              r_id: data.e_id,
-            },
-          });
-        } else if (data.roles === "Doctor") {
-          toast.success("Welcome!");
-          // show doctor dashboard
-          navigate("/doctor-dashboard", {
-            state: {
-              d_id: data.e_id,
-            },
-          });
-        } else if (data.roles === "Admin") {
-          toast.success("Welcome!");
-          navigate("/admin-dashboard", {
-            state: {
-              a_id: data.e_id,
-            },
-            replace: true,
-          });
-        } else {
-        }
+        navigate("/receptionist-dashboard", {
+          state: {
+            r_id: data.e_id,
+          },
+        });
+      } else if (data.roles === "Doctor") {
+        toast.success("Welcome!");
+        // show doctor dashboard
+        navigate("/doctor-dashboard", {
+          state: {
+            d_id: data.e_id,
+          },
+        });
+      } else if (data.roles === "Admin") {
+        toast.success("Welcome!");
+        navigate("/admin-dashboard", {
+          state: {
+            a_id: data.e_id,
+          },
+        });
       } else {
-        // incorrect email or password
       }
-    } catch (error) {
+    } else {
+      // incorrect email or password
       toast.error("Incorrect email or password");
-      handleAuthentication(error.response, navigate, "/login");
     }
+    // } catch (error) {
+    //   toast.error("Incorrect email or password");
+    //   handleAuthentication(error.response, navigate, "/login");
+    // }
   }
 
   return (
     <div className="formPage">
-      <div className="container">
+      <div className="container" style={{ width: "500px" }}>
         <div className="title">LOGIN</div>
         <div className="content">
           <form onSubmit={onSubmit}>
             <div className="user-details">
-              <div className="input-box">
+              <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Email"}
                   name={"email"}
                   type={"email"}
                   value={loginData.email}
+                  placeholder={"Email"}
                   onChange={handleChange}
                 />
               </div>
-              <div className="input-box">
+              <div className="input-box" style={{ width: "100%" }}>
                 <InputField
                   title={"Password"}
                   name="password"
                   type="password"
                   value={loginData.password}
+                  placeholder={"Password"}
                   onChange={handleChange}
                 />
               </div>
@@ -106,7 +108,7 @@ function Login() {
             <div className="button">
               <input type="submit" value="LOGIN" />
             </div>
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "right" }}>
               <button
                 className="button2"
                 style={{ color: "black", fontWeight: "300", fontSize: "16px" }}

@@ -1,6 +1,7 @@
 package com.example.project3;
 
 import com.example.project3.config.TwilioConfig;
+import com.example.project3.repo.EmployeeRepo;
 import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Project3Application {
     @Autowired
     private TwilioConfig twilioConfig;
+    @Autowired
+    private EmployeeRepo employeeRepo;
 
     @PostConstruct
     public void initTwilio(){
@@ -18,6 +21,7 @@ public class Project3Application {
         Twilio.init(twilioConfig.getAccountSid(),twilioConfig.getAuthToken());
     }
     public static void main(String[] args) {
+
         SpringApplication.run(Project3Application.class, args);
 
     }

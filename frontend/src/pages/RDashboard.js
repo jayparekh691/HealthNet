@@ -11,6 +11,7 @@ import SelectModal from "../components/SelectModal";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
 
 function RDashboard() {
   const state = useLocation().state;
@@ -39,6 +40,9 @@ function RDashboard() {
   }
 
   useEffect(() => {
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
     setReceptionistId(state.r_id);
     (async function () {
       try {
@@ -53,7 +57,7 @@ function RDashboard() {
           );
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
 
@@ -66,7 +70,7 @@ function RDashboard() {
           setDoctorList(doctorListData);
         }
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
   }, [state.r_id, appointmentAdded, navigate]);
@@ -85,14 +89,15 @@ function RDashboard() {
       }
       closeModal();
     } catch (error) {
-      handleAuthentication(error.response, navigate, "/login");
+      handleAuthentication(error.response, navigate, "/login", toast);
     }
   }
 
   function handleChangeInDoctor(event) {
     event.preventDefault();
     const value = event.target.value;
-    console.log(value);
+
+    console.log("value", value);
     setDoctorID(value);
   }
 
@@ -133,7 +138,7 @@ function RDashboard() {
             setSearchedPatientList(searchedPatientList);
           }
         } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
       })();
     }
@@ -158,7 +163,7 @@ function RDashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={addPatient}>
           Add Patient
@@ -206,7 +211,7 @@ function RDashboard() {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              label="Search"
+              label="Search Patients"
               onChange={searchBarOnChange}
               placeholder="Search Patient by name or mobile number"
               value={searchValue}
@@ -346,7 +351,7 @@ function RDashboard() {
             </div>
             <div>
               <div style={{ alignSelf: "flex-end" }}>
-                <label className="tableHeading">Doctors Available</label>
+                <label className="tableHeading">Doctor List</label>
               </div>
               <div
                 className="table-wrapper"

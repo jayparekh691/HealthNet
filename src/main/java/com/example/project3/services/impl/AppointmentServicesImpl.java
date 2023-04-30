@@ -7,9 +7,15 @@ import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.repo.EmployeeRepo;
 import com.example.project3.repo.PatientRepo;
 import com.example.project3.services.AppointmentServices;
+import com.twilio.rest.microvisor.v1.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,13 +28,17 @@ public class AppointmentServicesImpl implements AppointmentServices {
     @Autowired
     private EmployeeRepo employeeRepo;
     @Override
-    public Appointment createAppointment(Appointment appointment, Integer p_id, Integer d_id) {
+    public Appointment createAppointment(Appointment appointment, Integer p_id, Integer d_id) throws ParseException {
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         Patient patient = this.patientRepo.findById(p_id).orElseThrow();
         Employee employee = this.employeeRepo.findById(d_id).orElseThrow();
         appointment.setPatient(patient);
         appointment.setDoctor(employee);
-//        patient.getAppointments().add(appointment);
-//        this.patientRepo.save(patient);
+        Date date = new Date();
+        String sdate = simpleDateFormat.format(date);
+        Date d = simpleDateFormat.parse(sdate);
+        appointment.setCurr_date(d);
         this.appointmentRepo.save(appointment);
         return appointment;
     }
@@ -52,8 +62,19 @@ public class AppointmentServicesImpl implements AppointmentServices {
 
     @Override
     public List<Appointment> getAllAppointments() {
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         List<Appointment> appointments = this.appointmentRepo.findAll();
-        return appointments;
+        List<Appointment> appointments1 = new ArrayList<>();
+        String today = simpleDateFormat.format(new Date());
+        for(Appointment appointment :appointments){
+            System.out.println(today);
+            String tdate = simpleDateFormat.format(appointment.getCurr_date());
+            System.out.println(tdate);
+            if(tdate.equals(today) && appointment.isTreated()==false)
+                appointments1.add(appointment);
+        }
+        return appointments1;
     }
 
     @Override

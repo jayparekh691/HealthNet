@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { handleAuthentication } from "../utils/authentication";
 import { logout } from "../utils/authentication";
 import ConfirmModal from "../components/ConfirmModal";
+import { getValueForKey } from "../utils/localStorage";
 
 function ADashboard() {
   const navigate = useNavigate();
@@ -14,12 +15,22 @@ function ADashboard() {
   const [searchName, setSearchName] = useState("");
   const [employeeList, setEmployeeList] = useState([]);
   const [adminId, setAdminId] = useState(null);
-  const [deleted, setDeleted] = useState(false);
+  // const [deleted, setDeleted] = useState(false);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
-    setAdminId(state.a_id);
-  }, [state.a_id, deleted]);
+    if (getValueForKey("token") === null) {
+      navigate("/login");
+    }
+
+    if (state === null) {
+      navigate("/login");
+    }
+
+    if (state !== null) {
+      setAdminId(state.a_id);
+    }
+  }, [state.a_id, navigate, state]);
 
   function addEmployee() {
     navigate("/employee-registration");
@@ -40,7 +51,7 @@ function ADashboard() {
             setEmployeeList(employeeList);
           }
         } catch (error) {
-          handleAuthentication(error.response, navigate, "/login");
+          handleAuthentication(error.response, navigate, "/login", toast);
         }
       })();
     }
@@ -62,9 +73,9 @@ function ADashboard() {
         const responseData = await deleteEmployee(e_id);
         console.log(responseData);
         toast.success(`Employee Deleted`);
-        setDeleted((pv) => !deleted);
+        // setDeleted((pv) => !deleted);
       } catch (error) {
-        handleAuthentication(error.response, navigate, "/login");
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
 
@@ -118,7 +129,7 @@ function ADashboard() {
         }}
       >
         <button className="button2" onClick={updatePassword}>
-          Update Password
+          Update Profile
         </button>
         <button className="button2" onClick={addEmployee}>
           Add Employee
@@ -179,7 +190,7 @@ function ADashboard() {
             <tbody style={{}}>
               {employeeList
                 .filter((e) => {
-                  return e.deleted === false && e.roles !== "Admin";
+                  return e.deleted === false;
                 })
                 .map((e, i) => {
                   return (
@@ -199,15 +210,17 @@ function ADashboard() {
                         </button>
                       </td>
                       <td>
-                        <button
-                          className="button"
-                          value={i}
-                          onClick={(event) =>
-                            onDeleteButtonClicked(event, e.e_id)
-                          }
-                        >
-                          Delete
-                        </button>
+                        {e.roles !== "Admin" && (
+                          <button
+                            className="button"
+                            value={i}
+                            onClick={(event) =>
+                              onDeleteButtonClicked(event, e.e_id)
+                            }
+                          >
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

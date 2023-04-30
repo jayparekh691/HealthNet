@@ -25,9 +25,11 @@ public class SupervisorController {
     private EmployeeServices employeeServices;
 
     @PostMapping("/create-employee/")
-//    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee){
         Employee employee1 = this.employeeServices.createEmployee(employee);
+        if(employee1==null)
+            return new ResponseEntity<>(employee1,HttpStatus.CONFLICT);
         return new ResponseEntity<>(employee1, HttpStatus.CREATED);
     }
 

@@ -50,6 +50,7 @@ public class PatientController {
     @PreAuthorize("hasAnyAuthority('Receptionist','Admin')")
     public ResponseEntity<List<Patient>> allPatientByNameOrMob(@PathVariable("nORm") String id){
         List<Patient> patient1 = this.patientServices.searchPatient(id);
+        System.out.println(patient1.size());
         return new ResponseEntity<List<Patient>>(patient1,HttpStatus.ACCEPTED);
     }
 }
