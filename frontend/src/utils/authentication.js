@@ -9,7 +9,7 @@ export const handleAuthentication = (
   if (response.status === 401 || response.status === 403) {
     deleteKey("token");
     navigationHandler(url);
-    toast.error("Please relogin again. Your session has expired");
+    if (toast) toast.error("Please relogin again. Your session has expired");
   } else if (response.status === 409) {
     toast.error("The entered email is already in use.");
   }
