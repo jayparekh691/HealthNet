@@ -3,6 +3,7 @@ import { login } from "../services/loginService";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { handleAuthentication } from "../utils/authentication";
 
 function Login() {
   //FIXME: on back button pressed, the login screen is showing for few mili
@@ -33,48 +34,46 @@ function Login() {
 
   async function onSubmit(event) {
     event.preventDefault();
-    // try {
-    const responseData = await login(loginData);
-    console.log(responseData);
-    console.log(loginData);
-    const data = responseData.data;
-    console.log(data);
-    console.log(data.email);
-    if (loginData.email === data.email) {
-      if (data.roles === "Receptionist") {
-        // show receptionist dashboard
-        toast.success("Welcome!");
+    try {
+      const responseData = await login(loginData);
+      console.log(responseData);
+      console.log(loginData);
+      const data = responseData.data;
+      console.log(data);
+      console.log(data.email);
+      if (loginData.email === data.email) {
+        if (data.roles === "Receptionist") {
+          // show receptionist dashboard
+          toast.success("Welcome!");
 
-        navigate("/receptionist-dashboard", {
-          state: {
-            r_id: data.e_id,
-          },
-        });
-      } else if (data.roles === "Doctor") {
-        toast.success("Welcome!");
-        // show doctor dashboard
-        navigate("/doctor-dashboard", {
-          state: {
-            d_id: data.e_id,
-          },
-        });
-      } else if (data.roles === "Admin") {
-        toast.success("Welcome!");
-        navigate("/admin-dashboard", {
-          state: {
-            a_id: data.e_id,
-          },
-        });
+          navigate("/receptionist-dashboard", {
+            state: {
+              r_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Doctor") {
+          toast.success("Welcome!");
+          // show doctor dashboard
+          navigate("/doctor-dashboard", {
+            state: {
+              d_id: data.e_id,
+            },
+          });
+        } else if (data.roles === "Admin") {
+          toast.success("Welcome!");
+          navigate("/admin-dashboard", {
+            state: {
+              a_id: data.e_id,
+            },
+          });
+        } else {
+        }
       } else {
       }
-    } else {
-      // incorrect email or password
+    } catch (error) {
       toast.error("Incorrect email or password");
+      handleAuthentication(error.response, navigate, "/login");
     }
-    // } catch (error) {
-    //   toast.error("Incorrect email or password");
-    //   handleAuthentication(error.response, navigate, "/login");
-    // }
   }
 
   return (

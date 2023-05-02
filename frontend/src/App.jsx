@@ -18,6 +18,7 @@ import VisitsDueByFieldWorker from "./pages/VisitsDueByFieldWorker";
 import ViewNewVisitRecords from "./pages/ViewNewVisitRecords";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
+import { WriteFollowUpProvider } from "./contexts/WriteFollowUpContext";
 
 function App() {
   return (
@@ -45,13 +46,14 @@ function App() {
         element={<PatientMedicalHistory />}
       />
       <Route path="/diagnose-patient" element={<DiagnosePatient />} />
+      <Route path="/write-follow-up" element={<WriteFollowUp />} />
+
       <Route path="/supervisor-dashboard" element={<SDashboard />} />
       <Route
         path="/visits-due-by-fieldworker"
         element={<VisitsDueByFieldWorker />}
       />
       <Route path="/view-new-visit-records" element={<ViewNewVisitRecords />} />
-      <Route path="/write-follow-up" element={<WriteFollowUp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/update-password" element={<UpdatePassword />} />
       <Route path="/" element={<Navigate to="/login" />} />

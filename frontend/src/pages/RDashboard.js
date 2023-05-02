@@ -77,20 +77,25 @@ function RDashboard() {
 
   async function addAppointment(p_id) {
     // add appointment for patient using pid
-    try {
-      const responseData = await addPatientAppointment(p_id, doctorID);
-      const appointmentData = responseData.data;
-      console.log(appointmentData);
-      if (appointmentData) {
-        toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
-        setAppointmentAdded((pv) => !appointmentAdded);
-      } else {
-        toast.error(`Unable to generate Appointment`);
+    if (doctorID === null) {
+      alert("Doctor not selected");
+    } else {
+      try {
+        const responseData = await addPatientAppointment(p_id, doctorID);
+        const appointmentData = responseData.data;
+        console.log(appointmentData);
+        if (appointmentData) {
+          toast.success(`Appointment ID: ${appointmentData.a_id} generated!`);
+          setAppointmentAdded((pv) => !appointmentAdded);
+        } else {
+          toast.error(`Unable to generate Appointment`);
+        }
+        closeModal();
+      } catch (error) {
+        handleAuthentication(error.response, navigate, "/login", toast);
       }
-      closeModal();
-    } catch (error) {
-      handleAuthentication(error.response, navigate, "/login", toast);
     }
+    setDoctorID(null);
   }
 
   function handleChangeInDoctor(event) {
@@ -112,6 +117,7 @@ function RDashboard() {
     setModalIndex(index);
   }
   function closeModal() {
+    setDoctorID(null);
     setModalIndex(-1);
   }
 
@@ -126,7 +132,6 @@ function RDashboard() {
     event.preventDefault();
     const { value } = event.target;
     setSearchValue(value);
-    setDoctorID(doctorList[0].e_id);
     // api call to get list
     if (value !== "") {
       (async function getSearchedPatientList() {
@@ -234,7 +239,6 @@ function RDashboard() {
               height: "100%",
               maxHeight: "700px",
               overflowY: "scroll",
-              margin: "2px",
             }}
           >
             <table

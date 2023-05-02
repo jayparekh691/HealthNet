@@ -2,6 +2,7 @@ import React, { useState } from "react";
 export const WriteFollowUpContext = React.createContext({});
 
 export const resetFollowupData = {
+  remarks: "",
   instructions: {
     temperature: false,
     sugarLevel: false,

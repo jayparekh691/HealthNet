@@ -185,6 +185,10 @@ function PatientMedicalHistory() {
                             </>
                           )}
 
+                          <label className="tableHeading">Instructions: </label>
+                          <br />
+                          <span>{e.followup.remarks}</span>
+                          <br />
                           <label className="tableHeading">Interval: </label>
                           <br />
                           <span>{e.followup.gap}</span>

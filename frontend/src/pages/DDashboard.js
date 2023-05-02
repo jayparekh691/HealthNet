@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllPatients } from "../services/doctorServices";
 import { handleAuthentication } from "../utils/authentication";
@@ -7,6 +7,14 @@ import ConfirmModal from "../components/ConfirmModal";
 import { getValueForKey } from "../utils/localStorage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  DiagnoseContext,
+  resetDiagnoseData,
+} from "../contexts/DiagnoseContext";
+import {
+  WriteFollowUpContext,
+  resetFollowupData,
+} from "../contexts/WriteFollowUpContext";
 
 function DDashboard() {
   const state = useLocation().state;
@@ -15,6 +23,9 @@ function DDashboard() {
   const [patientList, setPatientList] = useState([]);
   const [modal, setModal] = useState(false);
 
+  const [writtenData, setWrittenData] = useContext(DiagnoseContext);
+  const [followUpDetails, setFollowUpDetails] =
+    useContext(WriteFollowUpContext);
   useEffect(() => {
     if (getValueForKey("token") === null) {
       navigate("/login");
@@ -51,6 +62,20 @@ function DDashboard() {
   }
 
   function onCheckUPButtonClicked(p, event) {
+    setWrittenData(resetDiagnoseData);
+    setFollowUpDetails(() => {
+      return {
+        remarks: "",
+        instructions: {
+          temperature: false,
+          sugarLevel: false,
+          spo2Level: false,
+          bloodPressure: false,
+        },
+        gap: "",
+        visitCount: "",
+      };
+    });
     console.log(p.a_id);
     const index = Number(event.target.value);
     setPatientList((list) => {
