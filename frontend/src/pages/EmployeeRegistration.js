@@ -151,6 +151,7 @@ function EmployeeRegistration() {
                 <input
                   name="password"
                   type="password"
+                  minLength={3}
                   placeholder="Password"
                   value={employeeData.password}
                   onChange={handleChange}

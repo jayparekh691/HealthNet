@@ -1,14 +1,14 @@
 import axios from "axios";
 import { setKey } from "../utils/localStorage";
-import { IP_ADDRESS, PORT } from "../utils/constants";
+import { IP_ADDRESS } from "../utils/constants";
 
-const loginAPI = `http://${IP_ADDRESS}:${PORT}/api/employee/login`;
+const loginAPI = `http://${IP_ADDRESS}/api/employee/login`;
 
 const updatePasswordAPI = (employeeId) =>
-  `http://${IP_ADDRESS}:${PORT}/api/employee/update-password/${employeeId}`;
+  `http://${IP_ADDRESS}/api/employee/update-password/${employeeId}`;
 
 const forgotPasswordAPI = (email) =>
-  `http://${IP_ADDRESS}:${PORT}/api/employee/forgot-password/${email}`;
+  `http://${IP_ADDRESS}/api/employee/forgot-password/${email}`;
 
 async function login(loginData) {
   const responseData = await axios.post(loginAPI, loginData);
