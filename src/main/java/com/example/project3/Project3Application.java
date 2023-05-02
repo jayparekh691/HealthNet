@@ -1,7 +1,7 @@
 package com.example.project3;
 
-import com.example.project3.config.TwilioConfig;
-import com.example.project3.repo.EmployeeRepo;
+import com.example.project3.Config.TwilioConfig;
+import com.example.project3.Repo.EmployeeRepo;
 import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;

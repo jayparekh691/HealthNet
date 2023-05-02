@@ -1,7 +1,7 @@
 package com.example.project3.Security.services;
 
-import com.example.project3.entities.Employee;
-import com.example.project3.repo.EmployeeRepo;
+import com.example.project3.Models.Employee;
+import com.example.project3.Repo.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
