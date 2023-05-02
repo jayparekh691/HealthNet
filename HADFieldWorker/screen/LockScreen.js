@@ -169,7 +169,7 @@ function LockScreen() {
             onPress: () => {
               console.log("logging out .... ");
               setIsDashboardLoading(true);
-
+              // login
               // sync all the medical data to the internet
               getMedicalDataFromTable(loadMedicalData).catch((error) => {
                 console.log("get medical data from table error: ", error);
