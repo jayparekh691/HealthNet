@@ -32,7 +32,7 @@ export const createTables = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "create table if not exists appointment (address text, age integer, bloodPressure integer,city text, date text, followup_id integer, gender text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription text, spo2Level integer, state text, sugarLevel integer, temperature integer, town text, v_id integer primary key not null);",
+        "create table if not exists appointment (address text, age integer, bloodPressure integer,city text, date text, followup_id integer, gender text, isvisited integer, mobilenumber text, name text, otp text, pincode integer, prescription text, remarks text, spo2Level integer, state text, sugarLevel integer, temperature integer, town text, v_id integer primary key not null);",
         [],
         (_, success) => {
           tx.executeSql(
@@ -59,7 +59,7 @@ export const insertAppointments = (data) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "insert into appointment values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "insert into appointment values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             data.address,
             data.age,
@@ -74,6 +74,7 @@ export const insertAppointments = (data) => {
             data.otp,
             data.pincode,
             data.prescription,
+            data.remarks,
             data.spo2Level === false ? 0 : 1, //
             data.state,
             data.sugarLevel === false ? 0 : 1, //

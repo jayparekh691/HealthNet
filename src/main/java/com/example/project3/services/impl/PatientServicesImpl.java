@@ -1,4 +1,5 @@
 package com.example.project3.services.impl;
+import com.example.project3.config.AesEncryptor;
 import com.example.project3.entities.Patient;
 import com.example.project3.repo.AppointmentRepo;
 import com.example.project3.repo.PatientRepo;
@@ -17,8 +18,12 @@ public class PatientServicesImpl implements PatientServices {
     @Autowired
     private AppointmentRepo appointmentRepo;
 
+    @Autowired
+    private AesEncryptor aesEncryptor;
+
     @Override
     public Patient createPatient(Patient patient) {
+        //
         patient.setMobilenumber("+91 "+patient.getMobilenumber());
         this.patientRepo.save(patient);
         return patient;
@@ -52,24 +57,18 @@ public class PatientServicesImpl implements PatientServices {
 
     @Override
     public List<Patient> searchPatient(String id) {
-        System.out.println(id);
-        List<Patient> l1=this.patientRepo.findAllByNameContaining(id);
-        List<Patient> l2=this.patientRepo.findPatientsByMobilenumberContaining(id);
+        List<Patient> l1=this.patientRepo.findAll();
+        List<Patient> l2 = new ArrayList<>();
         System.out.println("l1 size "+l1.size());
-        System.out.println("l2 size "+l2.size());
-        System.out.println("hello");
-        for(Patient patient : l1){
-            String s = patient.getMobilenumber();
-            s = s.substring(4);
-            patient.setMobilenumber(s);
+        for(Patient patient : l1) {
+            if (patient.getName().contains(id) || patient.getMobilenumber().contains(id)) {
+                System.out.println(patient.getName());
+                String s = patient.getMobilenumber();
+                s = s.substring(4);
+                patient.setMobilenumber(s);
+                l2.add(patient);
+            }
         }
-        for(Patient patient : l2){
-            String s = patient.getMobilenumber();
-            s = s.substring(4);
-            patient.setMobilenumber(s);
-        }
-        l1.addAll(l2);
-        System.out.println("hi");
-        return l1;
+        return l2;
     }
 }

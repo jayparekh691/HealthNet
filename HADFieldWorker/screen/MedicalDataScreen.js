@@ -65,6 +65,7 @@ function MedicalDataScreen() {
   }, []);
 
   useEffect(() => {
+    console.log("entered in medical data screen");
     return () => {
       console.log("going back to dashboard screen");
     };
@@ -130,37 +131,41 @@ function MedicalDataScreen() {
   };
 
   const openCamera = async () => {
-    setIsMediaActive(() => {
-      return true;
-    });
-    let result = await ImagePicker.launchCameraAsync({
+    setIsMediaActive("loading");
+    ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      onInputChange("photo", result.assets[0].uri);
-    }
+    })
+      .then((result) => {
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+          onInputChange("photo", result.assets[0].uri);
+        }
+      })
+      .catch((error) => {
+        console.log("UPLOAD IMAGE", error);
+      });
   };
 
   const uploadImage = async () => {
-    setIsMediaActive(() => {
-      return true;
-    });
-    let result = await ImagePicker.launchImageLibraryAsync({
+    setIsMediaActive("loading");
+    ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      onInputChange("photo", result.assets[0].uri);
-    }
+    })
+      .then((result) => {
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+          onInputChange("photo", result.assets[0].uri);
+        }
+      })
+      .catch((error) => {
+        console.log("UPLOAD IMAGE", error);
+      });
   };
 
   const onClear = () => {
@@ -280,9 +285,8 @@ function MedicalDataScreen() {
             </View>
           </View>
         </View>
-        <Divider />
         {/*  TODO: instruction to be added later */}
-        {/* <View
+        <View
           style={{
             minheight: height / 12,
             maxHeight: height / 4,
@@ -302,9 +306,9 @@ function MedicalDataScreen() {
               color: COLOR.white,
             }}
           >
-            {data.instruction}
+            {data.remarks}
           </Text>
-        </View>  */}
+        </View>
         <Divider />
         <View style={{ marginVertical: 8 }}>
           <View
@@ -471,7 +475,7 @@ function MedicalDataScreen() {
                   selectionColor={COLOR.black}
                   placeholderTextColor={COLOR.black}
                   onChangeText={(text) => {
-                    onInputChange("bloodoxygen", text);
+                    onInputChange("spo2Level", text);
                   }}
                 />
               )}

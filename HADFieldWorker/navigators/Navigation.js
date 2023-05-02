@@ -6,7 +6,7 @@ import SecureStoreProvider, {
 } from "../contexts/SecureStoreContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { getValueFor } from "../utils/util";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, SafeAreaView, View } from "react-native";
 import { COLOR } from "../utils/Color";
 import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import NetInfo from "@react-native-community/netinfo";
