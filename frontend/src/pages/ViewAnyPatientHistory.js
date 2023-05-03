@@ -29,11 +29,16 @@ function ViewAnyPatientHistory() {
     if (value !== "") {
       (async function getsearchedPatientList() {
         try {
-          const responseData = await getPatientList(doctorID, value);
-          const patientList = responseData.data;
-          if (patientList) {
-            console.log(patientList);
-            setSearchedPatientList(patientList);
+          if (!/^([A-Za-z]{0,})$/.test(value)) {
+            alert("Enter A-Z, a-z characters only!");
+            setSearchValue("");
+          } else {
+            const responseData = await getPatientList(doctorID, value);
+            const patientList = responseData.data;
+            if (patientList) {
+              console.log(patientList);
+              setSearchedPatientList(patientList);
+            }
           }
         } catch (error) {
           handleAuthentication(error.response, navigate, "/login", toast);
@@ -52,15 +57,14 @@ function ViewAnyPatientHistory() {
   }
 
   return (
-    <div className="paddingPage">
-      <label className="tableHeading">Search Patients</label>
-      <div className="search">
+    <div>
+      <div className="search" style={{ padding: "12px" }}>
         <TextField
           name="Patient Search"
           id="outlined-basic"
           variant="outlined"
           fullWidth
-          label="Search"
+          label="Search for patient using name"
           onChange={searchBarOnChange}
           value={searchValue}
         />

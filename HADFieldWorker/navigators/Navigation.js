@@ -12,8 +12,11 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 import NetInfo from "@react-native-community/netinfo";
 import AppNavigation from "./StackNavigator";
 import LoadingProvider from "../contexts/LoadingContext";
+import { usePreventScreenCapture } from "expo-screen-capture";
 
 function Navigation() {
+  usePreventScreenCapture();
+
   const { pinState } = useContext(SecureStoreContext);
   const [pin, setPin] = pinState;
 

@@ -44,11 +44,16 @@ function ADashboard() {
     if (value !== "") {
       (async function getEmployees() {
         try {
-          const responseData = await getEmployeeList(value);
-          let employeeList = responseData.data;
-          if (employeeList) {
-            console.log(employeeList);
-            setEmployeeList(employeeList);
+          if (!/^([A-Za-z]{0,})$/.test(value)) {
+            alert("Enter A-Z, a-z, 0-9 characters only!");
+            setSearchName("");
+          } else {
+            const responseData = await getEmployeeList(value);
+            let employeeList = responseData.data;
+            if (employeeList) {
+              console.log(employeeList);
+              setEmployeeList(employeeList);
+            }
           }
         } catch (error) {
           handleAuthentication(error.response, navigate, "/login", toast);

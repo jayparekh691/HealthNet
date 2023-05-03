@@ -42,9 +42,7 @@ public class EmployeeController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
-//        Employee employee1 = this.employeeServices.login(employee);
       Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-//        System.out.println("parekh");
       if(authentication.isAuthenticated()) {
           String token=jwtService.generateToken(authRequest.getEmail());
           Employee emp=this.empRepo.findByEmail(authRequest.getEmail()).orElseThrow();

@@ -181,11 +181,16 @@ function SDashboard() {
     if (value !== "") {
       (async function getSearchedPatientList() {
         try {
-          const responseData = await searchPatient(value);
-          let searchedPatientList = responseData.data;
-          if (searchedPatientList) {
-            console.log(searchedPatientList);
-            setSearchedPatientList(searchedPatientList);
+          if (!/^([A-Za-z0-9]{0,})$/.test(value)) {
+            alert("Enter A-Z, a-z, 0-9 characters only!");
+            setSearchValue("");
+          } else {
+            const responseData = await searchPatient(value);
+            let searchedPatientList = responseData.data;
+            if (searchedPatientList) {
+              console.log(searchedPatientList);
+              setSearchedPatientList(searchedPatientList);
+            }
           }
         } catch (error) {
           handleAuthentication(error.response, navigate, "/login", toast);

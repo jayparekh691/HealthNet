@@ -455,6 +455,7 @@ function Dashboard({ navigation }) {
     console.log("dashboard network: ", isConnected);
     setIsDashboardLoading(true);
     if (isConnected) {
+      // login
       getMedicalDataFromTable(loadMedicalData).catch((error) => {
         console.log("get medical data from table error: ", error);
         setIsDashboardLoading(false);

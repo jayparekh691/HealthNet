@@ -200,7 +200,6 @@ function WriteFollowUp() {
                   cols={40}
                   value={followUpDetails.remarks}
                   onChange={handleChange}
-                  required
                 />
                 <div
                   className="user-details"
