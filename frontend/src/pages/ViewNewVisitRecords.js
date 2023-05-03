@@ -26,8 +26,9 @@ function ViewNewVisitRecords() {
       try {
         const responseData = await getNewVisitRecords(state.doctorID);
         let data = responseData.data;
+        console.log("visit data: ", data);
         if (data) {
-          if (newVisitList.length === 0) {
+          if (data.length === 0) {
             alert("No New Visits");
             navigate(-1);
           } else {

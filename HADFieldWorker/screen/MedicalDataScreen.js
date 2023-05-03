@@ -26,6 +26,7 @@ import {
   removeRecordFromAppointmentTable,
 } from "../services/databaseServices";
 import { AppStateContext } from "../contexts/AppStateContext";
+import { medicalDataRanges } from "../utils/Constants";
 const { width, height } = Dimensions.get("screen");
 
 function MedicalDataScreen() {
@@ -99,6 +100,39 @@ function MedicalDataScreen() {
     );
   };
 
+  const checkRange = (medicalData) => {
+    if (
+      data.sugarLevel === 1 &&
+      (medicalData.sugarLevel > medicalDataRanges.maxSugarLevel ||
+        medicalData.sugarLevel < medicalDataRanges.minSugarLevel)
+    ) {
+      Alert.alert("Please enter valid sugar level");
+      return false;
+    } else if (
+      data.temperature === 1 &&
+      (medicalData.temperature > medicalDataRanges.maxTemperture ||
+        medicalData.temperature < medicalDataRanges.minTemperture)
+    ) {
+      Alert.alert("Please enter valid temperature reading");
+      return false;
+    } else if (
+      data.spo2Level === 1 &&
+      (medicalData.spo2Level < medicalDataRanges.minSpo2Level ||
+        medicalData.spo2Level > medicalDataRanges.maxSpo2Level)
+    ) {
+      Alert.alert("Please enter valid oxygen saturation reading");
+      return false;
+    } else if (
+      data.bloodPressure === 1 &&
+      (medicalData.bloodPressure > medicalDataRanges.minBloodPressure ||
+        medicalData.bloodPressure < medicalDataRanges.maxBloodPressure)
+    ) {
+      Alert.alert("Please enter valid blood pressure reading");
+      return false;
+    }
+    return true;
+  };
+
   const onSubmitData = async () => {
     const f_id = JSON.parse(await getValueFor("user")).e_id;
     medicalData.bloodPressure =
@@ -107,8 +141,10 @@ function MedicalDataScreen() {
     if (!isAllValueFilled(medicalData)) {
       Alert.alert("Please fill all data!");
     } else {
-      medicalData.isVisited = 1;
-      storeRecord(medicalData);
+      if (checkRange(medicalData)) {
+        medicalData.isVisited = 1;
+        storeRecord(medicalData);
+      }
     }
   };
 
@@ -285,30 +321,31 @@ function MedicalDataScreen() {
             </View>
           </View>
         </View>
-        {/*  TODO: instruction to be added later */}
-        <View
-          style={{
-            minheight: height / 12,
-            maxHeight: height / 4,
-            borderRadius: 12,
-            marginHorizontal: 4,
-            marginVertical: 24,
-            padding: 8,
-            backgroundColor: COLOR.shade5,
-            justifyContent: "center",
-          }}
-        >
-          <Text
+        {data.remarks.length > 0 ? (
+          <View
             style={{
+              minheight: height / 12,
+              maxHeight: height / 4,
+              borderRadius: 12,
+              marginHorizontal: 4,
+              marginVertical: 24,
               padding: 8,
-              fontSize: width / 24,
-              fontWeight: "400",
-              color: COLOR.white,
+              backgroundColor: COLOR.shade5,
+              justifyContent: "center",
             }}
           >
-            {data.remarks}
-          </Text>
-        </View>
+            <Text
+              style={{
+                padding: 8,
+                fontSize: width / 24,
+                fontWeight: "400",
+                color: COLOR.white,
+              }}
+            >
+              {data.remarks}
+            </Text>
+          </View>
+        ) : null}
         <Divider />
         <View style={{ marginVertical: 8 }}>
           <View
