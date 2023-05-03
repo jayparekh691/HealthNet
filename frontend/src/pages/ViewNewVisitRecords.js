@@ -17,6 +17,7 @@ function ViewNewVisitRecords() {
   const navigate = useNavigate();
   const state = useLocation().state;
   const [newVisitList, setNewVisitList] = useState([]);
+  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     if (getValueForKey("token") === null) {
@@ -27,7 +28,7 @@ function ViewNewVisitRecords() {
         const responseData = await getNewVisitRecords(state.doctorID);
         let data = responseData.data;
         if (data) {
-          if (newVisitList.length === 0) {
+          if (data.length === 0) {
             alert("No New Visits");
             navigate(-1);
           } else {
@@ -39,7 +40,7 @@ function ViewNewVisitRecords() {
         handleAuthentication(error.response, navigate, "/login", toast);
       }
     })();
-  }, [state.doctorID, navigate, newVisitList.length]);
+  }, [state.doctorID, navigate, seen]);
 
   async function markAsSeenByDoctor(visitID) {
     console.log(visitID);
@@ -49,6 +50,7 @@ function ViewNewVisitRecords() {
       console.log(data);
       if (data) {
         toast.success("Marked as seen");
+        setSeen((pv) => !pv);
       } else {
         toast.error("Could not mark as seen");
       }
@@ -257,18 +259,26 @@ function ViewNewVisitRecords() {
 
                                     {v.medicalData.photo !== null &&
                                       v.medicalData.photo !== "" && (
-                                        <img
-                                          style={{ height: "200px" }}
-                                          src={v.medicalData.photo}
-                                          alt="medicalphoto"
-                                        />
+                                        <a
+                                          href={v.medicalData.photo}
+                                          target="_blank"
+                                        >
+                                          <img
+                                            style={{ height: "200px" }}
+                                            src={v.medicalData.photo}
+                                            alt="medicalphoto"
+                                          />
+                                        </a>
                                       )}
                                     {/* TODO: put this button to the right end */}
                                     <br />
                                   </Typography>
                                   <Typography>
                                     <span
-                                      style={{ float: "right", margin: "4px" }}
+                                      style={{
+                                        float: "right",
+                                        margin: "4px",
+                                      }}
                                     >
                                       <button
                                         onClick={() =>
