@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useContext, useEffect } from "react";
 import { WriteFollowUpContext } from "../contexts/WriteFollowUpContext";
 import { getValueForKey } from "../utils/localStorage";
-import userEvent from "@testing-library/user-event";
 
 function WriteFollowUp() {
   const navigate = useNavigate();
