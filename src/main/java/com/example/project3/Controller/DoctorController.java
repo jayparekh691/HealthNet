@@ -15,8 +15,6 @@ import java.util.List;
 public class DoctorController {
     @Autowired
     private DoctorServices doctorServices;
-//    @Autowired
-//    private AppointmentServices appointmentServices;
 
     @GetMapping("/get-all-appointments-of-doctor/{d_id}")
     @PreAuthorize("hasAuthority('Doctor')")
