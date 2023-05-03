@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DoctorServicesImpl implements DoctorServices {
@@ -120,25 +117,25 @@ public class DoctorServicesImpl implements DoctorServices {
 
     @Override
     public List<Patient> searchPatientByNameORpid(Integer did,String id) {
-        List<Patient> patients=new ArrayList<Patient>();
+        List<Patient> patients=this.patientRepo.findAll();
+        List<Patient> finalPatients=new ArrayList<Patient>();
         try{
             int i=Integer.parseInt(id);
-            Patient patient=this.patientRepo.findById(i).orElseThrow();
-            patients.add(patient);
+            Patient patient1=this.patientRepo.findById(i).orElseThrow();
+            finalPatients.add(patient1);
         }
         catch (Exception e){
-            patients=this.patientRepo.findAllByNameContaining(id);
+            System.out.println(e.getMessage());
         }
-        List<Patient> finalPatients=new ArrayList<Patient>();
         for(Patient p:patients)
         {
-            List<Appointment> appointments=this.appointmentRepo.findByPatient(p);
-            for(Appointment a:appointments)
-            {
-                if(a.getDoctor().getE_id()==did)
-                {
-                    finalPatients.add(p);
-                    break;
+            if(p.getName().contains(id)) {
+                List<Appointment> appointments = this.appointmentRepo.findByPatient(p);
+                for (Appointment a : appointments) {
+                    if (a.getDoctor().getE_id() == did) {
+                        finalPatients.add(p);
+                        break;
+                    }
                 }
             }
         }
@@ -160,25 +157,26 @@ public class DoctorServicesImpl implements DoctorServices {
 
     @Override
     public List<Appointment> getUnseenListByDoctorId(Integer did) {
-        List<Appointment> appointments=getAppointmentByDoctorId(did);
+        Employee e = this.employeeRepo.findById(did).orElseThrow();
+        List<Appointment> appointments=this.appointmentRepo.findByDoctor(e);
         List<Appointment> finalAppointments=new ArrayList<>();
         for(Appointment a:appointments)
         {
             if(a.getFollowup()==null)
                 continue;
             List<Visit> visits=a.getFollowup().getVisitList();
+            List<Visit> finalVisit = new ArrayList<>();
             for(Visit v:visits)
             {
-                if(v.isVisited()==false)  //false
-                    break;
-                if(v.isSeenByDoctor()==true)
+                if(v.isVisited()==false || v.isSeenByDoctor()==true)
                     continue;
                 else
                 {
-                    finalAppointments.add(a);
-                    break;
+                    finalVisit.add(v);
                 }
             }
+            a.getFollowup().setVisitList(finalVisit);
+            finalAppointments.add(a);
         }
         return finalAppointments;
     }
