@@ -175,8 +175,10 @@ public class DoctorServicesImpl implements DoctorServices {
                     finalVisit.add(v);
                 }
             }
-            a.getFollowup().setVisitList(finalVisit);
-            finalAppointments.add(a);
+            if(finalVisit.size()>0) {
+                a.getFollowup().setVisitList(finalVisit);
+                finalAppointments.add(a);
+            }
         }
         return finalAppointments;
     }

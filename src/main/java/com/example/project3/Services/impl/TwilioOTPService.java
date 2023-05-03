@@ -27,7 +27,7 @@ public class TwilioOTPService {
             PhoneNumber to = new PhoneNumber(followupOTPDto.getPhonenumber());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
             String otp = generateOTP();
-            String otpMessage = "Dear Customer, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. For follow up on date "+date+".";
+            String otpMessage = "Dear Patient, your OTP for Appointment No. "+id+" and Visit No. "+x+" is ## " + otp + " ##. For follow up on date "+date+".";
             Message message = Message
                     .creator(to, from,
                             otpMessage)
