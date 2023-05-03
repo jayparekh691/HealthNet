@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   AppState,
+  Button,
   Dimensions,
   FlatList,
   Image,
@@ -33,12 +34,13 @@ import { ConnectivityContext } from "../contexts/ConnectivityContext";
 const { width } = Dimensions.get("screen");
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import { getValueFor, updateSyncTime } from "../utils/util";
+import { getValueFor, removeItem, save, updateSyncTime } from "../utils/util";
 import { BackHandler } from "react-native";
 import { SecureStoreContext } from "../contexts/SecureStoreContext";
 import { Ionicons } from "@expo/vector-icons";
 import { AppStateContext } from "../contexts/AppStateContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { login } from "../services/loginServices";
 
 // TODO: Prevent going back to lockscreen once navigated to dashboard screen
 
@@ -456,10 +458,19 @@ function Dashboard({ navigation }) {
     setIsDashboardLoading(true);
     if (isConnected) {
       // login
-      getMedicalDataFromTable(loadMedicalData).catch((error) => {
-        console.log("get medical data from table error: ", error);
-        setIsDashboardLoading(false);
-      });
+      let user = await getValueFor("userCredential");
+      user = JSON.parse(user);
+      login(user)
+        .then(async (response) => {
+          await save("token", `Bearer ${response.data.token}`);
+          getMedicalDataFromTable(loadMedicalData).catch((error) => {
+            console.log("get medical data from table error: ", error);
+            setIsDashboardLoading(false);
+          });
+        })
+        .catch((error) => {
+          Alert.alert("Cannot sync data!");
+        });
     } else {
       Alert.alert("No Internet Connection!");
       setIsDashboardLoading(false);

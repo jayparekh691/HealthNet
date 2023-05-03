@@ -49,9 +49,11 @@ function RecordsScreen({ navigation }) {
         keyExtractor={(itemData, i) => itemData.v_id}
         data={medicalData}
         renderItem={(itemData) => {
+          console.log(itemData.item);
           return (
             <View
               style={{
+                backgroundColor: COLOR.white,
                 padding: 8,
                 marginTop: 8,
                 flexDirection: "column",
@@ -59,20 +61,107 @@ function RecordsScreen({ navigation }) {
                 borderRadius: 8,
               }}
             >
-              <Text>
-                BP:{"\t\t\t\t\t\t\t\t\t\t\t"}
-                {itemData.item.bloodPressure}
-              </Text>
-              <Text>
-                SUGAR LEVEL:{"\t\t"}
-                {itemData.item.sugarLevel}
-              </Text>
-              <Text>
-                TEMPERATURE:{"\t"} {itemData.item.temperature}
-              </Text>
-              <Text>
-                SpO2:{"\t"} {itemData.item.spo2Level}
-              </Text>
+              {itemData.item.v_id.toString().length > 0 ? (
+                <Text
+                  style={{
+                    marginBottom: 12,
+                    fontSize: 24,
+                    fontWeight: "300",
+                  }}
+                >
+                  ID: {itemData.item.v_id}
+                </Text>
+              ) : null}
+              {itemData.item.bloodPressure.length > 0 ? (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "300",
+                  }}
+                >
+                  BP :{" "}
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    {itemData.item.bloodPressure}
+                  </Text>{" "}
+                  mmHg
+                </Text>
+              ) : null}
+              {itemData.item.sugarLevel.length > 0 ? (
+                <Text
+                  style={{
+                    fontSize: 24,
+                    fontWeight: "300",
+                  }}
+                >
+                  SUGAR LEVEL :{" "}
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    {itemData.item.sugarLevel}
+                  </Text>{" "}
+                  mg/dL
+                </Text>
+              ) : null}
+              {itemData.item.temperature.length > 0 ? (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "300",
+                  }}
+                >
+                  TEMPERATURE :{" "}
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    {itemData.item.temperature}
+                  </Text>{" "}
+                  °F
+                </Text>
+              ) : null}
+              {itemData.item.spo2Level.length > 0 ? (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "300",
+                  }}
+                >
+                  SpO2 :{" "}
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    {itemData.item.spo2Level}
+                  </Text>{" "}
+                  %
+                </Text>
+              ) : null}
+              {itemData.item.date.length > 0 ? (
+                <Text
+                  style={{
+                    marginTop: 12,
+                    fontSize: 16,
+                    fontWeight: "300",
+                  }}
+                >
+                  Date :{" "}
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    {itemData.item.date}
+                  </Text>
+                </Text>
+              ) : null}
             </View>
           );
         }}

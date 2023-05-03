@@ -27,6 +27,10 @@ import {
 } from "../services/databaseServices";
 import { AppStateContext } from "../contexts/AppStateContext";
 import { medicalDataRanges } from "../utils/Constants";
+import { Feather } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import { StorageAccessFramework } from "expo-file-system";
+
 const { width, height } = Dimensions.get("screen");
 
 function MedicalDataScreen() {
@@ -57,6 +61,24 @@ function MedicalDataScreen() {
 
   const [image, setImage] = useState(null);
   const [imagePermission, setImagePersmission] = useState(null);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Feather
+          name="printer"
+          color={COLOR.primaryColor}
+          size={28}
+          onPress={() => {
+            printPrescription();
+          }}
+        />
+      ),
+      headerTitleStyle: {
+        fontSize: width / 24,
+      },
+    });
+  }, [navigation]);
 
   useEffect(() => {
     (async () => {
@@ -98,6 +120,33 @@ function MedicalDataScreen() {
       (data.spo2Level === 1 ? medicalData.bloodoxygen !== "" : true) &&
       (data.bloodPressure === 1 ? bpData.sys !== "" && bpData.dia !== "" : true)
     );
+  };
+
+  const printPrescription = async () => {
+    setIsMediaActive("loading");
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+
+    try {
+      await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        data.name,
+        "application/pdf"
+      )
+        .then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, data.prescription, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (e) {
+      throw new Error(e);
+    }
   };
 
   const checkRange = (medicalData) => {

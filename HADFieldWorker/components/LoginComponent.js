@@ -107,6 +107,7 @@ function LoginComponent({ changeIndexTo, index }) {
       if (response.data && response.data.roles === "FieldWorker") {
         console.log("saving user data");
         await save("user", JSON.stringify(response.data));
+        await save("userCredential", JSON.stringify(loginData));
         setupDatabase()
           .then(async (success) => {
             console.log("setup done");
