@@ -1,11 +1,10 @@
 package com.example.project3.Security.services;
 
-import com.example.project3.entities.Employee;
+import com.example.project3.Models.Employee;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;

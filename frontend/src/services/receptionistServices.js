@@ -1,21 +1,21 @@
 import axios from "axios";
 import { getValueForKey } from "../utils/localStorage";
-import { IP_ADDRESS, PORT } from "../utils/constants";
+import { IP_ADDRESS } from "../utils/constants";
 
-const doctorListAPI = `http://${IP_ADDRESS}:${PORT}/api/employee/get-all-doctors`;
+const doctorListAPI = `http://${IP_ADDRESS}/api/employee/get-all-doctors`;
 
-const registerPatientAPI = `http://${IP_ADDRESS}:${PORT}/api/patient/add-patient`;
+const registerPatientAPI = `http://${IP_ADDRESS}/api/patient/add-patient`;
 
 const addPatientAppointmentAPI = (patientID, doctorID) =>
-  `http://${IP_ADDRESS}:${PORT}/api/appointment/add-appointment/${patientID}/${doctorID}`;
+  `http://${IP_ADDRESS}/api/appointment/add-appointment/${patientID}/${doctorID}`;
 
-const getALLAppointmentAPI = `http://${IP_ADDRESS}:${PORT}/api/appointment/get-all-appointments`;
+const getALLAppointmentAPI = `http://${IP_ADDRESS}/api/appointment/get-all-appointments`;
 
 const searchPatientAPI = (searchValue) =>
-  `http://${IP_ADDRESS}:${PORT}/api/patient/search-patient-receptionist/${searchValue}`;
+  `http://${IP_ADDRESS}/api/patient/search-patient-receptionist/${searchValue}`;
 
 const updatePatientAPI = (patientID) =>
-  `http://${IP_ADDRESS}:${PORT}/api/patient/update-patient/${patientID}`;
+  `http://${IP_ADDRESS}/api/patient/update-patient/${patientID}`;
 
 async function getDoctorList() {
   const responseData = await axios.get(doctorListAPI, {

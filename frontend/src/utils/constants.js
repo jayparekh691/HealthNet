@@ -1,2 +1,1 @@
-export const IP_ADDRESS = "localhost";
-export const PORT = "9080";
+export const IP_ADDRESS = "localhost:9080";
