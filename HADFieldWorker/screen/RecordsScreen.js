@@ -65,11 +65,11 @@ function RecordsScreen({ navigation }) {
                 <Text
                   style={{
                     marginBottom: 12,
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: "300",
                   }}
                 >
-                  ID: {itemData.item.v_id}
+                  VISIT ID: {itemData.item.v_id}
                 </Text>
               ) : null}
               {itemData.item.bloodPressure.length > 0 ? (
@@ -93,7 +93,7 @@ function RecordsScreen({ navigation }) {
               {itemData.item.sugarLevel.length > 0 ? (
                 <Text
                   style={{
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: "300",
                   }}
                 >
@@ -133,7 +133,7 @@ function RecordsScreen({ navigation }) {
                     fontWeight: "300",
                   }}
                 >
-                  SpO2 :{" "}
+                  OXYGEN SATURATION :{" "}
                   <Text
                     style={{
                       fontWeight: "600",
@@ -152,7 +152,7 @@ function RecordsScreen({ navigation }) {
                     fontWeight: "300",
                   }}
                 >
-                  Date :{" "}
+                  VISITED DATE :{" "}
                   <Text
                     style={{
                       fontWeight: "600",

@@ -173,8 +173,8 @@ function MedicalDataScreen() {
       return false;
     } else if (
       data.bloodPressure === 1 &&
-      (medicalData.bloodPressure > medicalDataRanges.minBloodPressure ||
-        medicalData.bloodPressure < medicalDataRanges.maxBloodPressure)
+      (medicalData.bloodPressure < medicalDataRanges.minBloodPressure ||
+        medicalData.bloodPressure > medicalDataRanges.maxBloodPressure)
     ) {
       Alert.alert("Please enter valid blood pressure reading");
       return false;
@@ -608,7 +608,7 @@ function MedicalDataScreen() {
                     selectionColor={COLOR.white}
                     placeholderTextColor={COLOR.white}
                     onChangeText={(text) => {
-                      onInputChange("sugar_level", text);
+                      onInputChange("sugarLevel", text);
                     }}
                   />
                 )}
