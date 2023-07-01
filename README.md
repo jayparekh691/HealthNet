@@ -1,2 +1,3 @@
 # HealthNet
-https://docs.google.com/document/d/1RHLdluvpA7tRkiCIYO1Upev-c69LBZNSQ1nvBUvV8RU/edit?usp=sharing
+
+https://iiitbac-my.sharepoint.com/:v:/g/personal/shashidhar_nagaral_iiitb_ac_in/Efzqbj35tR9Pl5WiRx-H4KoBUcemaaaSwYbgihSozD05sQ?e=LyViu8
